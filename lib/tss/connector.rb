@@ -13,8 +13,8 @@ module TSS
     def self.auth_credentials
       @auth_credentials ||= {
         basic_auth: {
-          username: (TSS.configuration.secret || 'secret').freeze,
-          password: ''.freeze
+          username: TSS.configuration.secret.freeze,
+          password: TSS.configuration.password.freeze
         }
       }.freeze
     end

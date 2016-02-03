@@ -11,11 +11,12 @@ module TSS #:nodoc:
 
 
   class Configuration #:nodoc:
-    attr_accessor :base_uri, :secret
+    attr_accessor :base_uri, :secret, :password
 
     def initialize
       @base_uri = 'http://localhost:5000/'
-      @secret   = ''
+      @secret   = 'secret'
+      @password   = ''
     end
   end
 end
