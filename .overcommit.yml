@@ -1,0 +1,17 @@
+CommitMsg:
+  ALL:
+    enabled: false
+  AddTicketId:
+    enabled: true
+
+PreCommit:
+  RuboCop:
+    enabled: true
+    command: ['bundle', 'exec', 'rubocop']
+    on_warn: 'fail'
+
+PrePush:
+  RSpec:
+    enabled: true
+    command: ['bundle', 'exec', 'rspec']
+
