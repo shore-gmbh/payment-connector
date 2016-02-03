@@ -16,11 +16,7 @@ describe 'TSS Library Configuration' do
     expect(TSS.configuration.secret).to eq('bar')
   end
 
-  describe '.load!' do
-    it 'loads the Connector class' do
-      expect { TSS::Connector.new }.to raise_error(ArgumentError)
-      TSS.load!
-      expect { TSS::Connector.new('a') }.not_to raise_error
-    end
+  it 'has TSS::Connnector defined' do
+    expect(TSS.const_defined?(:Connector)).to be_truthy
   end
 end

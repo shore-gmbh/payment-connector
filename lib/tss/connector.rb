@@ -10,14 +10,14 @@ module TSS
 
     base_uri TSS.configuration.base_uri
 
-    BASIC_AUTH_USERNAME    = (TSS.configuration.secret || 'secret').freeze
-    BASIC_AUTH_PASSWORD    = ''.freeze
-    BASIC_AUTH_CREDENTIALS = {
-      basic_auth: {
-        username: BASIC_AUTH_USERNAME,
-        password: BASIC_AUTH_PASSWORD
-      }
-    }.freeze
+    def self.auth_credentials
+      @auth_credentials ||= {
+        basic_auth: {
+          username: (TSS.configuration.secret || 'secret').freeze,
+          password: ''.freeze
+        }
+      }.freeze
+    end
 
     attr_reader :oid
     def initialize(organization_id)
@@ -67,7 +67,7 @@ module TSS
     self::Request::SupportedHTTPMethods
       .map { |x| x.name.demodulize.downcase }.each do |method|
       define_singleton_method("authenticated_#{method}") do |path, options = {}|
-        send(method, path, options.merge(BASIC_AUTH_CREDENTIALS))
+        send(method, path, options.merge(auth_credentials))
       end
     end
 
