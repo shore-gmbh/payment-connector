@@ -28,8 +28,8 @@ describe TSS::Connector do
   end
 
   describe '#get_organization' do
-    it 'sends a GE request to /v1/organizations/:oid/' do
-      expect(described_class).to receive(:get)
+    it 'sends a GET request to /v1/organizations/:oid/' do
+      expect(TSS::HttpRetriever).to receive(:get)
         .with("/v1/organizations/#{oid}", auth_mock)
         .and_return(mock_success('{"organization":[]}'))
 
@@ -37,7 +37,7 @@ describe TSS::Connector do
     end
 
     it 'returns nil if the TSS responds with code 404' do
-      expect(described_class).to receive(:get)
+      expect(TSS::HttpRetriever).to receive(:get)
         .with(any_args)
         .and_return(mock_not_found)
 
@@ -45,7 +45,7 @@ describe TSS::Connector do
     end
 
     it 'raises an error if the TSS responds with code != 200 and != 404' do
-      expect(described_class).to receive(:get)
+      expect(TSS::HttpRetriever).to receive(:get)
         .with(any_args)
         .and_return(mock_server_error)
 
@@ -57,7 +57,7 @@ describe TSS::Connector do
 
   describe '#get_transactions' do
     it 'sends a GET request to /v1/:oid/transactions' do
-      expect(described_class).to receive(:get)
+      expect(TSS::HttpRetriever).to receive(:get)
         .with("/v1/#{oid}/transactions", auth_mock)
         .and_return(mock_success('{"transactions":[]}'))
 
@@ -65,7 +65,7 @@ describe TSS::Connector do
     end
 
     it 'returns nil if the TSS responds with code 404' do
-      expect(described_class).to receive(:get)
+      expect(TSS::HttpRetriever).to receive(:get)
         .with(any_args)
         .and_return(mock_not_found)
 
@@ -73,7 +73,7 @@ describe TSS::Connector do
     end
 
     it 'raises an error if the TSS responds with code != 200 and != 404' do
-      expect(described_class).to receive(:get)
+      expect(TSS::HttpRetriever).to receive(:get)
         .with(any_args)
         .and_return(mock_server_error)
 
@@ -85,7 +85,7 @@ describe TSS::Connector do
 
   describe '#get_transaction' do
     it 'sends a GET request to /v1/:oid/transactions/:id' do
-      expect(described_class).to receive(:get)
+      expect(TSS::HttpRetriever).to receive(:get)
         .with("/v1/#{oid}/transactions/#{fake_id}", auth_mock)
         .and_return(mock_success('{"transaction":{}}'))
 
@@ -93,7 +93,7 @@ describe TSS::Connector do
     end
 
     it 'returns nil if the TSS responds with code 404' do
-      expect(described_class).to receive(:get)
+      expect(TSS::HttpRetriever).to receive(:get)
         .with(any_args)
         .and_return(mock_not_found)
 
@@ -101,7 +101,7 @@ describe TSS::Connector do
     end
 
     it 'raises an error if the TSS responds with code != 200 and != 404' do
-      expect(described_class).to receive(:get)
+      expect(TSS::HttpRetriever).to receive(:get)
         .with(any_args)
         .and_return(mock_server_error)
 
@@ -114,7 +114,7 @@ describe TSS::Connector do
   describe '#add_bank_account' do
     it 'sends a POST request to /v1/:oid/bank_accounts' do
       options = hash_including(basic_auth: an_instance_of(Hash))
-      expect(described_class).to receive(:post)
+      expect(TSS::HttpRetriever).to receive(:post)
         .with("/v1/#{oid}/bank_accounts", options)
         .and_return(mock_created('{}'))
 
@@ -122,7 +122,7 @@ describe TSS::Connector do
     end
 
     it 'raises an error if the TSS responds with code != 201' do
-      expect(described_class).to receive(:post)
+      expect(TSS::HttpRetriever).to receive(:post)
         .with(any_args)
         .and_return(mock_server_error)
 

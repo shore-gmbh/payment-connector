@@ -2,23 +2,11 @@
 
 require 'httparty'
 require 'net/http'
+require_relative 'http_retriever'
 
 module TSS
   # Utility class encapsulating synchronous communication with TSS.
   class Connector
-    include HTTParty
-
-    base_uri TSS.configuration.base_uri
-
-    def self.auth_credentials
-      @auth_credentials ||= {
-        basic_auth: {
-          username: TSS.configuration.secret.freeze,
-          password: TSS.configuration.password.freeze
-        }
-      }.freeze
-    end
-
     attr_reader :oid
     def initialize(organization_id)
       @oid = organization_id
@@ -28,7 +16,7 @@ module TSS
     # @raise [RuntimeError] TSS request failed
     def get_organization # rubocop:disable AccessorMethodName
       path = "/v1/organizations/#{oid}"
-      response = self.class.authenticated_get(path)
+      response = HttpRetriever.authenticated_get(path)
 
       handle_get_response(response, path, 'organization')
     end
@@ -36,7 +24,7 @@ module TSS
     # @raise [RuntimeError] TSS request failed
     def get_transactions # rubocop:disable AccessorMethodName
       path = "#{base_path}/transactions"
-      response = self.class.authenticated_get(path)
+      response = HttpRetriever.authenticated_get(path)
 
       handle_get_response(response, path, 'transactions')
     end
@@ -44,7 +32,7 @@ module TSS
     # @raise [RuntimeError] TSS request failed
     def get_transaction(transaction_id)
       path = "#{base_path}/transactions/#{transaction_id}"
-      response = self.class.authenticated_get(path)
+      response = HttpRetriever.authenticated_get(path)
 
       handle_get_response(response, path, 'transaction')
     end
@@ -52,7 +40,7 @@ module TSS
     # @raise [RuntimeError] TSS request failed
     def add_bank_account(bank_token)
       path = "#{base_path}/bank_accounts"
-      response = self.class.authenticated_post(
+      response = HttpRetriever.authenticated_post(
         path, query: { bank_token: bank_token }
       )
 
@@ -60,15 +48,6 @@ module TSS
     end
 
     private
-
-    # Define variants of all HTTParty request methods with authentication
-    # support.
-    self::Request::SupportedHTTPMethods
-      .map { |x| x.name.demodulize.downcase }.each do |method|
-      define_singleton_method("authenticated_#{method}") do |path, options = {}|
-        send(method, path, options.merge(auth_credentials))
-      end
-    end
 
     def base_path
       "/v1/#{oid}"
