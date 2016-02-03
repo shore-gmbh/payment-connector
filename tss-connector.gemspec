@@ -1,7 +1,5 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'tss/version'
+require_relative 'lib/tss/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'tss-connector'
@@ -14,9 +12,8 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'http://shore.com'
   spec.license       = 'Nonstandard'
 
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
-  end
+  spec.files = Dir["{lib,spec}/**/*.rb"] + ['README.md', 'Rakefile']
+  spec.test_files = Dir["spec/**/*.rb"]
 
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
