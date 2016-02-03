@@ -26,7 +26,7 @@ TSS.configure do |config|
   config.secret = 'secret'
 end
 
-TSS.load!
+TSS::Connector.organizations
 ```
 
 

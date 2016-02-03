@@ -26,7 +26,7 @@ module TSS
 
     # @param [String] - organization_id
     # @raise [RuntimeError] TSS request failed
-    def organizations
+    def organization
       path = "/v1/organizations/#{oid}"
       p path
       response = self.class.authenticated_get(path)
