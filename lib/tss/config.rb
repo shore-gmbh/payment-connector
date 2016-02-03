@@ -1,12 +1,13 @@
 module TSS #:nodoc:
   class << self
     attr_accessor :configuration
+
+    def configure
+      self.configuration ||= Configuration.new
+      yield(configuration) if block_given?
+    end
   end
 
-  def self.configure
-    self.configuration ||= Configuration.new
-    yield(configuration)
-  end
 
   class Configuration #:nodoc:
     attr_accessor :base_uri, :secret
