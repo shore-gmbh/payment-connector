@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-module TSS
+module TSS #:nodoc:
   VERSION = '0.1.0'.freeze
 end

@@ -26,16 +26,15 @@ module TSS
 
     # @param [String] - organization_id
     # @raise [RuntimeError] TSS request failed
-    def organization
+    def get_organization # rubocop:disable AccessorMethodName
       path = "/v1/organizations/#{oid}"
-      p path
       response = self.class.authenticated_get(path)
 
       handle_get_response(response, path, 'organization')
     end
 
     # @raise [RuntimeError] TSS request failed
-    def transactions
+    def get_transactions # rubocop:disable AccessorMethodName
       path = "#{base_path}/transactions"
       response = self.class.authenticated_get(path)
 
@@ -43,7 +42,7 @@ module TSS
     end
 
     # @raise [RuntimeError] TSS request failed
-    def transaction(transaction_id)
+    def get_transaction(transaction_id)
       path = "#{base_path}/transactions/#{transaction_id}"
       response = self.class.authenticated_get(path)
 
@@ -78,7 +77,7 @@ module TSS
     def handle_post_response(response, path)
       case response.code
       when 200, 201 then JSON.parse(response.body)
-      else fail "RSS: 'POST #{path}' failed with status = #{response.code}."
+      else fail "TSS: 'POST #{path}' failed with status = #{response.code}."
       end
     end
 

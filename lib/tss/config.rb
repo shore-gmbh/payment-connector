@@ -9,14 +9,13 @@ module TSS #:nodoc:
     end
   end
 
-
   class Configuration #:nodoc:
     attr_accessor :base_uri, :secret, :password
 
     def initialize
       @base_uri = 'http://localhost:5000/'
       @secret   = 'secret'
-      @password   = ''
+      @password = ''
     end
   end
 end

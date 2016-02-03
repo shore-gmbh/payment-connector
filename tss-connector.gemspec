@@ -12,8 +12,8 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'http://shore.com'
   spec.license       = 'Nonstandard'
 
-  spec.files = Dir["{lib,spec}/**/*.rb"] + ['README.md', 'Rakefile']
-  spec.test_files = Dir["spec/**/*.rb"]
+  spec.files = Dir['{lib,spec}/**/*.rb'] + ['README.md', 'Rakefile']
+  spec.test_files = Dir['spec/**/*.rb']
 
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
