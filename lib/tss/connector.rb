@@ -8,11 +8,12 @@ module TSS
   # Utility class encapsulating synchronous communication with TSS.
   class Connector
     attr_reader :oid
+
+    # @param [String] - organization_id
     def initialize(organization_id)
       @oid = organization_id
     end
 
-    # @param [String] - organization_id
     # @raise [RuntimeError] TSS request failed
     def get_organization # rubocop:disable AccessorMethodName
       path = "/v1/organizations/#{oid}"
@@ -29,6 +30,7 @@ module TSS
       handle_get_response(response, path, 'transactions')
     end
 
+    # @param [String] - transaction_id
     # @raise [RuntimeError] TSS request failed
     def get_transaction(transaction_id)
       path = "#{base_path}/transactions/#{transaction_id}"
@@ -37,6 +39,7 @@ module TSS
       handle_get_response(response, path, 'transaction')
     end
 
+    # @param [String] - bank_token
     # @raise [RuntimeError] TSS request failed
     def add_bank_account(bank_token)
       path = "#{base_path}/bank_accounts"
