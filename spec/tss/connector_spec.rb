@@ -55,6 +55,29 @@ describe TSS::Connector do
     end
   end
 
+  describe '#create_organization' do
+    it 'sends a POST request to /v1/organizations/:oid' do
+      options = hash_including(
+        query: { meta: { 'foo' => 'bar' } },
+        basic_auth: an_instance_of(Hash)
+      )
+      expect(TSS::HttpRetriever).to receive(:post)
+        .with("/v1/organizations/#{fake_id}", options)
+        .and_return(mock_created('{}'))
+
+      expect(subject.create_organization(fake_id, 'foo' => 'bar')).to eq({})
+    end
+
+    it 'raises an error if the TSS responds with code != 201' do
+      expect(TSS::HttpRetriever).to receive(:post)
+        .with(any_args)
+        .and_return(mock_server_error)
+
+      expect { subject.create_organization(fake_id) }
+        .to raise_error(RuntimeError)
+    end
+  end
+
   describe '#get_transactions' do
     it 'sends a GET request to /v1/:oid/transactions' do
       expect(TSS::HttpRetriever).to receive(:get)
