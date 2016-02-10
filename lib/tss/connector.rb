@@ -22,6 +22,16 @@ module TSS
       handle_get_response(response, path, 'organization')
     end
 
+    # @param organization_id [String] UUID format.
+    # @param meta [Hash<String,Object>] JSON serializable dictionary.
+    # @raise [RuntimeError] TSS request failed
+    def create_organization(organization_id, meta = {})
+      path = "/v1/organizations/#{organization_id}"
+      response = HttpRetriever.authenticated_post(path, query: { meta: meta })
+
+      handle_post_response(response, path)
+    end
+
     # @raise [RuntimeError] TSS request failed
     def get_transactions # rubocop:disable AccessorMethodName
       path = "#{base_path}/transactions"
