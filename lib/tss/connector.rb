@@ -59,7 +59,7 @@ module TSS
     private
 
     def base_path
-      "/v1/#{oid}"
+      "/v1/organizations/#{oid}"
     end
 
     def handle_post_response(response, path)

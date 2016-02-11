@@ -30,7 +30,7 @@ describe TSS::Connector do
   describe '#get_organization' do
     it 'sends a GET request to /v1/organizations/:oid/' do
       expect(TSS::HttpRetriever).to receive(:get)
-        .with("/v1/#{oid}", auth_mock)
+        .with("/v1/organizations/#{oid}", auth_mock)
         .and_return(mock_success('{"organization":{}}'))
 
       expect(subject.get_organization).to eq({})
@@ -62,7 +62,7 @@ describe TSS::Connector do
         basic_auth: an_instance_of(Hash)
       )
       expect(TSS::HttpRetriever).to receive(:post)
-        .with("/v1/#{oid}", options)
+        .with("/v1/organizations/#{oid}", options)
         .and_return(mock_created('{}'))
 
       expect(subject.create_organization('foo' => 'bar')).to eq({})
@@ -81,7 +81,7 @@ describe TSS::Connector do
   describe '#get_transactions' do
     it 'sends a GET request to /v1/:oid/transactions' do
       expect(TSS::HttpRetriever).to receive(:get)
-        .with("/v1/#{oid}/transactions", auth_mock)
+        .with("/v1/organizations/#{oid}/transactions", auth_mock)
         .and_return(mock_success('{"transactions":[]}'))
 
       expect(subject.get_transactions).to eq([])
@@ -109,7 +109,7 @@ describe TSS::Connector do
   describe '#get_transaction' do
     it 'sends a GET request to /v1/:oid/transactions/:id' do
       expect(TSS::HttpRetriever).to receive(:get)
-        .with("/v1/#{oid}/transactions/#{fake_id}", auth_mock)
+        .with("/v1/organizations/#{oid}/transactions/#{fake_id}", auth_mock)
         .and_return(mock_success('{"transaction":{}}'))
 
       expect(subject.get_transaction(fake_id)).to eq({})
@@ -138,7 +138,7 @@ describe TSS::Connector do
     it 'sends a POST request to /v1/:oid/bank_accounts' do
       options = hash_including(basic_auth: an_instance_of(Hash))
       expect(TSS::HttpRetriever).to receive(:post)
-        .with("/v1/#{oid}/bank_accounts", options)
+        .with("/v1/organizations/#{oid}/bank_accounts", options)
         .and_return(mock_created('{}'))
 
       expect(subject.add_bank_account(fake_token)).to eq({})
