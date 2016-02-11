@@ -30,10 +30,10 @@ describe TSS::Connector do
   describe '#get_organization' do
     it 'sends a GET request to /v1/organizations/:oid/' do
       expect(TSS::HttpRetriever).to receive(:get)
-        .with("/v1/organizations/#{oid}", auth_mock)
-        .and_return(mock_success('{"organization":[]}'))
+        .with("/v1/#{oid}", auth_mock)
+        .and_return(mock_success('{"organization":{}}'))
 
-      expect(subject.get_organization).to eq([])
+      expect(subject.get_organization).to eq({})
     end
 
     it 'returns nil if the TSS responds with code 404' do
@@ -62,10 +62,10 @@ describe TSS::Connector do
         basic_auth: an_instance_of(Hash)
       )
       expect(TSS::HttpRetriever).to receive(:post)
-        .with("/v1/organizations/#{fake_id}", options)
+        .with("/v1/#{oid}", options)
         .and_return(mock_created('{}'))
 
-      expect(subject.create_organization(fake_id, 'foo' => 'bar')).to eq({})
+      expect(subject.create_organization('foo' => 'bar')).to eq({})
     end
 
     it 'raises an error if the TSS responds with code != 201' do
@@ -73,7 +73,7 @@ describe TSS::Connector do
         .with(any_args)
         .and_return(mock_server_error)
 
-      expect { subject.create_organization(fake_id) }
+      expect { subject.create_organization(oid) }
         .to raise_error(RuntimeError)
     end
   end
