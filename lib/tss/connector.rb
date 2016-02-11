@@ -9,50 +9,73 @@ module TSS
   class Connector
     attr_reader :oid
 
-    # @param [String] - organization_id
-    def initialize(organization_id)
-      @oid = organization_id
+    # Create a new +Connector+ instance bound to a specific +Organization+ ID
+    # (see +#oid+).
+    #
+    # @param oid [String] +Organization+ ID. UUID format.
+    #
+    # @return [Connector]
+    def initialize(oid)
+      @oid = oid
     end
 
-    # @raise [RuntimeError] TSS request failed
+    # Retrieve the current +Organization+ (see +#oid+).
+    #
+    # @return [Hash<String,Object>] JSON representation of the +Organization+.
+    # @raise [RuntimeError] Request failed.
     def get_organization # rubocop:disable AccessorMethodName
       path = base_path
       response = HttpRetriever.authenticated_get(path)
       handle_get_response(response, path, 'organization')
     end
 
+    # Create the current +Organization+ (see +#oid+).
+    #
     # @param meta [Hash<String,Object>] JSON serializable dictionary.
-    # @raise [RuntimeError] TSS request failed
+    #
+    # @return [Hash<String,Object>] JSON respresentation of the +Organization+.
+    # @raise [RuntimeError] Request failed.
     def create_organization(meta = {})
       path = base_path
-      response = HttpRetriever.authenticated_post(path, query: { meta: meta })
+      query = { meta: meta }
+      response = HttpRetriever.authenticated_post(path, query: query)
       handle_post_response(response, path)
     end
 
-    # @raise [RuntimeError] TSS request failed
+    # Retreive a list of all +Transaction+s for the current +Organization+ (see
+    # +#oid+).
+    #
+    # @return [Array<Hash>] JSON representations of all +Transaction+s.
+    # @raise [RuntimeError] Request failed.
     def get_transactions # rubocop:disable AccessorMethodName
       path = "#{base_path}/transactions"
       response = HttpRetriever.authenticated_get(path)
       handle_get_response(response, path, 'transactions')
     end
 
-    # @param [String] - transaction_id
-    # @raise [RuntimeError] TSS request failed
+    # Retrieve a specific +Transaction+ for the current +Organization+ (see
+    # +#oid+).
+    #
+    # @param transaction_id [String] +Transaction+ ID. UUID format.
+    #
+    # @return [Hash<String,Object>] JSON representation of the +Transaction+.
+    # @raise [RuntimeError] Request failed.
     def get_transaction(transaction_id)
       path = "#{base_path}/transactions/#{transaction_id}"
       response = HttpRetriever.authenticated_get(path)
-
       handle_get_response(response, path, 'transaction')
     end
 
-    # @param [String] - bank_token
-    # @raise [RuntimeError] TSS request failed
+    # Create a new +BankAccount+ for the current +Organization+ (see +#oid+).
+    #
+    # @param bank_token [String] Token generated via Stripe's API.
+    #
+    # @return [Hash<String,Object>] JSON representation of the +BankAccount+.
+    # @raise [RuntimeError] Request failed.
     def add_bank_account(bank_token)
       path = "#{base_path}/bank_accounts"
-      response = HttpRetriever.authenticated_post(
-        path, query: { bank_token: bank_token }
-      )
-
+      query = { bank_token: bank_token }
+      response = HttpRetriever.authenticated_post(path, query: query)
       handle_post_response(response, path)
     end
 
