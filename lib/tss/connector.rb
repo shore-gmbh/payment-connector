@@ -19,6 +19,18 @@ module TSS
       @oid = oid
     end
 
+    # Retrieve a filtered list of +Organizations+
+    #
+    # @param params - filter and cursor (limit, start) parameters
+    #
+    # @return [Array[Hash<String,Object>]] JSON array of +Organizations+.
+    # @raise [RuntimeError] Request failed.
+    def get_organizations(**params)
+      path = '/v1/organizations/'
+      response = HttpRetriever.authenticated_get(path, params)
+      handle_get_response(response, path, 'organizations')
+    end
+
     # Retrieve the current +Organization+ (see +#oid+).
     #
     # @return [Hash<String,Object>] JSON representation of the +Organization+.

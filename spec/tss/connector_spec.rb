@@ -27,6 +27,39 @@ describe TSS::Connector do
     hash_including(basic_auth: an_instance_of(Hash))
   end
 
+  describe '#get_organizations' do
+    it 'sends a GET request to /v1/organizations/' do
+      params = hash_including(
+        basic_auth: an_instance_of(Hash),
+        filter: hash_including(state: 'disabled')
+      )
+
+      expect(TSS::HttpRetriever).to receive(:get)
+        .with('/v1/organizations/', params)
+        .and_return(mock_success('{"organizations":[]}'))
+
+      expect(subject.get_organizations(filter: { state: 'disabled' })).to eq([])
+    end
+
+    it 'returns nil if the TSS responds with code 404' do
+      expect(TSS::HttpRetriever).to receive(:get)
+        .with(any_args)
+        .and_return(mock_not_found)
+
+      expect(subject.get_organizations).to be_nil
+    end
+
+    it 'raises an error if the TSS responds with code != 200 and != 404' do
+      expect(TSS::HttpRetriever).to receive(:get)
+        .with(any_args)
+        .and_return(mock_server_error)
+
+      expect do
+        subject.get_organizations
+      end.to raise_error(RuntimeError)
+    end
+  end
+
   describe '#get_organization' do
     it 'sends a GET request to /v1/organizations/:oid/' do
       expect(TSS::HttpRetriever).to receive(:get)
