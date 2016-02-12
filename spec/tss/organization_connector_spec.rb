@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TSS::Organization do
+describe TSS::OrganizationConnector do
   let(:oid)     { SecureRandom.uuid }
   let(:fake_id) { SecureRandom.uuid }
   let(:fake_token) { 'btok_7pOCL22R2RLUC8' }

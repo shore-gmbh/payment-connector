@@ -8,7 +8,7 @@ require_relative 'response_handlers'
 module TSS
   # Utility class encapsulating synchronous communication with TSS
   # for organization objects.
-  class Organization
+  class OrganizationConnector
     include ResponsesHandlers
     attr_reader :oid
 
