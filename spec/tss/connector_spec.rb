@@ -24,7 +24,7 @@ describe TSS::Connector do
         .with(any_args)
         .and_return(mock_not_found)
 
-      expect(subject.get_organizations).to be_nil
+      expect(subject.get_organizations({})).to be_nil
     end
 
     it 'raises an error if the TSS responds with code != 200 and != 404' do
@@ -33,7 +33,7 @@ describe TSS::Connector do
         .and_return(mock_server_error)
 
       expect do
-        subject.get_organizations
+        subject.get_organizations({})
       end.to raise_error(RuntimeError)
     end
   end

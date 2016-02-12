@@ -15,9 +15,9 @@ module TSS
     #
     # @return [Array[Hash<String,Object>]] JSON array of +Organizations+.
     # @raise [RuntimeError] Request failed.
-    def get_organizations(**params)
+    def get_organizations(query)
       path = '/v1/organizations/'
-      response = HttpRetriever.authenticated_get(path, params)
+      response = HttpRetriever.authenticated_get(path, query)
       handle_get_response(response, path, 'organizations')
     end
   end
