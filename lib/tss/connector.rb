@@ -17,7 +17,7 @@ module TSS
     # @raise [RuntimeError] Request failed.
     def get_organizations(query)
       path = '/v1/organizations/'
-      response = HttpRetriever.authenticated_get(path, query)
+      response = HttpRetriever.authenticated_get(path, query: query)
       handle_get_response(response, path, 'organizations')
     end
   end

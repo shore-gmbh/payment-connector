@@ -9,7 +9,7 @@ describe TSS::Connector do
     it 'sends a GET request to /v1/organizations/' do
       params = hash_including(
         basic_auth: an_instance_of(Hash),
-        filter: hash_including(state: 'disabled')
+        query: { filter: { state: 'disabled' } }
       )
 
       expect(TSS::HttpRetriever).to receive(:get)
