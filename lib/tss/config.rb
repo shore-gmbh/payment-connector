@@ -5,7 +5,7 @@ module TSS #:nodoc:
     def configure
       self.configuration ||= Configuration.new
       yield(configuration) if block_given?
-      require_relative 'connector'
+      require_relative 'all_connectors'
     end
   end
 
