@@ -83,6 +83,20 @@ module TSS
       handle_post_response(response, path)
     end
 
+    # Create or edit +StripeAccount+ for the current +Organization+ (see
+    # +#oid+).
+    #
+    # @param legal_entity [Hash<String,Object>] Legal Entity.
+    #
+    # @return [Hash<String,Object>] JSON respresentation of the +Organization+.
+    # @raise [RuntimeError] Request failed.
+    def add_stripe_account(legal_entity)
+      path = "#{base_path}/stripe"
+      query = { legal_entity: legal_entity }
+      response = HttpRetriever.authenticated_put(path, query: query)
+      handle_put_response(response, path)
+    end
+
     private
 
     def base_path

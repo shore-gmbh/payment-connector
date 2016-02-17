@@ -16,4 +16,12 @@ module ResponsesHandlers
     else fail "TSS: 'GET #{path}' failed with status = #{response.code}."
     end
   end
+
+  def handle_put_response(response, path)
+    case response.code
+    when 200 then JSON.parse(response.body)
+    when 404 then nil
+    else fail "TSS: 'PUT #{path}' failed with status = #{response.code}."
+    end
+  end
 end
