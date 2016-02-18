@@ -43,7 +43,7 @@ module TSS
       path = base_path
       query = { meta: meta }
       response = HttpRetriever.authenticated_post(path, query: query)
-      handle_response(:get, response, path)
+      handle_response(:post, response, path)
     end
 
     # Retreive a list of all +Transaction+s for the current +Organization+ (see
