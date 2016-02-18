@@ -47,7 +47,7 @@ describe TSS::OrganizationConnector do
       expect(subject.create_organization('foo' => 'bar')).to eq({})
     end
 
-    it 'raises an error if the TSS responds with code != 201' do
+    it 'raises an error if the TSS responds with code != 200..299' do
       expect(TSS::HttpRetriever).to receive(:post)
         .with(any_args)
         .and_return(mock_server_error)
@@ -123,7 +123,7 @@ describe TSS::OrganizationConnector do
       expect(subject.add_bank_account(fake_token)).to eq({})
     end
 
-    it 'raises an error if the TSS responds with code != 201' do
+    it 'raises an error if the TSS responds with code != 200..299' do
       expect(TSS::HttpRetriever).to receive(:post)
         .with(any_args)
         .and_return(mock_server_error)
@@ -139,12 +139,12 @@ describe TSS::OrganizationConnector do
       options = hash_including(basic_auth: an_instance_of(Hash))
       expect(TSS::HttpRetriever).to receive(:put)
         .with("/v1/organizations/#{oid}/stripe", options)
-        .and_return(mock_success('{}'))
+        .and_return(mock_created('{}'))
 
       expect(subject.add_stripe_account(fake_token)).to eq({})
     end
 
-    it 'raises an error if the TSS responds with code != 200 and != 404' do
+    it 'raises an error if the TSS responds with code != 200..299 and != 404' do
       expect(TSS::HttpRetriever).to receive(:put)
         .with(any_args)
         .and_return(mock_server_error)

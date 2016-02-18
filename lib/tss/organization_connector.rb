@@ -43,7 +43,7 @@ module TSS
       path = base_path
       query = { meta: meta }
       response = HttpRetriever.authenticated_post(path, query: query)
-      handle_post_response(response, path)
+      handle_post_put_response(response, path)
     end
 
     # Retreive a list of all +Transaction+s for the current +Organization+ (see
@@ -80,7 +80,7 @@ module TSS
       path = "#{base_path}/bank_accounts"
       query = { bank_token: bank_token }
       response = HttpRetriever.authenticated_post(path, query: query)
-      handle_post_response(response, path)
+      handle_post_put_response(response, path)
     end
 
     # Create or edit +StripeAccount+ for the current +Organization+ (see
@@ -94,7 +94,7 @@ module TSS
       path = "#{base_path}/stripe"
       query = { legal_entity: legal_entity }
       response = HttpRetriever.authenticated_put(path, query: query)
-      handle_put_response(response, path)
+      handle_post_put_response(response, path)
     end
 
     private

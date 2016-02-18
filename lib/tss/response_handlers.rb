@@ -2,10 +2,10 @@
 module ResponsesHandlers
   protected
 
-  def handle_post_response(response, path)
+  def handle_post_put_response(response, path)
     case response.code
-    when 200, 201 then JSON.parse(response.body)
-    else fail "TSS: 'POST #{path}' failed with status = #{response.code}."
+    when 200..299 then JSON.parse(response.body)
+    else fail "TSS: 'POST/PUT #{path}' failed with status = #{response.code}."
     end
   end
 
@@ -17,11 +17,4 @@ module ResponsesHandlers
     end
   end
 
-  def handle_put_response(response, path)
-    case response.code
-    when 200 then JSON.parse(response.body)
-    when 404 then nil
-    else fail "TSS: 'PUT #{path}' failed with status = #{response.code}."
-    end
-  end
 end
