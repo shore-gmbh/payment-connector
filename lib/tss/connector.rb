@@ -18,7 +18,7 @@ module TSS
     def get_organizations(query)
       path = '/v1/organizations/'
       response = HttpRetriever.authenticated_get(path, query: query)
-      handle_get_response(response, path, 'organizations')
+      handle_response(:get, response, path, 'organizations')
     end
   end
 end
