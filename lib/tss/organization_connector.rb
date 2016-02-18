@@ -30,7 +30,7 @@ module TSS
     def get_organization # rubocop:disable AccessorMethodName
       path = base_path
       response = HttpRetriever.authenticated_get(path)
-      handle_get_response(response, path, 'organization')
+      handle_response(:get, response, path, 'organization')
     end
 
     # Create the current +Organization+ (see +#oid+).
@@ -43,7 +43,7 @@ module TSS
       path = base_path
       query = { meta: meta }
       response = HttpRetriever.authenticated_post(path, query: query)
-      handle_post_response(response, path)
+      handle_response(:post, response, path)
     end
 
     # Retreive a list of all +Transaction+s for the current +Organization+ (see
@@ -54,7 +54,7 @@ module TSS
     def get_transactions # rubocop:disable AccessorMethodName
       path = "#{base_path}/transactions"
       response = HttpRetriever.authenticated_get(path)
-      handle_get_response(response, path, 'transactions')
+      handle_response(:get, response, path, 'transactions')
     end
 
     # Retrieve a specific +Transaction+ for the current +Organization+ (see
@@ -67,7 +67,7 @@ module TSS
     def get_transaction(transaction_id)
       path = "#{base_path}/transactions/#{transaction_id}"
       response = HttpRetriever.authenticated_get(path)
-      handle_get_response(response, path, 'transaction')
+      handle_response(:get, response, path, 'transaction')
     end
 
     # Create a new +BankAccount+ for the current +Organization+ (see +#oid+).
@@ -80,7 +80,21 @@ module TSS
       path = "#{base_path}/bank_accounts"
       query = { bank_token: bank_token }
       response = HttpRetriever.authenticated_post(path, query: query)
-      handle_post_response(response, path)
+      handle_response(:post, response, path)
+    end
+
+    # Create or edit +StripeAccount+ for the current +Organization+ (see
+    # +#oid+).
+    #
+    # @param legal_entity [Hash<String,Object>] Legal Entity.
+    #
+    # @return [Hash<String,Object>] JSON respresentation of the +Organization+.
+    # @raise [RuntimeError] Request failed.
+    def add_stripe_account(legal_entity)
+      path = "#{base_path}/stripe"
+      query = { legal_entity: legal_entity }
+      response = HttpRetriever.authenticated_put(path, query: query)
+      handle_response(:put, response, path)
     end
 
     private

@@ -2,18 +2,13 @@
 module ResponsesHandlers
   protected
 
-  def handle_post_response(response, path)
+  def handle_response(verb, response, path, root_name = nil)
     case response.code
-    when 200, 201 then JSON.parse(response.body)
-    else fail "TSS: 'POST #{path}' failed with status = #{response.code}."
-    end
-  end
-
-  def handle_get_response(response, path, root_name)
-    case response.code
-    when 200 then JSON.parse(response.body)[root_name]
+    when 200..299
+      response_json = JSON.parse(response.body)
+      root_name.nil? ? response_json : response_json[root_name]
     when 404 then nil
-    else fail "TSS: 'GET #{path}' failed with status = #{response.code}."
+    else fail "TSS: '#{verb} #{path}' failed with status = #{response.code}."
     end
   end
 end
