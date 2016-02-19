@@ -90,10 +90,9 @@ module TSS
     #
     # @return [Hash<String,Object>] JSON respresentation of the +Organization+.
     # @raise [RuntimeError] Request failed.
-    def add_stripe_account(legal_entity)
+    def add_stripe_account(stripe_payload)
       path = "#{base_path}/stripe"
-      query = { legal_entity: legal_entity }
-      response = HttpRetriever.authenticated_put(path, query: query)
+      response = HttpRetriever.authenticated_put(path, query: stripe_payload)
       handle_response(:put, response, path)
     end
 
