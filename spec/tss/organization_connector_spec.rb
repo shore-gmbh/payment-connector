@@ -57,13 +57,13 @@ describe TSS::OrganizationConnector do
     end
   end
 
-  describe '#get_transactions' do
-    it 'sends a GET request to /v1/:oid/transactions' do
+  describe '#get_charges' do
+    it 'sends a GET request to /v1/:oid/charges' do
       expect(TSS::HttpRetriever).to receive(:get)
-        .with("/v1/organizations/#{oid}/transactions", auth_mock)
-        .and_return(mock_success('{"transactions":[]}'))
+        .with("/v1/organizations/#{oid}/charges", auth_mock)
+        .and_return(mock_success('{"charges":[]}'))
 
-      expect(subject.get_transactions).to eq([])
+      expect(subject.get_charges).to eq([])
     end
 
     it 'returns nil if the TSS responds with code 404' do
@@ -71,7 +71,7 @@ describe TSS::OrganizationConnector do
         .with(any_args)
         .and_return(mock_not_found)
 
-      expect(subject.get_transactions).to be_nil
+      expect(subject.get_charges).to be_nil
     end
 
     it 'raises an error if the TSS responds with code != 200 and != 404' do
@@ -80,18 +80,18 @@ describe TSS::OrganizationConnector do
         .and_return(mock_server_error)
 
       expect do
-        subject.get_transactions
+        subject.get_charges
       end.to raise_error(RuntimeError)
     end
   end
 
-  describe '#get_transaction' do
-    it 'sends a GET request to /v1/:oid/transactions/:id' do
+  describe '#get_charge' do
+    it 'sends a GET request to /v1/:oid/charges/:id' do
       expect(TSS::HttpRetriever).to receive(:get)
-        .with("/v1/organizations/#{oid}/transactions/#{fake_id}", auth_mock)
-        .and_return(mock_success('{"transaction":{}}'))
+        .with("/v1/organizations/#{oid}/charges/#{fake_id}", auth_mock)
+        .and_return(mock_success('{"charge":{}}'))
 
-      expect(subject.get_transaction(fake_id)).to eq({})
+      expect(subject.get_charge(fake_id)).to eq({})
     end
 
     it 'returns nil if the TSS responds with code 404' do
@@ -99,7 +99,7 @@ describe TSS::OrganizationConnector do
         .with(any_args)
         .and_return(mock_not_found)
 
-      expect(subject.get_transaction(fake_id)).to be_nil
+      expect(subject.get_charge(fake_id)).to be_nil
     end
 
     it 'raises an error if the TSS responds with code != 200 and != 404' do
@@ -108,7 +108,98 @@ describe TSS::OrganizationConnector do
         .and_return(mock_server_error)
 
       expect do
-        subject.get_transaction(fake_id)
+        subject.get_charge(fake_id)
+      end.to raise_error(RuntimeError)
+    end
+  end
+
+  describe '#create_charge' do
+    let(:charge_params) do
+      {
+        credit_card_token: 'credit_card_token',
+        amount_cents: '100',
+        currency: 'eur',
+        description: 'description'
+      }
+    end
+
+    it 'sends a POST request to /v1/:oid/charges/' do
+      options = hash_including(query: an_instance_of(Hash),
+                               basic_auth: an_instance_of(Hash))
+
+      expect(TSS::HttpRetriever).to receive(:post)
+        .with("/v1/organizations/#{oid}/charges", options)
+        .and_return(mock_success('{"last_charge":{}}'))
+
+      expect(subject.create_charge(charge_params)).to eq({})
+    end
+
+    it 'returns nil if the TSS responds with code 404' do
+      expect(TSS::HttpRetriever).to receive(:post)
+        .with(any_args)
+        .and_return(mock_not_found)
+
+      expect(subject.create_charge(charge_params)).to be_nil
+    end
+
+    it 'raises an error if the TSS responds with code != 200 and != 404' do
+      expect(TSS::HttpRetriever).to receive(:post)
+        .with(any_args)
+        .and_return(mock_server_error)
+
+      expect do
+        subject.create_charge(charge_params)
+      end.to raise_error(RuntimeError)
+    end
+
+    describe 'parameter validations' do
+      it 'fails if credit_card_token is missing' do
+        expect do
+          subject.create_charge(charge_params.except(:credit_card_token))
+        end.to raise_error(RuntimeError)
+      end
+
+      it 'fails if amount_cents is missing' do
+        expect do
+          subject.create_charge(charge_params.except(:amount_cents))
+        end.to raise_error(RuntimeError)
+      end
+
+      it 'fails if currency is missing' do
+        expect do
+          subject.create_charge(charge_params.except(:currency))
+        end.to raise_error(RuntimeError)
+      end
+
+      it 'fails if parameter is unknown' do
+        expect do
+          subject.create_charge(charge_params.merge(foo: 'bar'))
+        end.to raise_error(RuntimeError)
+      end
+    end
+  end
+
+  describe '#create_refund' do
+    it 'sends a POST request to /v1/:oid/charges/:charge_id/refund' do
+      charge_id = 'charge_id'
+      options = hash_including(query: an_instance_of(Hash),
+                               basic_auth: an_instance_of(Hash))
+
+      expect(TSS::HttpRetriever).to receive(:post)
+        .with("/v1/organizations/#{oid}/charges/#{charge_id}/refund", options)
+        .and_return(mock_success('{"refunded_charge":{}}'))
+
+      expect(subject.create_refund(charge_id: charge_id,
+                                   amount_refunded_cents: 3)).to eq({})
+    end
+
+    it 'raises an error if the TSS responds with code != 200..299' do
+      expect(TSS::HttpRetriever).to receive(:post)
+        .with(any_args)
+        .and_return(mock_server_error)
+
+      expect do
+        subject.create_refund(charge_id: 1, amount_refunded_cents: 3)
       end.to raise_error(RuntimeError)
     end
   end
