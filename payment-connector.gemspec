@@ -2,13 +2,13 @@
 require_relative 'lib/tss/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'tss-connector'
+  spec.name          = 'payment-connector'
   spec.version       = TSS::VERSION
   spec.authors       = ['Cristian Eigel']
   spec.email         = ['cristian.eigel@shore.com']
 
-  spec.summary       = 'Connector for TSS'
-  spec.description   = 'Easy access to TSS and its data.'
+  spec.summary       = 'Connector for the Shore Payment Service'
+  spec.description   = 'Easy access to the Payment Service and its data.'
   spec.homepage      = 'http://shore.com'
   spec.license       = 'Nonstandard'
 

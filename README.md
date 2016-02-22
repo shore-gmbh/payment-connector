@@ -1,13 +1,13 @@
 # TSS::Connector
 
-Talks to TSS.
+Talks to the Shore Payment Service.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'tss-connector'
+gem 'payment-connector'
 ```
 
 And then execute:
@@ -16,7 +16,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install tss-connector
+    $ gem install payment-connector
 
 ## Usage
 
@@ -34,4 +34,4 @@ TODO: Write usage instructions here
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/shore-gmbh/tss-connector.
+Bug reports and pull requests are welcome on GitHub at https://github.com/shore-gmbh/payment-connector.
