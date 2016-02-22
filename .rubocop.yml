@@ -1,6 +1,9 @@
+Style/FrozenStringLiteralComment:
+  Enabled: false
 AllCops:
   Exclude:
     - 'vendor/**/*'
     - 'contract/**/*'
     - '.git-hooks/**/*'
     - 'bin/*'
+  TargetRubyVersion: 2.3
