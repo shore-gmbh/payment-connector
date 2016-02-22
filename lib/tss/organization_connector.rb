@@ -46,28 +46,58 @@ module TSS
       handle_response(:post, response, path)
     end
 
-    # Retreive a list of all +Transaction+s for the current +Organization+ (see
+    # Retreive a list of all +Charge+s for the current +Organization+ (see
     # +#oid+).
     #
-    # @return [Array<Hash>] JSON representations of all +Transaction+s.
+    # @return [Array<Hash>] JSON representations of all +Charge+s.
     # @raise [RuntimeError] Request failed.
-    def get_transactions # rubocop:disable AccessorMethodName
-      path = "#{base_path}/transactions"
+    def get_charges # rubocop:disable AccessorMethodName
+      path = "#{base_path}/charges"
       response = HttpRetriever.authenticated_get(path)
-      handle_response(:get, response, path, 'transactions')
+      handle_response(:get, response, path, 'charges')
     end
 
-    # Retrieve a specific +Transaction+ for the current +Organization+ (see
+    # Retrieve a specific +Charge+ for the current +Organization+ (see
     # +#oid+).
     #
-    # @param transaction_id [String] +Transaction+ ID. UUID format.
+    # @param charge_id [String] +Charge+ ID. UUID format.
     #
-    # @return [Hash<String,Object>] JSON representation of the +Transaction+.
+    # @return [Hash<String,Object>] JSON representation of the +Charge+.
     # @raise [RuntimeError] Request failed.
-    def get_transaction(transaction_id)
-      path = "#{base_path}/transactions/#{transaction_id}"
+    def get_charge(charge_id)
+      path = "#{base_path}/charges/#{charge_id}"
       response = HttpRetriever.authenticated_get(path)
-      handle_response(:get, response, path, 'transaction')
+      handle_response(:get, response, path, 'charge')
+    end
+
+    # Create a +Charge+ for the current +Organization+ (see +#oid+).
+    #
+    # @param meta [Hash<String,Object>] JSON serializable dictionary.
+    #
+    # @return [Hash<String,Object>] JSON respresentation of the +Charge+.
+    # @raise [RuntimeError] Request failed.
+    def create_charge(params)
+      path = "#{base_path}/charges"
+      CreateChargeParams.verify_params(params)
+      response = HttpRetriever.authenticated_post(path, query: params)
+      handle_response(:post, response, path, 'last_charge')
+    end
+
+    # Create a Refund for the current +Charge+ (see +#charge_id+).
+    #
+    # @param meta [String] charge_id
+    # @param meta [String] amount_refunded_cents
+    #
+    # @return [String] charge_id of the refunded charge
+    # @raise [RuntimeError] Request failed.
+    def create_refund(charge_id:, amount_refunded_cents:)
+      query = { charge_id: charge_id,
+                amount_refunded_cents: amount_refunded_cents
+      }
+
+      path = "#{base_path}/charges/#{charge_id}/refund"
+      response = HttpRetriever.authenticated_post(path, query: query)
+      handle_response(:post, response, path, 'refunded_charge')
     end
 
     # Create a new +BankAccount+ for the current +Organization+ (see +#oid+).
@@ -100,6 +130,33 @@ module TSS
 
     def base_path
       "/v1/organizations/#{oid}"
+    end
+
+    # :nodoc:
+    module CreateChargeParams
+      REQUIRED_PARAMS = [:credit_card_token, :amount_cents, :currency]
+      OPTIONAL_PARAMS = [:customer_name, :customer_address, :customer_email,
+                         :services, :description]
+
+      def self.verify_params(params)
+        verify_required_params(params)
+        verify_optional_params(params)
+      end
+
+      private
+
+      def self.verify_required_params(params)
+        REQUIRED_PARAMS.each do |required|
+          fail 'Parameter #{required} missing' unless params.key?(required)
+        end
+      end
+
+      def self.verify_optional_params(params)
+        all_params = Set.new(REQUIRED_PARAMS + OPTIONAL_PARAMS)
+        params.each_key do |p|
+          fail "Unknown parameter #{p} passed in" unless all_params.member?(p)
+        end
+      end
     end
   end
 end
