@@ -140,7 +140,7 @@ module TSS
 
       def self.verify_params(params)
         verify_required_params(params)
-        verify_optional_params(params)
+        verify_unknown_params(params)
       end
 
       def self.verify_required_params(params)
@@ -149,7 +149,7 @@ module TSS
         end
       end
 
-      def self.verify_optional_params(params)
+      def self.verify_unknown_params(params)
         all_params = Set.new(REQUIRED_PARAMS + OPTIONAL_PARAMS)
         params.each_key do |p|
           raise "Unknown parameter #{p} passed in" unless all_params.member?(p)
