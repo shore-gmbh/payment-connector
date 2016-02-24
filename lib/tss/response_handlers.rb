@@ -8,6 +8,10 @@ module ResponsesHandlers
       response_json = JSON.parse(response.body)
       root_name.nil? ? response_json : response_json[root_name]
     when 404 then nil
+    when 422 then 
+      response_json = JSON.parse(response.body)
+      raise "TSS: '#{verb} #{path}' failed with status = #{response.code}, \
+message: #{response_json}."
     else raise "TSS: '#{verb} #{path}' failed with status = #{response.code}."
     end
   end
