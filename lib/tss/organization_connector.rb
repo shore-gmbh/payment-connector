@@ -80,7 +80,7 @@ module TSS
       path = "#{base_path}/charges"
       CreateChargeParams.verify_params(params)
       response = HttpRetriever.authenticated_post(path, query: params)
-      handle_response(:post, response, path, 'last_charge')
+      handle_response(:post, response, path, 'created_charge')
     end
 
     # Create a Refund for the current +Charge+ (see +#charge_id+).
