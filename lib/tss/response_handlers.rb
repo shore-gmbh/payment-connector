@@ -10,6 +10,7 @@ module ResponsesHandlers
     when 404 then nil
     when 422 then 
       response_json = JSON.parse(response.body)
+      response_json = response_json['error'] if response_json.key?('error')
       raise "TSS: '#{verb} #{path}' failed with status = #{response.code}, \
 message: #{response_json}."
     else raise "TSS: '#{verb} #{path}' failed with status = #{response.code}."
