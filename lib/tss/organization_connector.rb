@@ -97,7 +97,7 @@ module TSS
 
       path = "#{base_path}/charges/#{charge_id}/refund"
       response = HttpRetriever.authenticated_post(path, query: query)
-      handle_response(:post, response, path, 'refunded_charge')
+      handle_response(:post, response, path)
     end
 
     # Create a new +BankAccount+ for the current +Organization+ (see +#oid+).
@@ -134,27 +134,25 @@ module TSS
 
     # :nodoc:
     module CreateChargeParams
-      REQUIRED_PARAMS = [:credit_card_token, :amount_cents, :currency]
+      REQUIRED_PARAMS = [:credit_card_token, :amount_cents, :currency].freeze
       OPTIONAL_PARAMS = [:customer_name, :customer_address, :customer_email,
-                         :services, :description]
+                         :services, :description].freeze
 
       def self.verify_params(params)
         verify_required_params(params)
         verify_optional_params(params)
       end
 
-      private
-
       def self.verify_required_params(params)
         REQUIRED_PARAMS.each do |required|
-          fail 'Parameter #{required} missing' unless params.key?(required)
+          raise 'Parameter #{required} missing' unless params.key?(required)
         end
       end
 
       def self.verify_optional_params(params)
         all_params = Set.new(REQUIRED_PARAMS + OPTIONAL_PARAMS)
         params.each_key do |p|
-          fail "Unknown parameter #{p} passed in" unless all_params.member?(p)
+          raise "Unknown parameter #{p} passed in" unless all_params.member?(p)
         end
       end
     end

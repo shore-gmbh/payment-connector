@@ -187,7 +187,7 @@ describe TSS::OrganizationConnector do
 
       expect(TSS::HttpRetriever).to receive(:post)
         .with("/v1/organizations/#{oid}/charges/#{charge_id}/refund", options)
-        .and_return(mock_success('{"refunded_charge":{}}'))
+        .and_return(mock_success('{}'))
 
       expect(subject.create_refund(charge_id: charge_id,
                                    amount_refunded_cents: 3)).to eq({})
