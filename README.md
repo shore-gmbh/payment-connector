@@ -1,4 +1,5 @@
-# TSS::Connector
+# Payment::Connector
+[![Build Status](https://travis-ci.org/shore-gmbh/payment-connector.svg?branch=master)](https://travis-ci.org/shore-gmbh/payment-connector)
 
 Talks to the Shore Payment Service.
 
