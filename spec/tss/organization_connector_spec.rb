@@ -129,7 +129,7 @@ describe TSS::OrganizationConnector do
 
       expect(TSS::HttpRetriever).to receive(:post)
         .with("/v1/organizations/#{oid}/charges", options)
-        .and_return(mock_success('{"last_charge":{}}'))
+        .and_return(mock_success('{"created_charge":{}}'))
 
       expect(subject.create_charge(charge_params)).to eq({})
     end
