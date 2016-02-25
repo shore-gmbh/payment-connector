@@ -131,7 +131,7 @@ describe TSS::OrganizationConnector do
         .with("/v1/organizations/#{oid}/charges", options)
         .and_return(mock_success('{"created_charge":{}}'))
 
-      expect(subject.create_charge(charge_params)).to eq({})
+      expect(subject.create_charge(charge_params)).to eq('created_charge' => {})
     end
 
     it 'returns nil if the TSS responds with code 404' do
