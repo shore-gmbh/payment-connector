@@ -1,5 +1,5 @@
 # coding: utf-8
-require_relative 'lib/tss/version'
+require_relative 'lib/payment/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'payment-connector'

@@ -1,4 +1,4 @@
-module TSS #:nodoc:
+module TSS # :nodoc:
   class << self
     attr_accessor :configuration
 

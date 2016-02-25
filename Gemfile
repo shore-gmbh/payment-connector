@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in tss-connector.gemspec
+# Specify your gem's dependencies in payment-connector.gemspec
 gemspec
