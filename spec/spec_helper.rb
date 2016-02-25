@@ -5,7 +5,7 @@ require 'securerandom'
 
 Time.zone = 'Europe/Berlin'
 
-TSS.configure do |config|
+ShorePayment.configure do |config|
   config.base_uri = 'testhost'
   config.secret = 'secret'
 end

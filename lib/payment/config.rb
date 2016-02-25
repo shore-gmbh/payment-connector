@@ -1,4 +1,4 @@
-module TSS # :nodoc:
+module ShorePayment # :nodoc:
   class << self
     attr_accessor :configuration
 

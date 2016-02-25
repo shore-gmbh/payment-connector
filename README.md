@@ -22,12 +22,12 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-TSS.configure do |config|
+ShorePayment.configure do |config|
   config.base_uri = 'payment_service_url'
   config.secret = 'secret'
 end
 
-TSS::Connector.organizations
+ShorePayment::Connector.organizations
 ```
 
 
