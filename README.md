@@ -23,7 +23,7 @@ Or install it yourself as:
 
 ```ruby
 TSS.configure do |config|
-  config.base_uri = 'tss_url'
+  config.base_uri = 'payment_service_url'
   config.secret = 'secret'
 end
 
