@@ -245,7 +245,7 @@ describe ShorePayment::OrganizationConnector do
       end.to raise_error(RuntimeError)
     end
 
-    it 'raises an error with details if the TSS responds with code 422' do
+    it 'raises an error with details if the service responds with code 422' do
       expect(ShorePayment::HttpRetriever).to receive(:put)
         .with(any_args)
         .and_return(mock_unprocessable_entity_error('{"error":"wrong"}'))
