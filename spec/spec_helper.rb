@@ -22,6 +22,10 @@ def mock_server_error
   double('Internal Server Error', code: 500)
 end
 
+def mock_unprocessable_entity_error(body = '{}')
+  double('Unprocessable Entity error', code: 422, body: body)
+end
+
 def mock_not_found
   double('Not Found', code: 404)
 end

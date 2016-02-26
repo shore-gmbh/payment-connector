@@ -6,7 +6,7 @@ module ResponsesHandlers
     case response.code
     when 200..299 then handle_response_success(response, root_name)
     when 404 then nil
-    when 422 then handle_response_unprocessable_entity
+    when 422 then handle_response_unprocessable_entity(verb, response, path)
     else
       summary = "'#{verb} #{path}' failed with status = #{response.code}"
       raise "Shore Payment Service: #{summary}."

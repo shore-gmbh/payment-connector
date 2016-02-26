@@ -244,5 +244,15 @@ describe ShorePayment::OrganizationConnector do
         subject.add_stripe_account(fake_token)
       end.to raise_error(RuntimeError)
     end
+
+    it 'raises an error with details if the service responds with code 422' do
+      expect(ShorePayment::HttpRetriever).to receive(:put)
+        .with(any_args)
+        .and_return(mock_unprocessable_entity_error('{"error":"wrong"}'))
+
+      expect do
+        puts subject.add_stripe_account(fake_token)
+      end.to raise_error(/422.+wrong/)
+    end
   end
 end
