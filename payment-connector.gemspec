@@ -3,7 +3,7 @@ require_relative 'lib/payment/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'payment-connector'
-  spec.version       = TSS::VERSION
+  spec.version       = ShorePayment::VERSION
   spec.authors       = ['Cristian Eigel']
   spec.email         = ['cristian.eigel@shore.com']
 

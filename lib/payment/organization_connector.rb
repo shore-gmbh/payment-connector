@@ -5,20 +5,19 @@ require 'net/http'
 require_relative 'http_retriever'
 require_relative 'response_handlers'
 
-module TSS
-  # Utility class encapsulating synchronous communication with TSS
-  # for organization objects.
+module ShorePayment
+  # Utility class encapsulating synchronous communication with Shore's Payment
+  #   Service for specific Organization objects.
   class OrganizationConnector
     include ResponsesHandlers
     attr_reader :oid
 
-    # Create a new +TSS::Organization+ instance bound to a specific
-    # +Organization+ ID
-    # (see +#oid+).
+    # Create a new +ShorePayment::OrganizationConnector+ instance bound to a
+    #   specific +Organization+ ID (see +#oid+).
     #
     # @param oid [String] +Organization+ ID. UUID format.
     #
-    # @return [TSS::Organization]
+    # @return [ShorePayment::OrganizationConnector]
     def initialize(oid)
       @oid = oid
     end

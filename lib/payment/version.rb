@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-module TSS #:nodoc:
-  VERSION = '0.1.7'
+module ShorePayment # :nodoc:
+  VERSION = '0.2.0'
 end

@@ -1,13 +1,13 @@
-module TSS
+module ShorePayment
   class HttpRetriever #:nodoc:
     include HTTParty
-    base_uri TSS.configuration.base_uri
+    base_uri ShorePayment.configuration.base_uri
 
     def self.auth_credentials
       @auth_credentials ||= {
         basic_auth: {
-          username: TSS.configuration.secret.freeze,
-          password: TSS.configuration.password.freeze
+          username: ShorePayment.configuration.secret.freeze,
+          password: ShorePayment.configuration.password.freeze
         }
       }.freeze
     end

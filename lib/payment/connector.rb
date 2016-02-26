@@ -5,10 +5,12 @@ require 'net/http'
 require_relative 'http_retriever'
 require_relative 'response_handlers'
 
-module TSS
-  # Utility class encapsulating synchronous communication with TSS.
+module ShorePayment
+  # Utility class encapsulating synchronous communication with Shore's Payment
+  #   Service.
   class Connector
     include ResponsesHandlers
+
     # Retrieve a filtered list of +Organizations+
     #
     # @param params - filter and cursor (limit, start) parameters
