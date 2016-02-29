@@ -252,7 +252,7 @@ describe ShorePayment::OrganizationConnector do
 
       expect do
         puts subject.add_stripe_account(fake_token)
-      end.to raise_error(/error.+wrong/)
+      end.to raise_error(/wrong/)
     end
   end
 end

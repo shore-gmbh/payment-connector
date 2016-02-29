@@ -19,6 +19,7 @@ module ResponsesHandlers
   end
 
   def handle_response_unprocessable_entity(response)
-    raise response.body
+    error = JSON.parse(response.body)['error'] || 'request error'
+    raise error
   end
 end
