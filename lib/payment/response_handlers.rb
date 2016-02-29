@@ -6,7 +6,7 @@ module ResponsesHandlers
     case response.code
     when 200..299 then handle_response_success(response, root_name)
     when 404 then nil
-    when 422 then handle_response_unprocessable_entity(verb, response, path)
+    when 422 then handle_response_unprocessable_entity(response)
     else
       summary = "'#{verb} #{path}' failed with status = #{response.code}"
       raise "Shore Payment Service: #{summary}."
@@ -18,10 +18,7 @@ module ResponsesHandlers
     root_name.nil? ? response_json : response_json[root_name]
   end
 
-  def handle_response_unprocessable_entity(verb, response, path)
-    response_json = JSON.parse(response.body)
-    response_json = response_json['error'] if response_json.key?('error')
-    summary = "'#{verb} #{path}' failed with status = #{response.code}"
-    raise "Shore Payment Service: #{summary}, message: #{response_json}."
+  def handle_response_unprocessable_entity(response)
+    raise response.body
   end
 end
