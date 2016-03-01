@@ -50,9 +50,10 @@ module ShorePayment
     #
     # @return [Array<Hash>] JSON representations of all +Charge+s.
     # @raise [RuntimeError] Request failed.
-    def get_charges # rubocop:disable AccessorMethodName
+    def get_charges(page:, perPage:)
+      query = { page: page, perPage: perPage }
       path = "#{base_path}/charges"
-      response = HttpRetriever.authenticated_get(path)
+      response = HttpRetriever.authenticated_get(path, query: query)
       handle_response(:get, response, path, 'charges')
     end
 
