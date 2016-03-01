@@ -50,8 +50,8 @@ module ShorePayment
     #
     # @return [Array<Hash>] JSON representations of all +Charge+s.
     # @raise [RuntimeError] Request failed.
-    def get_charges(page:, perPage:)
-      query = { page: page, perPage: perPage }
+    def get_charges(page:, per_page:)
+      query = { page: page, per_page: per_page }
       path = "#{base_path}/charges"
       response = HttpRetriever.authenticated_get(path, query: query)
       handle_response(:get, response, path, 'charges')
