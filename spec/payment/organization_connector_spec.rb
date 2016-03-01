@@ -59,9 +59,9 @@ describe ShorePayment::OrganizationConnector do
 
   describe '#get_charges' do
     let(:page) { 2 }
-    let(:perPage) { 10 }
+    let(:per_page) { 10 }
     it 'sends a GET request to /v1/:oid/charges' do
-      query_hash = hash_including(page: page, perPage: perPage)
+      query_hash = hash_including(page: page, per_page: per_page)
       options = hash_including(query: query_hash,
                                basic_auth: an_instance_of(Hash))
 
@@ -69,7 +69,7 @@ describe ShorePayment::OrganizationConnector do
         .with("/v1/organizations/#{oid}/charges", options)
         .and_return(mock_success('{"charges":[]}'))
 
-      expect(subject.get_charges(page: page, perPage: perPage)).to eq([])
+      expect(subject.get_charges(page: page, per_page: per_page)).to eq([])
     end
 
     it 'returns nil if the service responds with code 404' do
@@ -77,7 +77,7 @@ describe ShorePayment::OrganizationConnector do
         .with(any_args)
         .and_return(mock_not_found)
 
-      expect(subject.get_charges(page: page, perPage: perPage)).to be_nil
+      expect(subject.get_charges(page: page, per_page: per_page)).to be_nil
     end
 
     it 'raises an error if the service responds with code != 200 and != 404' do
@@ -86,7 +86,7 @@ describe ShorePayment::OrganizationConnector do
         .and_return(mock_server_error)
 
       expect do
-        subject.get_charges(page: page, perPage: perPage)
+        subject.get_charges(page: page, per_page: per_page)
       end.to raise_error(RuntimeError)
     end
   end
