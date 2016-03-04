@@ -2,11 +2,32 @@ module ShorePayment
   #
   class StripeHash
     def initialize(attrs = {})
-      if attrs
-        attrs.each_pair do |attr, value|
-          send(:"#{attr}=", value) if respond_to?(:"#{attr}=")
-        end
+      attrs.each_pair do |attr, value|
+        send(:"#{attr}=", value) if respond_to?(:"#{attr}=")
+      end if attrs
+    end
+
+    # Update object with this method. We have to take care updating 'nested'
+    #   objects seperately
+    def update_attributes(attrs = {})
+      attrs.each_pair do |attr, value|
+        next unless respond_to?(:"#{attr}=")
+        send(:"#{attr}=", value) unless value.is_a?(Hash)
       end
+    end
+  end
+
+  # Conversion between day of birth Hash and Date representation
+  module StripeDobDate
+    ATTRIBUTES = %i(day month year).freeze
+
+    def dob_date
+      Date.new(dob.year.to_i, dob.month.to_i, dob.day.to_i) if dob
+    end
+
+    def dob_date=(new_date)
+      new_date = new_date.to_date if new_date.respond_to?(:to_date)
+      ATTRIBUTES.each { |a| dob.send(:"#{a}=", new_date.send(a)) } if new_date
     end
   end
 
@@ -15,14 +36,6 @@ module ShorePayment
     ATTRIBUTES = %i(day month year).freeze
 
     attr_accessor(*ATTRIBUTES)
-
-    def date
-      Date.new(year.to_i, month.to_i, day.to_i) if year && month && day
-    end
-
-    def date=(new_date)
-      ATTRIBUTES.each { |a| send(:"#{a}=", new_date.send(a)) } if new_date
-    end
   end
 
   # Representation of an {Address} object in the Organization response
@@ -34,34 +47,53 @@ module ShorePayment
 
   # Representation of an {AdditionalOwner} object in the Organization response
   class AdditionalOwner < StripeHash
+    include StripeDobDate
+
     ATTRIBUTES = %i(first_name last_name dob).freeze
 
     attr_accessor(*ATTRIBUTES)
 
-    def initialize(attrs = {})
-      super
-      @dob = DateOfBirth.new(attrs['dob'])
+    def dob=(attrs)
+      @dob ? @dob.update_attributes(attr) : @dob = DateOfBirth.new(attrs)
     end
   end
 
   # Representation of an {LegalEntity} object in the Organization response
   class LegalEntity < StripeHash
+    include StripeDobDate
+
     ATTRIBUTES = %i(additional_owners address dob first_name last_name
                     type).freeze
 
     attr_accessor(*ATTRIBUTES)
 
-    def initialize(attrs = {})
-      super
-      @dob = DateOfBirth.new(attrs['dob'])
-      @address = Address.new(attrs['address'])
-      @additional_owners = nil
-      
-      @additional_owners = attrs['additional_owners'].map do |a|
-        AdditionalOwner.new(a)
-      end if attrs['additional_owners']
+    def address=(attrs)
+      if @address
+        @address.update_attributes(attrs)
+      else
+        @address = Address.new(attrs)
+      end
     end
-    
+
+    def additional_owners=(attrs)
+      # We alway build a new array of additional owners, because there is no
+      #   such thing as editing a single additional owner.
+      # Setting additional_owners to an empty string means that stripe API
+      #   should delete all additional owners
+      @additional_owners = if attrs && attrs.is_a?(String)
+                             attrs
+                           elsif attrs
+                             attrs.map do |a|
+                               a = a[1] if a.is_a?(Array)
+                               AdditionalOwner.new(a)
+                             end
+                           end
+    end
+
+    def dob=(attrs)
+      @dob ? @dob.update_attributes(attrs) : @dob = DateOfBirth.new(attrs)
+    end
+
     def clear_additional_owners!
       @additional_owners = ''
     end
@@ -73,30 +105,48 @@ module ShorePayment
 
   # Representation of an {ActiveBankAccount} object in the Organization response
   class ActiveBankAccount < StripeHash
-    ATTRIBUTES = %i(account_holder_name bank_name currency created_at
-                    last4 status).freeze
+    ATTRIBUTES = %i(bank_name currency created_at
+                    last4 name status).freeze
 
     attr_accessor(*ATTRIBUTES)
+
+    def date_created
+      Date.parse(created_at) unless created_at.nil?
+    end
   end
 
   # Representation of a {Stripe} object in the Organization response
   class Stripe < StripeHash
-    ATTRIBUTES = %i(account_id active_bank_accounts legal_entity meta
-                    publishable_key verification_disabled_reason
-                    verification_due_by verfication_fields_needed).freeze
+    ATTRIBUTES = %i(account_id active_bank_accounts charges_count
+                    last_charge_created_at legal_entity meta publishable_key
+                    verification_disabled_reason verification_due_by
+                    verfication_fields_needed).freeze
 
     attr_accessor(*ATTRIBUTES)
 
-    def initialize(attrs = {})
-      super
-      @active_bank_accounts = 
-      @legal_entity = LegalEntity.new(attrs['legal_entity'])
-      
-      @active_bank_accounts = attrs['active_bank_accounts'].map do |a|
-        ActiveBankAccount.new(a)
-      end if attrs['active_bank_accounts']
+    def legal_entity=(attrs)
+      if @legal_entity
+        @legal_entity.update_attributes(attrs)
+      else
+        @legal_entity = LegalEntity.new(attrs)
+      end
     end
 
+    def active_bank_accounts=(attrs)
+      @active_bank_accounts = []
+
+      @active_bank_accounts = attrs.map do |a|
+        ActiveBankAccount.new(a)
+      end if attrs
+    end
+
+    def verification_fields_needed=(attrs)
+      @verification_fields_needed = []
+
+      @verification_fields_needed = attrs.map do |a|
+        a
+      end if attrs
+    end
 
     def account_active
       verification_disabled_reason.nil? ? 'yes' : 'no'

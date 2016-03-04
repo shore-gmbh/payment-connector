@@ -2,6 +2,7 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'payment-connector'
 require 'pry'
 require 'securerandom'
+require 'support/stripe_payment'
 
 Time.zone = 'Europe/Berlin'
 
