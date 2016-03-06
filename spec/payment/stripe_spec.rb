@@ -214,5 +214,36 @@ describe ShorePayment::Stripe do
       it { expect(legal_entity).to respond_to(:last_name) }
       it { expect(legal_entity).to respond_to(:type) }
     end
+
+    it 'updates the attributes' do
+      binding.pry
+      legal_entity.update_attributes({
+        first_name: 'Fifi',
+        dob: { year: '2010', month: '6', day: '4' },
+        address:  {
+          city: 'RandomCity',
+          country: 'RandomCountry',
+          line1: 'RandomLine1',
+          line2: 'RandomLine2',
+          postal_code: 'RandomPostalCode',
+          state: 'RandomState'
+        },
+        additional_owners: {
+          '0' => {
+            first_name: 'Fi',
+            last_name: 'La',
+            dob: { year: 1990, month: 2, day: 1 }
+          },
+          '1' => {
+            first_name: 'Fn',
+            last_name: 'Ln',
+            dob: { year: 1970, month: 12, day: 15 }
+          }
+        }
+      })
+      expect(legal_entity.first_name).to eq('Fifi')
+      expect(legal_entity.dob.month).to eq('6')
+      expect(legal_entity.additional_owners.last.last_name).to eq('Ln')
+    end
   end
 end

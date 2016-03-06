@@ -2,18 +2,15 @@ module ShorePayment
   #
   class StripeHash
     def initialize(attrs = {})
-      attrs.each_pair do |attr, value|
-        send(:"#{attr}=", value) if respond_to?(:"#{attr}=")
-      end if attrs
+      update_attributes(attrs)
     end
 
     # Update object with this method. We have to take care updating 'nested'
-    #   objects seperately
+    #   objects
     def update_attributes(attrs = {})
       attrs.each_pair do |attr, value|
-        next unless respond_to?(:"#{attr}=")
-        send(:"#{attr}=", value) unless value.is_a?(Hash)
-      end
+        send(:"#{attr}=", value) if respond_to?(:"#{attr}=")
+      end if attrs
     end
   end
 
@@ -100,6 +97,10 @@ module ShorePayment
 
     def number_of_owners
       additional_owners.length + 1
+    end
+    
+    def as_hash
+      JSON.parse(self.to_json)
     end
   end
 
