@@ -10,21 +10,21 @@ describe ShorePayment::MerchantStripe do
   end
 
   describe 'attributes' do
-    it { expect(subject).to respond_to(:account_id) }
-    it { expect(subject).to respond_to(:active_bank_accounts) }
-    it { expect(subject).to respond_to(:charges_count) }
-    it { expect(subject).to respond_to(:last_charge_created_at) }
-    it { expect(subject).to respond_to(:legal_entity) }
-    it { expect(subject).to respond_to(:meta) }
-    it { expect(subject).to respond_to(:publishable_key) }
-    it { expect(subject).to respond_to(:verification_disabled_reason) }
-    it { expect(subject).to respond_to(:verification_due_by) }
-    it { expect(subject).to respond_to(:verfication_fields_needed) }
-    it { expect(subject).to respond_to(:account_active) }
-    it { expect(subject).to respond_to(:disabled_reason) }
-    it { expect(subject).to respond_to(:update_until) }
-    it { expect(subject).to respond_to(:last_charge) }
-    it { expect(subject).to respond_to(:fields_needed) }
+    it { is_expected.to respond_to(:account_id) }
+    it { is_expected.to respond_to(:active_bank_accounts) }
+    it { is_expected.to respond_to(:charges_count) }
+    it { is_expected.to respond_to(:last_charge_created_at) }
+    it { is_expected.to respond_to(:legal_entity) }
+    it { is_expected.to respond_to(:meta) }
+    it { is_expected.to respond_to(:publishable_key) }
+    it { is_expected.to respond_to(:verification_disabled_reason) }
+    it { is_expected.to respond_to(:verification_due_by) }
+    it { is_expected.to respond_to(:verfication_fields_needed) }
+    it { is_expected.to respond_to(:account_active) }
+    it { is_expected.to respond_to(:disabled_reason) }
+    it { is_expected.to respond_to(:update_until) }
+    it { is_expected.to respond_to(:last_charge) }
+    it { is_expected.to respond_to(:fields_needed) }
   end
 
   context '#account_active' do
@@ -135,6 +135,17 @@ describe ShorePayment::MerchantStripe do
     end
 
     context '#address' do
+      before do
+        legal_entity.address = {
+          city: 'RandomCity',
+          country: 'RandomCountry',
+          line1: 'RandomLine1',
+          line2: 'RandomLine2',
+          postal_code: 'RandomPostalCode',
+          state: 'RandomState'
+        }
+      end
+
       describe 'attributes' do
         it { expect(legal_entity.address).to respond_to(:city) }
         it { expect(legal_entity.address).to respond_to(:country) }
@@ -149,14 +160,6 @@ describe ShorePayment::MerchantStripe do
       end
 
       it 'updates the attributes' do
-        legal_entity.address = {
-          city: 'RandomCity',
-          country: 'RandomCountry',
-          line1: 'RandomLine1',
-          line2: 'RandomLine2',
-          postal_code: 'RandomPostalCode',
-          state: 'RandomState'
-        }
         expect(legal_entity.address.city).to eq('RandomCity')
         expect(legal_entity.address.country).to eq('RandomCountry')
         expect(legal_entity.address.line1).to eq('RandomLine1')

@@ -15,7 +15,7 @@ module ShorePayment
   end
 
   # Conversion between day of birth's Hash and Date representation
-  module StripeDobDate
+  module DobConvertible
     def dob_date
       if @dob && dob_present?
         Date.new(@dob.year.to_i, @dob.month.to_i, @dob.day.to_i)
@@ -23,7 +23,7 @@ module ShorePayment
     end
 
     def dob_date=(new_date)
-      date = new_date.to_date if new_date.respond_to?(:to_date)
+      date = new_date.to_date
       @dob = DateOfBirth.new(
         year: date.year,
         month: date.month,
@@ -50,7 +50,7 @@ module ShorePayment
 
   # Representation of an {AdditionalOwner} object in the Organization response
   class AdditionalOwner < StripeHash
-    include StripeDobDate
+    include DobConvertible
 
     attr_accessor :first_name, :last_name, :dob
 
@@ -61,7 +61,7 @@ module ShorePayment
 
   # Representation of a {LegalEntity} object in the Organization response
   class LegalEntity < StripeHash
-    include StripeDobDate
+    include DobConvertible
 
     attr_accessor :additional_owners, :address, :dob, :first_name, :last_name,
                   :type
@@ -82,13 +82,11 @@ module ShorePayment
       #   such thing as editing a single additional owner.
       # Setting additional_owners to an empty string means that stripe API
       #   should delete all previously added additional owners
-      @additional_owners = if attrs && attrs.is_a?(String)
+      @additional_owners = if !attrs.present?
                              attrs
-                           elsif attrs
-                             attrs.map do |a|
-                               a = a[1] if a.is_a?(Array)
-                               AdditionalOwner.new(a)
-                             end
+                           else
+                             attrs = attrs.values if attrs.respond_to?(:values)
+                             attrs.map { |a| AdditionalOwner.new(a) }
                            end
     end
 
