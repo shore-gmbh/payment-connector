@@ -19,12 +19,21 @@ module ShorePayment
     ATTRIBUTES = %i(day month year).freeze
 
     def dob_date
-      Date.new(dob.year.to_i, dob.month.to_i, dob.day.to_i) if dob
+      Date.new(dob.year.to_i, dob.month.to_i, dob.day.to_i) if dob && !empty?
     end
 
     def dob_date=(new_date)
       new_date = new_date.to_date if new_date.respond_to?(:to_date)
       ATTRIBUTES.each { |a| dob.send(:"#{a}=", new_date.send(a)) } if new_date
+    end
+
+    private
+
+    def empty?
+      ATTRIBUTES.any? do |a|
+        value = dob.send(:"#{a}")
+        value.nil? || value == ''
+      end
     end
   end
 
@@ -98,9 +107,9 @@ module ShorePayment
     def number_of_owners
       additional_owners.length + 1
     end
-    
+
     def as_hash
-      JSON.parse(self.to_json)
+      JSON.parse(to_json)
     end
   end
 

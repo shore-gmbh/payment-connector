@@ -98,6 +98,23 @@ describe ShorePayment::Stripe do
         expect(legal_entity.dob.month).to eq(11)
         expect(legal_entity.dob.day).to eq(21)
       end
+
+      it 'should return nil when the dob attributes are empty' do
+        legal_entity.dob.year = nil
+        legal_entity.dob.month = nil
+        legal_entity.dob.day = nil
+        expect(legal_entity.dob_date).to eq(nil)
+
+        legal_entity.dob.year = ''
+        legal_entity.dob.month = ''
+        legal_entity.dob.day = ''
+        expect(legal_entity.dob_date).to eq(nil)
+
+        legal_entity.dob.year = 2015
+        legal_entity.dob.month = nil
+        legal_entity.dob.day = nil
+        expect(legal_entity.dob_date).to eq(nil)
+      end
     end
 
     context '#address' do
@@ -216,8 +233,7 @@ describe ShorePayment::Stripe do
     end
 
     it 'updates the attributes' do
-      binding.pry
-      legal_entity.update_attributes({
+      legal_entity.update_attributes(
         first_name: 'Fifi',
         dob: { year: '2010', month: '6', day: '4' },
         address:  {
@@ -240,7 +256,7 @@ describe ShorePayment::Stripe do
             dob: { year: 1970, month: 12, day: 15 }
           }
         }
-      })
+      )
       expect(legal_entity.first_name).to eq('Fifi')
       expect(legal_entity.dob.month).to eq('6')
       expect(legal_entity.additional_owners.last.last_name).to eq('Ln')
