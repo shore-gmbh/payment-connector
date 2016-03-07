@@ -152,7 +152,13 @@ module ShorePayment
     attr_accessor(*ATTRIBUTES)
 
     def initialize(attrs = nil)
-      attrs ||= { legal_entity: { address: {} } }
+      attrs ||= {
+        legal_entity: {
+          additional_owners: {},
+          address: {}
+        },
+        active_bank_accounts: {}
+      }
       update_attributes(attrs)
     end
 
