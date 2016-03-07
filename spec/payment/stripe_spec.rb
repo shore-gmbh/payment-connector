@@ -33,6 +33,7 @@ describe ShorePayment::Stripe do
         payment_service_organization_response(
           oid,
           'stripe' => {
+            'account_id' => '1',
             'verification_disabled_reason' => nil
           }
         )['stripe']
@@ -42,6 +43,22 @@ describe ShorePayment::Stripe do
 
     it 'should return "no" if any verification_disabled_reason present' do
       expect(subject.account_active).to eq('no')
+    end
+
+    it 'should return "no" if created from an empty hash' do
+      empty_account = ShorePayment::Stripe.new
+      expect(empty_account.account_active).to eq('no')
+    end
+  end
+
+  context '#account_exists?' do
+    it 'should return true if account_id has value' do
+      expect(subject.account_exists?).to eq(true)
+    end
+
+    it 'should return false if created from an empty hash' do
+      empty_account = ShorePayment::Stripe.new
+      expect(empty_account.account_exists?).to eq(false)
     end
   end
 

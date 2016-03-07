@@ -151,6 +151,11 @@ module ShorePayment
 
     attr_accessor(*ATTRIBUTES)
 
+    def initialize(attrs = nil)
+      attrs ||= { legal_entity: { address: {} } }
+      update_attributes(attrs)
+    end
+
     def legal_entity=(attrs)
       if @legal_entity
         @legal_entity.update_attributes(attrs)
@@ -175,8 +180,12 @@ module ShorePayment
       end if attrs
     end
 
+    def account_exists?
+      !account_id.nil?
+    end
+
     def account_active
-      verification_disabled_reason.nil? ? 'yes' : 'no'
+      !account_id.nil? && verification_disabled_reason.nil? ? 'yes' : 'no'
     end
 
     def disabled_reason
