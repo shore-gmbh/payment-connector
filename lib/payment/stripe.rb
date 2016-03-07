@@ -1,7 +1,7 @@
 module ShorePayment
   #
   class StripeHash
-    ATTRIBUTES = []
+    ATTRIBUTES = [].freeze
 
     def initialize(attrs = {})
       update_attributes(attrs)
@@ -27,7 +27,9 @@ module ShorePayment
     ATTRIBUTES = %i(day month year).freeze
 
     def dob_date
-      Date.new(@dob.year.to_i, @dob.month.to_i, @dob.day.to_i) if @dob && !empty?
+      if @dob && !empty?
+        Date.new(@dob.year.to_i, @dob.month.to_i, @dob.day.to_i)
+      end
     end
 
     def dob_date=(new_date)
@@ -84,7 +86,7 @@ module ShorePayment
 
     def update_attributes(attrs = {})
       super
-      @additional_owners = '' if @type == 'individual'
+      @additional_owners = '' if @type == 'individual' || number_of_owners == 1
     end
 
     def address=(attrs)
@@ -119,6 +121,7 @@ module ShorePayment
     end
 
     def number_of_owners
+      return 1 unless additional_owners
       additional_owners.length + 1
     end
 
