@@ -22,7 +22,7 @@ module ShorePayment
     end
   end
 
-  # Conversion between day of birth Hash and Date representation
+  # Conversion between day of birth's Hash and Date representation
   module StripeDobDate
     ATTRIBUTES = %i(day month year).freeze
 
@@ -75,7 +75,7 @@ module ShorePayment
     end
   end
 
-  # Representation of an {LegalEntity} object in the Organization response
+  # Representation of a {LegalEntity} object in the Organization response
   class LegalEntity < StripeHash
     include StripeDobDate
 
@@ -86,6 +86,8 @@ module ShorePayment
 
     def update_attributes(attrs = {})
       super
+      # We have to set additional owners to an empty string to delete
+      #   previously added additional owners.
       @additional_owners = '' if @type == 'individual' || number_of_owners == 1
     end
 
@@ -98,10 +100,10 @@ module ShorePayment
     end
 
     def additional_owners=(attrs)
-      # We alway build a new array of additional owners, because there is no
+      # We always build a new array of additional owners, because there is no
       #   such thing as editing a single additional owner.
       # Setting additional_owners to an empty string means that stripe API
-      #   should delete all additional owners
+      #   should delete all previously added additional owners
       @additional_owners = if attrs && attrs.is_a?(String)
                              attrs
                            elsif attrs
@@ -120,6 +122,8 @@ module ShorePayment
       @additional_owners = ''
     end
 
+    # All stripe account have at least one owner, and accounts with company
+    #   type could have 0..3 additional owners
     def number_of_owners
       return 1 unless additional_owners
       additional_owners.length + 1
@@ -152,6 +156,7 @@ module ShorePayment
     attr_accessor(*ATTRIBUTES)
 
     def initialize(attrs = nil)
+      # Empty stripe object with all the necessery empty nodes
       attrs ||= {
         legal_entity: {
           additional_owners: {},
