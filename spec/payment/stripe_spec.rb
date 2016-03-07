@@ -182,12 +182,25 @@ describe ShorePayment::Stripe do
         expect(subject.legal_entity.number_of_owners).to eq(1)
       end
 
+      context '#dob_date' do
+        it 'converts dob attributes to date' do
+          expect(first_additional_owner.dob_date).to eq(Date.new(1980, 11, 1))
+        end
+
+        it 'should update the dob attributes from a Date' do
+          first_additional_owner.dob_date = Date.new(2015, 11, 22)
+          expect(first_additional_owner.dob.year).to eq(2015)
+          expect(first_additional_owner.dob.month).to eq(11)
+          expect(first_additional_owner.dob.day).to eq(22)
+        end
+      end
+
       it 'updates the attributes with an Array' do
         legal_entity.additional_owners = [
           {
             first_name: 'Fi',
             last_name: 'La',
-            dob: { year: 1990, month: 2, day: 1 }
+            dob_date: '1990-02-01'
           },
           {
             first_name: 'Fn',
@@ -248,7 +261,7 @@ describe ShorePayment::Stripe do
           '0' => {
             first_name: 'Fi',
             last_name: 'La',
-            dob: { year: 1990, month: 2, day: 1 }
+            dob_date: '1990-02-01'
           },
           '1' => {
             first_name: 'Fn',
@@ -259,6 +272,7 @@ describe ShorePayment::Stripe do
       )
       expect(legal_entity.first_name).to eq('Fifi')
       expect(legal_entity.dob.month).to eq('6')
+      expect(legal_entity.additional_owners.first.dob.year).to eq(1990)
       expect(legal_entity.additional_owners.last.last_name).to eq('Ln')
     end
   end

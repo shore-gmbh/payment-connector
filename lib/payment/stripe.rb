@@ -1,6 +1,8 @@
 module ShorePayment
   #
   class StripeHash
+    ATTRIBUTES = []
+
     def initialize(attrs = {})
       update_attributes(attrs)
     end
@@ -12,6 +14,12 @@ module ShorePayment
         send(:"#{attr}=", value) if respond_to?(:"#{attr}=")
       end if attrs
     end
+
+    def default_attrs
+      ATTRIBUTES.map do |attr|
+        [attr, nil]
+      end.to_h
+    end
   end
 
   # Conversion between day of birth Hash and Date representation
@@ -19,12 +27,13 @@ module ShorePayment
     ATTRIBUTES = %i(day month year).freeze
 
     def dob_date
-      Date.new(dob.year.to_i, dob.month.to_i, dob.day.to_i) if dob && !empty?
+      Date.new(@dob.year.to_i, @dob.month.to_i, @dob.day.to_i) if @dob && !empty?
     end
 
     def dob_date=(new_date)
       new_date = new_date.to_date if new_date.respond_to?(:to_date)
-      ATTRIBUTES.each { |a| dob.send(:"#{a}=", new_date.send(a)) } if new_date
+      @dob = DateOfBirth.new(default_attrs) unless @dob
+      ATTRIBUTES.each { |a| @dob.send(:"#{a}=", new_date.send(a)) } if new_date
     end
 
     private
@@ -60,7 +69,7 @@ module ShorePayment
     attr_accessor(*ATTRIBUTES)
 
     def dob=(attrs)
-      @dob ? @dob.update_attributes(attr) : @dob = DateOfBirth.new(attrs)
+      @dob ? @dob.update_attributes(attrs) : @dob = DateOfBirth.new(attrs)
     end
   end
 
