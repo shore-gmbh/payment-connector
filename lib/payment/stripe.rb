@@ -82,6 +82,11 @@ module ShorePayment
 
     attr_accessor(*ATTRIBUTES)
 
+    def update_attributes(attrs = {})
+      super
+      @additional_owners = '' if @type == 'individual'
+    end
+
     def address=(attrs)
       if @address
         @address.update_attributes(attrs)

@@ -275,5 +275,25 @@ describe ShorePayment::Stripe do
       expect(legal_entity.additional_owners.first.dob.year).to eq(1990)
       expect(legal_entity.additional_owners.last.last_name).to eq('Ln')
     end
+
+    it 'additional_owners should be an empty string when the type is \
+individual' do
+      legal_entity.update_attributes(
+        type: 'individual',
+        additional_owners: {
+          '0' => {
+            first_name: 'Fi',
+            last_name: 'La',
+            dob_date: '1990-02-01'
+          },
+          '1' => {
+            first_name: 'Fn',
+            last_name: 'Ln',
+            dob: { year: 1970, month: 12, day: 15 }
+          }
+        }
+      )
+      expect(legal_entity.number_of_owners).to eq(1)
+    end
   end
 end

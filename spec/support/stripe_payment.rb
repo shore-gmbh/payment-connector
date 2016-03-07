@@ -50,7 +50,7 @@ def payment_service_organization_response(oid, attributes)
           'month' => '2',
           'day' => '3'
         },
-        'type' => 'individual',
+        'type' => 'company',
         'additional_owners' => [{
           'first_name' => 'Joe',
           'last_name' => 'Smith',
