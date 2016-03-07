@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ShorePayment::Stripe do
+describe ShorePayment::MerchantStripe do
   let(:oid) { SecureRandom.uuid }
 
   subject do
@@ -46,7 +46,7 @@ describe ShorePayment::Stripe do
     end
 
     it 'should return "no" if created from an empty hash' do
-      empty_account = ShorePayment::Stripe.new
+      empty_account = ShorePayment::MerchantStripe.new
       expect(empty_account.account_active).to eq('no')
     end
   end
@@ -57,7 +57,7 @@ describe ShorePayment::Stripe do
     end
 
     it 'should return false if created from an empty hash' do
-      empty_account = ShorePayment::Stripe.new
+      empty_account = ShorePayment::MerchantStripe.new
       expect(empty_account.account_exists?).to eq(false)
     end
   end
@@ -190,13 +190,6 @@ describe ShorePayment::Stripe do
 
       it '#number_of_owners returns with the count of owners' do
         expect(subject.legal_entity.number_of_owners).to eq(3)
-      end
-
-      it '#clear_additional_owners! set additional_owners to an empty string' do
-        expect(subject.legal_entity.additional_owners).to be_a(Array)
-        subject.legal_entity.clear_additional_owners!
-        expect(subject.legal_entity.additional_owners).to eq('')
-        expect(subject.legal_entity.number_of_owners).to eq(1)
       end
 
       context '#dob_date' do

@@ -4,7 +4,7 @@ require 'httparty'
 require 'net/http'
 require_relative 'http_retriever'
 require_relative 'response_handlers'
-require_relative 'stripe'
+require_relative 'merchant_stripe'
 
 module ShorePayment
   # Utility class encapsulating synchronous communication with Shore's Payment
