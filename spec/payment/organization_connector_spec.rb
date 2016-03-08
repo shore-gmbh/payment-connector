@@ -125,7 +125,8 @@ describe ShorePayment::OrganizationConnector do
         credit_card_token: 'credit_card_token',
         amount_cents: '100',
         currency: 'eur',
-        description: 'description'
+        description: 'description',
+        statement_descriptor: 'your company'
       }
     end
 
