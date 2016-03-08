@@ -244,7 +244,7 @@ module ShorePayment
     end
 
     def charges
-      Charge.all(@id)
+      Charge.all(oid)
     end
   end
 end
