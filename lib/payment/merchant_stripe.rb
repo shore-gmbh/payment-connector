@@ -201,7 +201,7 @@ module ShorePayment
     # @return [Array<MerchantProfile::Charge>]
     def self.all(merchant_id)
       connector = OrganizationConnector.new(merchant_id)
-      connector.get_charges.map { |charge_attrs| new(charge_attrs) }
+      connector.get_charges({}).map { |charge_attrs| new(charge_attrs) }
     end
   end
 

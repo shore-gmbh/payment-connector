@@ -310,3 +310,38 @@ individual' do
     end
   end
 end
+
+describe ShorePayment::MerchantPayment do
+  let(:oid) { SecureRandom.uuid }
+
+  subject do
+    described_class.new(
+      payment_service_organization_response(oid, {})
+    )
+  end
+
+  describe 'attributes' do
+    it { is_expected.to respond_to(:id) }
+    it { is_expected.to respond_to(:meta) }
+    it { is_expected.to respond_to(:stripe) }
+    it { is_expected.to respond_to(:stripe_publishable_key) }
+  end
+
+  context '#charges' do
+    before do
+      connector = double('payment connector')
+
+      expect(ShorePayment::OrganizationConnector).to(
+        receive(:new).with(oid).and_return(connector)
+      )
+
+      expect(connector).to receive(:get_charges).and_return(
+        [{ 'charge_id' => '1' }, { 'charge_id' => '2' }]
+      )
+    end
+
+    it 'should return charges array' do
+      expect(subject.charges.first.charge_id).to eq('1')
+    end
+  end
+end
