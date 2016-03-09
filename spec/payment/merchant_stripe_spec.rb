@@ -323,25 +323,48 @@ describe ShorePayment::MerchantPayment do
   describe 'attributes' do
     it { is_expected.to respond_to(:id) }
     it { is_expected.to respond_to(:meta) }
+    it { is_expected.to respond_to(:oid) }
     it { is_expected.to respond_to(:stripe) }
     it { is_expected.to respond_to(:stripe_publishable_key) }
   end
 
   context '#charges' do
-    before do
+    let(:charge) do
+      ShorePayment::Charge.new(
+        charge_id: 2,
+        status: 'succeeded',
+        amount_cents: 1000,
+        currency: 'eur',
+        customer_name: 'Jane Austion',
+        credit_card_brand: 'VISA',
+        created_at: '2016-02-05'
+      )
+    end
+
+    describe 'attributes' do
+      it { expect(charge).to respond_to(:charge_id) }
+      it { expect(charge).to respond_to(:status) }
+      it { expect(charge).to respond_to(:amount_cents) }
+      it { expect(charge).to respond_to(:customer_name) }
+      it { expect(charge).to respond_to(:credit_card_brand) }
+      it { expect(charge).to respond_to(:created_at) }
+    end
+
+    it 'should return a comparable Array of Charges' do
       connector = double('payment connector')
 
       expect(ShorePayment::OrganizationConnector).to(
-        receive(:new).with(oid).and_return(connector)
+        receive(:new).with(oid).and_return(connector).at_least(:once)
       )
 
       expect(connector).to receive(:get_charges).and_return(
         [{ 'charge_id' => '1' }, { 'charge_id' => '2' }]
-      )
-    end
+      ).at_least(:once)
 
-    it 'should return charges array' do
       expect(subject.charges.first.charge_id).to eq('1')
+      expect(subject.charges.first > subject.charges.last).to eq(false)
+      expect(subject.charges.first == subject.charges.last).to eq(false)
+      expect(subject.charges.first < subject.charges.last).to eq(true)
     end
   end
 end
