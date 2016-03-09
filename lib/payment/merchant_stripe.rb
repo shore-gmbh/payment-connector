@@ -210,7 +210,7 @@ module ShorePayment
     attr_accessor :id, :meta, :stripe, :stripe_publishable_key
 
     class << self
-      def from_payment(profile_id)
+      def from_payment_service(profile_id)
         connector = OrganizationConnector.new(profile_id)
 
         # Fetch Organization from the Payment Service. Create new Organization
@@ -221,7 +221,7 @@ module ShorePayment
         new(payment_resp)
       end
 
-      def list_from_payment(params)
+      def list_from_payment_service(params)
         connector = Connector.new
         payment_resp = connector.get_organizations(params)
         payment_resp.map { |h| new(h) }
