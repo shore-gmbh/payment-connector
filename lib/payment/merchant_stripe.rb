@@ -119,7 +119,7 @@ module ShorePayment
     attr_accessor :account_id, :active_bank_accounts, :charges_count,
                   :last_charge_created_at, :legal_entity, :meta,
                   :publishable_key, :verification_disabled_reason,
-                  :verification_due_by, :verfication_fields_needed
+                  :verification_due_by, :verification_fields_needed
 
     def initialize(attrs = nil)
       # Empty stripe object with all the necessery empty nodes
@@ -174,7 +174,7 @@ module ShorePayment
     end
 
     def fields_needed
-      @verification_fields_needed
+      verification_fields_needed
         .map { |f| f.split(/[\._]/).map(&:capitalize).join(' ') }
         .join(', ')
     end

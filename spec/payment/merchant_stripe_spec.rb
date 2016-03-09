@@ -19,7 +19,7 @@ describe ShorePayment::MerchantStripe do
     it { is_expected.to respond_to(:publishable_key) }
     it { is_expected.to respond_to(:verification_disabled_reason) }
     it { is_expected.to respond_to(:verification_due_by) }
-    it { is_expected.to respond_to(:verfication_fields_needed) }
+    it { is_expected.to respond_to(:verification_fields_needed) }
     it { is_expected.to respond_to(:account_active) }
     it { is_expected.to respond_to(:disabled_reason) }
     it { is_expected.to respond_to(:update_until) }
