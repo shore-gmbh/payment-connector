@@ -8,7 +8,7 @@ def payment_service_organization_response(oid, attributes)
     'stripe' => {
       'account_id' => 'acct_test',
       'verification_disabled_reason' => 'fields_needed',
-      'verification_due_by' => nil,
+      'verification_due_by' => '2016-04-03',
       'verification_fields_needed' => [
         'external_account',
         'legal_entity.dob.day',

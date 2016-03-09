@@ -174,7 +174,7 @@ module ShorePayment
     end
 
     def fields_needed
-      verification_fields_needed
+      @verification_fields_needed
         .map { |f| f.split(/[\._]/).map(&:capitalize).join(' ') }
         .join(', ')
     end

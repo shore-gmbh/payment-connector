@@ -62,6 +62,30 @@ describe ShorePayment::MerchantStripe do
     end
   end
 
+  context '#fields_needed' do
+    it 'should return a String with list of fields' do
+      expect(subject.fields_needed).to include('Legal Entity Dob Month,')
+    end
+  end
+
+  context '#last_charge' do
+    it 'should return an empty String if there were no charges' do
+      expect(subject.last_charge).to eq('')
+    end
+  end
+
+  context '#disabled_reason' do
+    it 'should return a String with readable reason' do
+      expect(subject.disabled_reason).to eq('fields needed')
+    end
+  end
+
+  context '#update_until' do
+    it 'should return a Date' do
+      expect(subject.update_until).to eq(Date.new(2016, 04, 03))
+    end
+  end
+
   describe '#legal_entity' do
     let(:legal_entity) { subject.legal_entity }
 
