@@ -210,20 +210,21 @@ module ShorePayment
     attr_accessor :id, :meta, :stripe, :stripe_publishable_key
 
     class << self
-      def from_tss(profile_id)
+      def from_payment(profile_id)
         connector = OrganizationConnector.new(profile_id)
 
         # Fetch Organization from the Payment Service. Create new Organization
         #   if it does not exist.
-        tss_resp = connector.get_organization || connector.create_organization
+        payment_resp = connector.get_organization ||
+                       connector.create_organization
 
-        new(tss_resp)
+        new(payment_resp)
       end
 
-      def list_from_tss(params)
+      def list_from_payment(params)
         connector = Connector.new
-        tss_resp = connector.get_organizations(params)
-        tss_resp.map { |h| new(h) }
+        payment_resp = connector.get_organizations(params)
+        payment_resp.map { |h| new(h) }
       end
     end
 
