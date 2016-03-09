@@ -4,11 +4,11 @@ def payment_service_organization_response(oid, attributes)
     'id' => oid,
     'supported_transaction_types' => ['cash'],
     'cash' => {},
-    'stripe_publishable_key' => 'pk_test_jbEBo444GYpI6UpBhyAk7FPW',
+    'stripe_publishable_key' => 'test key',
     'stripe' => {
-      'account_id' => 'acct_17aTUmGbaEijfown',
+      'account_id' => 'acct_test',
       'verification_disabled_reason' => 'fields_needed',
-      'verification_due_by' => nil,
+      'verification_due_by' => '2016-04-03',
       'verification_fields_needed' => [
         'external_account',
         'legal_entity.dob.day',

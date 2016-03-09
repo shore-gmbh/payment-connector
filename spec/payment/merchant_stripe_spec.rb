@@ -19,7 +19,7 @@ describe ShorePayment::MerchantStripe do
     it { is_expected.to respond_to(:publishable_key) }
     it { is_expected.to respond_to(:verification_disabled_reason) }
     it { is_expected.to respond_to(:verification_due_by) }
-    it { is_expected.to respond_to(:verfication_fields_needed) }
+    it { is_expected.to respond_to(:verification_fields_needed) }
     it { is_expected.to respond_to(:account_active) }
     it { is_expected.to respond_to(:disabled_reason) }
     it { is_expected.to respond_to(:update_until) }
@@ -59,6 +59,30 @@ describe ShorePayment::MerchantStripe do
     it 'should return false if created from an empty hash' do
       empty_account = ShorePayment::MerchantStripe.new
       expect(empty_account.account_exists?).to eq(false)
+    end
+  end
+
+  context '#fields_needed' do
+    it 'should return a String with list of fields' do
+      expect(subject.fields_needed).to include('Legal Entity Dob Month,')
+    end
+  end
+
+  context '#last_charge' do
+    it 'should return an empty String if there were no charges' do
+      expect(subject.last_charge).to eq('')
+    end
+  end
+
+  context '#disabled_reason' do
+    it 'should return a String with readable reason' do
+      expect(subject.disabled_reason).to eq('fields needed')
+    end
+  end
+
+  context '#update_until' do
+    it 'should return a Date' do
+      expect(subject.update_until).to eq(Date.new(2016, 04, 03))
     end
   end
 
@@ -307,6 +331,64 @@ individual' do
         }
       )
       expect(legal_entity.number_of_owners).to eq(1)
+    end
+  end
+end
+
+describe ShorePayment::MerchantPayment do
+  let(:oid) { SecureRandom.uuid }
+
+  subject do
+    described_class.new(
+      payment_service_organization_response(oid, {})
+    )
+  end
+
+  describe 'attributes' do
+    it { is_expected.to respond_to(:id) }
+    it { is_expected.to respond_to(:meta) }
+    it { is_expected.to respond_to(:oid) }
+    it { is_expected.to respond_to(:stripe) }
+    it { is_expected.to respond_to(:stripe_publishable_key) }
+  end
+
+  context '#charges' do
+    let(:charge) do
+      ShorePayment::Charge.new(
+        charge_id: 2,
+        status: 'succeeded',
+        amount_cents: 1000,
+        currency: 'eur',
+        customer_name: 'Jane Austion',
+        credit_card_brand: 'VISA',
+        created_at: '2016-02-05'
+      )
+    end
+
+    describe 'attributes' do
+      it { expect(charge).to respond_to(:charge_id) }
+      it { expect(charge).to respond_to(:status) }
+      it { expect(charge).to respond_to(:amount_cents) }
+      it { expect(charge).to respond_to(:customer_name) }
+      it { expect(charge).to respond_to(:credit_card_brand) }
+      it { expect(charge).to respond_to(:created_at) }
+    end
+
+    it 'should return a comparable Array of Charges' do
+      connector = double('payment connector')
+
+      expect(ShorePayment::OrganizationConnector).to(
+        receive(:new).with(oid).and_return(connector).at_least(:once)
+      )
+
+      expect(connector).to receive(:get_charges).and_return(
+        [{ 'charge_id' => '1' }, { 'charge_id' => '2' }]
+      ).at_least(:once)
+
+      expect(subject.charges.first.charge_id).to eq('1')
+      expect(subject.charges.first > subject.charges.last).to eq(false)
+      expect(subject.charges.first == subject.charges.last).to eq(false)
+      expect(subject.charges.first < subject.charges.last).to eq(true)
     end
   end
 end

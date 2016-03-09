@@ -119,7 +119,7 @@ module ShorePayment
     attr_accessor :account_id, :active_bank_accounts, :charges_count,
                   :last_charge_created_at, :legal_entity, :meta,
                   :publishable_key, :verification_disabled_reason,
-                  :verification_due_by, :verfication_fields_needed
+                  :verification_due_by, :verification_fields_needed
 
     def initialize(attrs = nil)
       # Empty stripe object with all the necessery empty nodes
@@ -177,6 +177,75 @@ module ShorePayment
       verification_fields_needed
         .map { |f| f.split(/[\._]/).map(&:capitalize).join(' ') }
         .join(', ')
+    end
+  end
+
+  # Representation of a {Charge} object in the Payment Service.
+  class Charge < StripeHash
+    include Comparable
+    def <=>(other)
+      charge_id <=> other.charge_id
+    end
+
+    attr_accessor :charge_id, :status, :amount_cents, :currency,
+                  :customer_name, :credit_card_brand, :created_at
+
+    # Fetch the list of {Charge}s for the given {Merchant} UUID from the Payment
+    #   Service. {Charge} objects are in reverse chronological order according
+    #   to their {#created_at} attribute.
+    #
+    # @todo The complete list of charges might be very long. Therefore, we have
+    #   to add a way to paginate the list.
+    #
+    # @param merchant_id [String] UUID.
+    # @return [Array<MerchantProfile::Charge>]
+    def self.all(merchant_id)
+      connector = OrganizationConnector.new(merchant_id)
+      connector.get_charges({}).map { |charge_attrs| new(charge_attrs) }
+    end
+  end
+
+  # Representation of a {Payment} object in the Payment Service.
+  class MerchantPayment < StripeHash
+    attr_accessor :id, :meta, :stripe, :stripe_publishable_key
+
+    class << self
+      def from_payment_service(profile_id)
+        connector = OrganizationConnector.new(profile_id)
+
+        # Fetch Organization from the Payment Service. Create new Organization
+        #   if it does not exist.
+        payment_resp = connector.get_organization ||
+                       connector.create_organization
+
+        new(payment_resp)
+      end
+
+      def list_from_payment_service(params)
+        connector = Connector.new
+        payment_resp = connector.get_organizations(params)
+        payment_resp.map { |h| new(h) }
+      end
+    end
+
+    def stripe=(attrs)
+      @stripe = MerchantStripe.new(attrs)
+    end
+
+    def oid
+      @id
+    end
+
+    def add_bank_account(token)
+      OrganizationConnector.new(@id).add_bank_account(token)
+    end
+
+    def add_stripe_account(stripe_payload)
+      OrganizationConnector.new(@id).add_stripe_account(stripe_payload)
+    end
+
+    def charges
+      Charge.all(oid)
     end
   end
 end
