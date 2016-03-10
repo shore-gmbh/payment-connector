@@ -126,6 +126,18 @@ module ShorePayment
       handle_response(:put, response, path)
     end
 
+    # Update +Dispute+
+    #
+    # @param evidence [Hash<String,Object>] Dispute evidence.
+    #
+    # @return [Hash<String,Object>] JSON respresentation of the +Dispute+.
+    # @raise [RuntimeError] Request failed.
+    def update_dispute(dispute_id:, evidence:)
+      path = "#{base_path}/disputes/#{dispute_id}"
+      response = HttpRetriever.authenticated_put(path, query: evidence)
+      handle_response(:put, response, path)
+    end
+
     private
 
     def base_path

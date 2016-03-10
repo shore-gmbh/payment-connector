@@ -22,5 +22,17 @@ module ShorePayment
       response = HttpRetriever.authenticated_get(path, query: query)
       handle_response(:get, response, path, 'organizations')
     end
+
+    # Retrieve a filtered list of +Disputes+
+    #
+    # @param query - filter and cursor (limit, start) parameters
+    #
+    # @return [Array[Hash<String,Object>]] JSON array of +Disputes+.
+    # @raise [RuntimeError] Request failed.
+    def get_disputes(query)
+      path = '/v1/disputes/'
+      response = HttpRetriever.authenticated_get(path, query: query)
+      handle_response(:get, response, path, 'disputes')
+    end
   end
 end
