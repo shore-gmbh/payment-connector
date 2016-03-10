@@ -126,6 +126,19 @@ module ShorePayment
       handle_response(:put, response, path)
     end
 
+    # Retrieve a specific +Dispute+ for the current +Organization+ (see
+    # +#oid+).
+    #
+    # @param dispute_id [String] +Dispute+ ID. UUID format.
+    #
+    # @return [Hash<String,Object>] JSON representation of the +Dispute+.
+    # @raise [RuntimeError] Request failed.
+    def get_dispute(dispute_id)
+      path = "#{base_path}/disputes/#{dispute_id}"
+      response = HttpRetriever.authenticated_get(path)
+      handle_response(:get, response, path, 'dispute')
+    end
+
     # Update +Dispute+
     #
     # @param evidence [Hash<String,Object>] Dispute evidence.
