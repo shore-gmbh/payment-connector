@@ -250,6 +250,11 @@ module ShorePayment
       OrganizationConnector.new(@id).add_stripe_account(stripe_payload)
     end
 
+    def get_dispute(dispute_id)
+      d = OrganizationConnector.new(@id).get_dispute(dispute_id)
+      Dispute.new(d)
+    end
+
     def charges
       Charge.all(oid)
     end

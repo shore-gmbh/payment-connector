@@ -352,6 +352,33 @@ describe ShorePayment::MerchantPayment do
     it { is_expected.to respond_to(:stripe_publishable_key) }
   end
 
+  describe 'methods' do
+    it { is_expected.to respond_to(:add_bank_account) }
+    it { is_expected.to respond_to(:add_stripe_account) }
+    it { is_expected.to respond_to(:get_dispute) }
+  end
+
+  context '#get_dispute' do
+    before do
+      connector = double('payment connector')
+
+      expect(ShorePayment::OrganizationConnector).to(
+        receive(:new).with(oid).and_return(connector)
+      )
+
+      expect(connector).to receive(:get_dispute).and_return(
+        id: 'x', status: 'under_review'
+      )
+    end
+
+    it 'returns with a Dispute object' do
+      dispute = subject.get_dispute('x')
+      expect(dispute).to be_a(ShorePayment::Dispute)
+      expect(dispute.id).to eq('x')
+      expect(dispute.status).to eq('under_review')
+    end
+  end
+
   context '#charges' do
     let(:charge) do
       ShorePayment::Charge.new(
@@ -412,6 +439,10 @@ describe ShorePayment::MerchantPayment do
       it { expect(dispute).to respond_to(:past_due) }
       it { expect(dispute).to respond_to(:submission_count) }
       it { expect(dispute).to respond_to(:evidence) }
+    end
+
+    describe 'methods' do
+      it { expect(dispute).to respond_to(:update) }
     end
 
     context '#evidence' do
