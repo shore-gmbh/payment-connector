@@ -73,3 +73,67 @@ def payment_service_organization_response(oid, attributes)
     'meta' => {}
   }.merge(attributes)
 end
+
+def payment_service_disputes_response(oid, attributes)
+  {
+    'disputes' => [
+      {
+        'created_at' => '2016-02-18T10:10:10Z',
+        'dispute_id' => 'dp_17Vv962eZvKYlo2CU7XhGGzB',
+        'due_by' => '2016-03-18T10:10:10Z',
+        'has_evidence' => false,
+        'organization_id' => oid,
+        'reason' => 'general',
+        'status' => 'lost'
+      },
+      {
+        'created_at' => '2016-02-19T11:09:10Z',
+        'dispute_id' => 'dp_18Vv962eZvKYlo2CU7XhGGzB',
+        'due_by' => '2016-03-19T11:09:10Z',
+        'has_evidence' => true,
+        'organization_id' => oid,
+        'reason:' => 'bank_cannot_process',
+        'status' => 'under_review'
+      }
+    ],
+    'meta' => {}
+  }.merge(attributes)
+end
+
+def payment_service_dispute_response(oid, attributes)
+  {
+    'dispute' =>
+    {
+      'id' => 'dp_17Vv962eZvKYlo2CU7XhGGzB',
+      'status' => 'under_review',
+      'reason' => 'bank_cannot_process',
+      'amount_cents' => 10_000,
+      'currency' => 'eur',
+      'created_at' => '2016-02-19T11:09:10Z',
+      'organization_id' => oid,
+      'due_by' => '2016-03-19T11:09:10Z',
+      'has_evidence' => true,
+      'past_due' => false,
+      'submission_count' => 0,
+      'evidence' =>
+      {
+        'product_description' => nil,
+        'customer_name' => nil,
+        'customer_email_address' => nil,
+        'billing_address' => nil,
+        'receipt' => nil,
+        'customer_signature' => nil,
+        'customer_communication' => nil,
+        'uncategorized_file' => nil,
+        'uncategorized_text' => nil,
+        'service_date' => nil,
+        'service_documentation' => nil,
+        'shipping_address' => nil,
+        'shipping_carrier' => nil,
+        'shipping_date' => nil,
+        'shipping_documentation' => nil,
+        'shipping_tracking_number' => nil
+      }
+    }
+  }.merge(attributes)
+end
