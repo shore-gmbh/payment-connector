@@ -91,11 +91,14 @@ describe ShorePayment::MerchantStripe do
 
     describe 'attributes' do
       it { expect(legal_entity).to respond_to(:additional_owners) }
+      it { expect(legal_entity).to respond_to(:business_name) }
+      it { expect(legal_entity).to respond_to(:business_tax_id) }
       it { expect(legal_entity).to respond_to(:dob) }
       it { expect(legal_entity).to respond_to(:dob_date) }
       it { expect(legal_entity).to respond_to(:first_name) }
       it { expect(legal_entity).to respond_to(:last_name) }
       it { expect(legal_entity).to respond_to(:type) }
+      it { expect(legal_entity).to respond_to(:verification) }
     end
 
     it 'has the proper Class' do
@@ -199,10 +202,12 @@ describe ShorePayment::MerchantStripe do
       end
 
       describe 'attributes' do
+        it { expect(first_additional_owner).to respond_to(:address) }
         it { expect(first_additional_owner).to respond_to(:dob) }
         it { expect(first_additional_owner).to respond_to(:dob_date) }
         it { expect(first_additional_owner).to respond_to(:first_name) }
         it { expect(first_additional_owner).to respond_to(:last_name) }
+        it { expect(first_additional_owner).to respond_to(:verification) }
       end
 
       it 'has the proper Class' do
@@ -268,21 +273,8 @@ describe ShorePayment::MerchantStripe do
         expect(legal_entity.additional_owners.last.last_name).to eq('Ln')
       end
     end
-  end
 
-  describe '#legal_entity' do
-    let(:legal_entity) { subject.legal_entity }
-
-    describe 'attributes' do
-      it { expect(legal_entity).to respond_to(:additional_owners) }
-      it { expect(legal_entity).to respond_to(:dob) }
-      it { expect(legal_entity).to respond_to(:dob_date) }
-      it { expect(legal_entity).to respond_to(:first_name) }
-      it { expect(legal_entity).to respond_to(:last_name) }
-      it { expect(legal_entity).to respond_to(:type) }
-    end
-
-    it 'updates the attributes' do
+    it 'updates all the attributes' do
       legal_entity.update_attributes(
         first_name: 'Fifi',
         dob: { year: '2010', month: '6', day: '4' },
@@ -331,6 +323,33 @@ individual' do
         }
       )
       expect(legal_entity.number_of_owners).to eq(1)
+    end
+
+    context '#verification' do
+      describe 'attributes' do
+        it { expect(legal_entity.verification).to respond_to(:details) }
+        it { expect(legal_entity.verification).to respond_to(:details_code) }
+        it { expect(legal_entity.verification).to respond_to(:document) }
+        it { expect(legal_entity.verification).to respond_to(:status) }
+      end
+
+      it 'has the proper Class' do
+        expect(legal_entity.verification).to be_a(ShorePayment::Verification)
+      end
+
+      it 'updates the attributes' do
+        legal_entity.verification = {
+          details: 'detail',
+          details_code: 'scan_corrupt',
+          document: 'fil_15BZxW2eZvKYlo2CvQbrn9dc',
+          status: 'pending'
+        }
+        verification = legal_entity.verification
+        expect(verification.details).to eq('detail')
+        expect(verification.details_code).to eq('scan_corrupt')
+        expect(verification.document).to eq('fil_15BZxW2eZvKYlo2CvQbrn9dc')
+        expect(verification.status).to eq('pending')
+      end
     end
   end
 end

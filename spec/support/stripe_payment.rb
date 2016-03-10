@@ -52,12 +52,26 @@ def payment_service_organization_response(oid, attributes)
         },
         'type' => 'company',
         'additional_owners' => [{
+          'address' => {
+            'city' => 'Munchen',
+            'country' => 'DE',
+            'line1' => 'Mittenwalder Str. 1',
+            'line2' => '',
+            'postal_code' => '82000',
+            'state' => ''
+          },
           'first_name' => 'Joe',
           'last_name' => 'Smith',
           'dob' => {
             'year' => '1980',
             'month' => '11',
             'day' => '01'
+          },
+          'verification' => {
+            'details' => 'additional detail',
+            'details_code' => 'scan_corrupt',
+            'document' => 'fil_95BZxW2eZvKYlo2CvQbrn9dc',
+            'status' => 'verified'
           }
         }, {
           'first_name' => 'Jane',
@@ -67,7 +81,13 @@ def payment_service_organization_response(oid, attributes)
             'month' => '12',
             'day' => '21'
           }
-        }]
+        }],
+        'verification' => {
+          'details' => 'detail',
+          'details_code' => 'scan_corrupt',
+          'document' => 'fil_15BZxW2eZvKYlo2CvQbrn9dc',
+          'status' => 'verified'
+        }
       }
     },
     'meta' => {}
