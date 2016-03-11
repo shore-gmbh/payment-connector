@@ -24,11 +24,19 @@ module ShorePayment
                            .update_dispute(id, evidence: new_evidence)
     end
 
+    def due_by=(val)
+      @due_by = DateTime.parse(val).to_date
+    end
+
+    def created_at=(val)
+      @created_at = DateTime.parse(val).to_date
+    end
+
     def self.collection_from_payment_service(params = {})
       connector = Connector.new
       service_resp = connector.get_disputes(params)
       Collection.new(service_resp) do |response|
-        response['disputes'].map { |h| Dispute.new(h) }
+        response['disputes'].map { |h| new(h) }
       end
     end
   end

@@ -69,8 +69,8 @@ describe ShorePayment::MerchantStripe do
   end
 
   context '#last_charge' do
-    it 'should return an empty String if there were no charges' do
-      expect(subject.last_charge).to eq('')
+    it 'should return nil if there is no charge' do
+      expect(subject.last_charge).to be_nil
     end
   end
 
