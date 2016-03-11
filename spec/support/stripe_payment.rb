@@ -89,20 +89,25 @@ def payment_service_organization_response(oid, attributes)
           'status' => 'verified'
         }
       }
-    },
-    'meta' => {}
+    }
   }.merge(attributes)
 end
 
-def payment_service_disputes_response(oid, attributes)
+def payment_service_disputes_response(attributes = {})
   {
+    'meta' => {
+      'current_page' => 1,
+      'per_page' => 20,
+      'total_pages' => 1,
+      'total_count' => 0
+    },
     'disputes' => [
       {
         'created_at' => '2016-02-18T10:10:10Z',
         'dispute_id' => 'dp_17Vv962eZvKYlo2CU7XhGGzB',
         'due_by' => '2016-03-18T10:10:10Z',
         'has_evidence' => false,
-        'organization_id' => oid,
+        'organization_id' => SecureRandom.uuid,
         'reason' => 'general',
         'status' => 'lost'
       },
@@ -111,13 +116,12 @@ def payment_service_disputes_response(oid, attributes)
         'dispute_id' => 'dp_18Vv962eZvKYlo2CU7XhGGzB',
         'due_by' => '2016-03-19T11:09:10Z',
         'has_evidence' => true,
-        'organization_id' => oid,
+        'organization_id' => SecureRandom.uuid,
         'reason:' => 'bank_cannot_process',
         'status' => 'under_review'
       }
-    ],
-    'meta' => {}
-  }.merge(attributes)
+    ]
+  }.merge(attributes).to_json
 end
 
 def payment_service_dispute_response(oid, attributes)
