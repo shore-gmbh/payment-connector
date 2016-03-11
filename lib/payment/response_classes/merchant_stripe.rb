@@ -165,11 +165,11 @@ module ShorePayment
     end
 
     def update_until
-      verification_due_by.nil? ? '' : DateTime.parse(verification_due_by)
+      verification_due_by.try { |v| DateTime.parse(v).to_date }
     end
 
     def last_charge
-      last_charge_created_at.nil? ? '' : DateTime.parse(last_charge_created_at)
+      last_charge_created_at.try { |v| DateTime.parse(v).to_date }
     end
 
     def fields_needed

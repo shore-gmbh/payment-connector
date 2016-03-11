@@ -66,7 +66,7 @@ describe ShorePayment::Dispute do
       end
 
       it 'initializes collection' do
-        expect(subject.collection.size).to eq 2
+        expect(subject.items.size).to eq 2
       end
 
       it 'has paging parameters' do
