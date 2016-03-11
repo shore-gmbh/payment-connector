@@ -1,19 +1,4 @@
 module ShorePayment
-  #
-  class StripeHash
-    def initialize(attrs = {})
-      update_attributes(attrs)
-    end
-
-    # Update object with this method. We have to take care updating 'nested'
-    #   objects
-    def update_attributes(attrs = {})
-      attrs.each_pair do |attr, value|
-        send(:"#{attr}=", value) if respond_to?(:"#{attr}=")
-      end if attrs
-    end
-  end
-
   # Conversion between day of birth's Hash and Date representation
   module DobConvertible
     def dob_date
@@ -240,12 +225,6 @@ module ShorePayment
         payment_resp = connector.get_organizations(params)
         payment_resp.map { |h| new(h) }
       end
-
-      def dispute_list_from_payment_service(params)
-        connector = Connector.new
-        payment_resp = connector.get_disputes(params)
-        payment_resp.map { |h| Dispute.new(h) }
-      end
     end
 
     def stripe=(attrs)
@@ -271,35 +250,6 @@ module ShorePayment
 
     def charges
       Charge.all(oid)
-    end
-  end
-
-  # Representation of an {Evidence} object in the Payment Service.
-  class Evidence < StripeHash
-    attr_accessor :product_description, :customer_name, :customer_email_address,
-                  :billing_address, :receipt, :customer_signature,
-                  :customer_communication, :uncategorized_file,
-                  :uncategorized_text, :service_date, :service_documentation,
-                  :shipping_address, :shipping_carrier, :shipping_date,
-                  :shipping_documentation, :shipping_tracking_number
-  end
-
-  # Representation of a {Dispute} object in the Payment Service.
-  class Dispute < StripeHash
-    attr_accessor :id, :status, :reason, :amount_cents, :currency, :created_at,
-                  :organization_id, :due_by, :has_evidence, :past_due,
-                  :submission_count, :evidence
-
-    def evidence=(attrs)
-      @evidence = Evidence.new(attrs)
-    end
-
-    def update(new_evidence)
-      OrganizationConnector.new(organization_id)
-                           .update_dispute(
-                             dispute_id: id,
-                             evidence: new_evidence
-                           )
     end
   end
 

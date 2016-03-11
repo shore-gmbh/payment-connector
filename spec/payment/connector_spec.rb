@@ -49,7 +49,7 @@ describe ShorePayment::Connector do
         .with('/v1/disputes/', params)
         .and_return(mock_success('{"disputes":[]}'))
 
-      expect(subject.get_disputes({})).to eq([])
+      expect(subject.get_disputes['disputes']).to eq([])
     end
 
     it 'returns nil if the service responds with code 404' do

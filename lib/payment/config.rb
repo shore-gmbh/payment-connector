@@ -5,7 +5,7 @@ module ShorePayment # :nodoc:
     def configure
       self.configuration ||= Configuration.new
       yield(configuration) if block_given?
-      require_relative 'all_connectors'
+      require_relative 'all'
     end
   end
 

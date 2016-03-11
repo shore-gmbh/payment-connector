@@ -29,10 +29,10 @@ module ShorePayment
     #
     # @return [Array[Hash<String,Object>]] JSON array of +Disputes+.
     # @raise [RuntimeError] Request failed.
-    def get_disputes(query)
+    def get_disputes(query = {})
       path = '/v1/disputes/'
       response = HttpRetriever.authenticated_get(path, query: query)
-      handle_response(:get, response, path, 'disputes')
+      handle_response(:get, response, path)
     end
   end
 end
