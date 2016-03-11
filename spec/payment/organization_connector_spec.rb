@@ -299,7 +299,7 @@ describe ShorePayment::OrganizationConnector do
         .and_return(mock_created('{}'))
 
       expect(
-        subject.update_dispute(dispute_id: fake_id, evidence: {})
+        subject.update_dispute(fake_id, evidence: {})
       ).to eq({})
     end
 
