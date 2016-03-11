@@ -21,10 +21,7 @@ module ShorePayment
 
     def update(new_evidence)
       OrganizationConnector.new(organization_id)
-                           .update_dispute(
-                             dispute_id: id,
-                             evidence: new_evidence
-                           )
+                           .update_dispute(id, evidence: new_evidence)
     end
 
     def self.collection_from_payment_service(params = {})
