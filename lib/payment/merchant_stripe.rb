@@ -52,10 +52,18 @@ module ShorePayment
   class AdditionalOwner < StripeHash
     include DobConvertible
 
-    attr_accessor :first_name, :last_name, :dob
+    attr_accessor :address, :first_name, :last_name, :dob, :verification
+
+    def address=(attrs)
+      @address = Address.new(attrs)
+    end
 
     def dob=(attrs)
       @dob = DateOfBirth.new(attrs)
+    end
+
+    def verification=(attrs)
+      @verification = Verification.new(attrs)
     end
   end
 
@@ -63,8 +71,9 @@ module ShorePayment
   class LegalEntity < StripeHash
     include DobConvertible
 
-    attr_accessor :additional_owners, :address, :dob, :first_name, :last_name,
-                  :type
+    attr_accessor :additional_owners, :address, :business_name,
+                  :business_tax_id, :dob, :first_name, :last_name, :type,
+                  :verification
 
     def update_attributes(attrs = {})
       super
@@ -92,6 +101,10 @@ module ShorePayment
 
     def dob=(attrs)
       @dob = DateOfBirth.new(attrs)
+    end
+
+    def verification=(attrs)
+      @verification = Verification.new(attrs)
     end
 
     # All stripe account have at least one owner, and accounts with company
@@ -126,7 +139,8 @@ module ShorePayment
       attrs ||= {
         legal_entity: {
           additional_owners: {},
-          address: {}
+          address: {},
+          verification: {}
         },
         active_bank_accounts: {}
       }
@@ -287,5 +301,10 @@ module ShorePayment
                              evidence: new_evidence
                            )
     end
+  end
+
+  # Representation of a {Verification} object in the Payment Service.
+  class Verification < StripeHash
+    attr_accessor :details, :details_code, :document, :status
   end
 end
