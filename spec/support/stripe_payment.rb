@@ -117,7 +117,7 @@ def payment_service_disputes_response(attributes = {})
         'due_by' => '2016-03-19T11:09:10Z',
         'has_evidence' => true,
         'organization_id' => SecureRandom.uuid,
-        'reason:' => 'bank_cannot_process',
+        'reason' => 'bank_cannot_process',
         'status' => 'under_review'
       }
     ]

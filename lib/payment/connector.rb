@@ -20,7 +20,7 @@ module ShorePayment
     def get_organizations(query)
       path = '/v1/organizations/'
       response = HttpRetriever.authenticated_get(path, query: query)
-      handle_response(:get, response, path, 'organizations')
+      handle_response(:get, response, path)
     end
 
     # Retrieve a filtered list of +Disputes+

@@ -16,7 +16,8 @@ describe ShorePayment::Connector do
         .with('/v1/organizations/', params)
         .and_return(mock_success('{"organizations":[]}'))
 
-      expect(subject.get_organizations(filter: { state: 'disabled' })).to eq([])
+      answer = subject.get_organizations(filter: { state: 'disabled' })
+      expect(answer['organizations']).to eq([])
     end
 
     it 'returns nil if the service responds with code 404' do

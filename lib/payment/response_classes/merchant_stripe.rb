@@ -220,10 +220,12 @@ module ShorePayment
         new(payment_resp)
       end
 
-      def list_from_payment_service(params)
+      def collection_from_payment_service(params)
         connector = Connector.new
         payment_resp = connector.get_organizations(params)
-        payment_resp.map { |h| new(h) }
+        Collection.new(payment_resp) do |response|
+          response['organizations'].map { |h| new(h) }
+        end
       end
     end
 
