@@ -374,28 +374,6 @@ describe ShorePayment::MerchantPayment do
   describe 'methods' do
     it { is_expected.to respond_to(:add_bank_account) }
     it { is_expected.to respond_to(:add_stripe_account) }
-    it { is_expected.to respond_to(:get_dispute) }
-  end
-
-  context '#get_dispute' do
-    before do
-      connector = double('payment connector')
-
-      expect(ShorePayment::OrganizationConnector).to(
-        receive(:new).with(oid).and_return(connector)
-      )
-
-      expect(connector).to receive(:get_dispute).and_return(
-        id: 'x', status: 'under_review'
-      )
-    end
-
-    it 'returns with a Dispute object' do
-      dispute = subject.get_dispute('x')
-      expect(dispute).to be_a(ShorePayment::Dispute)
-      expect(dispute.id).to eq('x')
-      expect(dispute.status).to eq('under_review')
-    end
   end
 
   context '#charges' do
