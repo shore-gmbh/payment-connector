@@ -20,8 +20,7 @@ module ShorePayment
     end
 
     def update(new_evidence)
-      OrganizationConnector.new(organization_id)
-                           .update_dispute(id, evidence: new_evidence)
+      Connector.new.update_dispute(id, evidence: new_evidence)
     end
 
     def due_by=(val)
@@ -30,6 +29,11 @@ module ShorePayment
 
     def created_at=(val)
       @created_at = DateTime.parse(val).to_date
+    end
+
+    def self.from_payment_service(dispute_id)
+      d = Connector.new.get_dispute(dispute_id)
+      Dispute.new(d)
     end
 
     def self.collection_from_payment_service(params = {})

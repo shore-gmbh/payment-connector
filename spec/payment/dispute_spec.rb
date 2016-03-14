@@ -50,6 +50,28 @@ describe ShorePayment::Dispute do
     end
   end
 
+  context '#from_payment_service' do
+    subject { ShorePayment::Dispute.from_payment_service('x') }
+
+    before do
+      connector = double('payment connector')
+
+      expect(ShorePayment::Connector).to(
+        receive(:new).and_return(connector)
+      )
+
+      expect(connector).to receive(:get_dispute).and_return(
+        id: 'x', status: 'under_review'
+      )
+    end
+
+    it 'returns with a Dispute object' do
+      expect(subject).to be_a(ShorePayment::Dispute)
+      expect(subject.id).to eq('x')
+      expect(subject.status).to eq('under_review')
+    end
+  end
+
   context 'collection_from_payment_service' do
     context 'with no params' do
       let(:params) { {} }
