@@ -93,6 +93,7 @@ describe ShorePayment::MerchantStripe do
       it { expect(legal_entity).to respond_to(:additional_owners) }
       it { expect(legal_entity).to respond_to(:business_name) }
       it { expect(legal_entity).to respond_to(:business_tax_id) }
+      it { expect(legal_entity).to respond_to(:business_tax_id_provided) }
       it { expect(legal_entity).to respond_to(:dob) }
       it { expect(legal_entity).to respond_to(:dob_date) }
       it { expect(legal_entity).to respond_to(:first_name) }
