@@ -57,8 +57,8 @@ module ShorePayment
     include DobConvertible
 
     attr_accessor :additional_owners, :address, :business_name,
-                  :business_tax_id, :dob, :first_name, :last_name, :type,
-                  :verification
+                  :business_tax_id, :business_tax_id_provided, :dob,
+                  :first_name, :last_name, :type, :verification
 
     def update_attributes(attrs = {})
       super
