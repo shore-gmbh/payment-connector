@@ -117,7 +117,8 @@ module ShorePayment
     attr_accessor :account_id, :active_bank_accounts, :charges_count,
                   :last_charge_created_at, :legal_entity, :meta,
                   :publishable_key, :verification_disabled_reason,
-                  :verification_due_by, :verification_fields_needed
+                  :verification_due_by, :verification_fields_needed,
+                  :transfers_enabled, :charges_enabled
 
     def initialize(attrs = nil)
       # Empty stripe object with all the necessery empty nodes
@@ -153,7 +154,7 @@ module ShorePayment
     end
 
     def account_active
-      account_exists? && verification_disabled_reason.nil? ? 'yes' : 'no'
+      account_exists? && verification_disabled_reason.nil?
     end
 
     def disabled_reason

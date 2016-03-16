@@ -25,10 +25,12 @@ describe ShorePayment::MerchantStripe do
     it { is_expected.to respond_to(:update_until) }
     it { is_expected.to respond_to(:last_charge) }
     it { is_expected.to respond_to(:fields_needed) }
+    it { is_expected.to respond_to(:transfers_enabled) }
+    it { is_expected.to respond_to(:charges_enabled) }
   end
 
   context '#account_active' do
-    it 'should return "yes" if no verification_disabled_reason present' do
+    it 'should return true if no verification_disabled_reason present' do
       active_account = described_class.new(
         payment_service_organization_response(
           oid,
@@ -38,16 +40,16 @@ describe ShorePayment::MerchantStripe do
           }
         )['stripe']
       )
-      expect(active_account.account_active).to eq('yes')
+      expect(active_account.account_active).to be_truthy
     end
 
-    it 'should return "no" if any verification_disabled_reason present' do
-      expect(subject.account_active).to eq('no')
+    it 'should return false if any verification_disabled_reason present' do
+      expect(subject.account_active).to be_falsey
     end
 
-    it 'should return "no" if created from an empty hash' do
+    it 'should return false if created from an empty hash' do
       empty_account = ShorePayment::MerchantStripe.new
-      expect(empty_account.account_active).to eq('no')
+      expect(empty_account.account_active).to be_falsey
     end
   end
 
