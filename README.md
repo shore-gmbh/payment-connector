@@ -27,7 +27,7 @@ ShorePayment.configure do |config|
   config.secret = 'secret'
 end
 
-ShorePayment::Connector.organizations
+ShorePayment::Connector.merchants
 ```
 
 

@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe ShorePayment::Dispute do
-  let(:oid) { SecureRandom.uuid }
+  let(:mid) { SecureRandom.uuid }
   let(:dispute) do
     ShorePayment::Dispute.new(
-      payment_service_dispute_response(oid, {})['dispute']
+      payment_service_dispute_response(mid, {})['dispute']
     )
   end
 
@@ -15,7 +15,7 @@ describe ShorePayment::Dispute do
     it { expect(dispute).to respond_to(:amount_cents) }
     it { expect(dispute).to respond_to(:currency) }
     it { expect(dispute).to respond_to(:created_at) }
-    it { expect(dispute).to respond_to(:organization_id) }
+    it { expect(dispute).to respond_to(:merchant_id) }
     it { expect(dispute).to respond_to(:due_by) }
     it { expect(dispute).to respond_to(:has_evidence) }
     it { expect(dispute).to respond_to(:past_due) }

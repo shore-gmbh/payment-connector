@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe ShorePayment::MerchantStripe do
-  let(:oid) { SecureRandom.uuid }
+  let(:mid) { SecureRandom.uuid }
 
   subject do
     described_class.new(
-      payment_service_organization_response(oid, {})['stripe']
+      payment_service_merchant_response(mid, {})['stripe']
     )
   end
 
@@ -32,8 +32,8 @@ describe ShorePayment::MerchantStripe do
   context '#account_active' do
     it 'should return true if no verification_disabled_reason present' do
       active_account = described_class.new(
-        payment_service_organization_response(
-          oid,
+        payment_service_merchant_response(
+          mid,
           'stripe' => {
             'account_id' => '1',
             'verification_disabled_reason' => nil
@@ -358,18 +358,18 @@ individual' do
 end
 
 describe ShorePayment::MerchantPayment do
-  let(:oid) { SecureRandom.uuid }
+  let(:mid) { SecureRandom.uuid }
 
   subject do
     described_class.new(
-      payment_service_organization_response(oid, {})
+      payment_service_merchant_response(mid, {})
     )
   end
 
   describe 'attributes' do
     it { is_expected.to respond_to(:id) }
     it { is_expected.to respond_to(:meta) }
-    it { is_expected.to respond_to(:oid) }
+    it { is_expected.to respond_to(:mid) }
     it { is_expected.to respond_to(:stripe) }
     it { is_expected.to respond_to(:stripe_publishable_key) }
   end
@@ -404,8 +404,8 @@ describe ShorePayment::MerchantPayment do
     it 'should return a comparable Array of Charges' do
       connector = double('payment connector')
 
-      expect(ShorePayment::OrganizationConnector).to(
-        receive(:new).with(oid).and_return(connector).at_least(:once)
+      expect(ShorePayment::MerchantConnector).to(
+        receive(:new).with(mid).and_return(connector).at_least(:once)
       )
 
       expect(connector).to receive(:get_charges).and_return(

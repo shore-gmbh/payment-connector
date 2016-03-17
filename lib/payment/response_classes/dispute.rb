@@ -12,7 +12,7 @@ module ShorePayment
   # Representation of a {Dispute} object in the Payment Service.
   class Dispute < StripeHash
     attr_accessor :id, :status, :reason, :amount_cents, :currency, :created_at,
-                  :organization_id, :due_by, :has_evidence, :past_due,
+                  :merchant_id, :due_by, :has_evidence, :past_due,
                   :submission_count, :evidence
 
     def evidence=(attrs)

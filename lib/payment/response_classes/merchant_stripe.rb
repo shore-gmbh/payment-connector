@@ -23,17 +23,17 @@ module ShorePayment
     end
   end
 
-  # Representation of a {DOB} object in the Organization response
+  # Representation of a {DOB} object in the Merchant response
   class DateOfBirth < StripeHash
     attr_accessor :day, :month, :year
   end
 
-  # Representation of an {Address} object in the Organization response
+  # Representation of an {Address} object in the Merchant response
   class Address < StripeHash
     attr_accessor :city, :country, :line1, :line2, :postal_code, :state
   end
 
-  # Representation of an {AdditionalOwner} object in the Organization response
+  # Representation of an {AdditionalOwner} object in the Merchant response
   class AdditionalOwner < StripeHash
     include DobConvertible
 
@@ -52,7 +52,7 @@ module ShorePayment
     end
   end
 
-  # Representation of a {LegalEntity} object in the Organization response
+  # Representation of a {LegalEntity} object in the Merchant response
   class LegalEntity < StripeHash
     include DobConvertible
 
@@ -103,7 +103,7 @@ module ShorePayment
     end
   end
 
-  # Representation of an {ActiveBankAccount} object in the Organization response
+  # Representation of an {ActiveBankAccount} object in the Merchant response
   class ActiveBankAccount < StripeHash
     attr_accessor :bank_name, :currency, :created_at, :last4, :name, :status
 
@@ -112,7 +112,7 @@ module ShorePayment
     end
   end
 
-  # Representation of a {Stripe} object in the Organization response
+  # Representation of a {Stripe} object in the Merchant response
   class MerchantStripe < StripeHash
     attr_accessor :account_id, :active_bank_accounts, :charges_count,
                   :last_charge_created_at, :legal_entity, :meta,
@@ -200,7 +200,7 @@ module ShorePayment
     # @param merchant_id [String] UUID.
     # @return [Array<ShorePayment::Charge>]
     def self.all(merchant_id)
-      connector = OrganizationConnector.new(merchant_id)
+      connector = MerchantConnector.new(merchant_id)
       connector.get_charges({}).map { |charge_attrs| new(charge_attrs) }
     end
   end
@@ -211,21 +211,21 @@ module ShorePayment
 
     class << self
       def from_payment_service(profile_id)
-        connector = OrganizationConnector.new(profile_id)
+        connector = MerchantConnector.new(profile_id)
 
-        # Fetch Organization from the Payment Service. Create new Organization
+        # Fetch Merchant from the Payment Service. Create new Merchant
         #   if it does not exist.
-        payment_resp = connector.get_organization ||
-                       connector.create_organization
+        payment_resp = connector.get_merchant ||
+                       connector.create_merchant
 
         new(payment_resp)
       end
 
       def collection_from_payment_service(params)
         connector = Connector.new
-        payment_resp = connector.get_organizations(params)
+        payment_resp = connector.get_merchants(params)
         Collection.new(payment_resp) do |response|
-          response['organizations'].map { |h| new(h) }
+          response['merchants'].map { |h| new(h) }
         end
       end
     end
@@ -234,20 +234,20 @@ module ShorePayment
       @stripe = MerchantStripe.new(attrs)
     end
 
-    def oid
+    def mid
       @id
     end
 
     def add_bank_account(token)
-      OrganizationConnector.new(@id).add_bank_account(token)
+      MerchantConnector.new(@id).add_bank_account(token)
     end
 
     def add_stripe_account(stripe_payload)
-      OrganizationConnector.new(@id).add_stripe_account(stripe_payload)
+      MerchantConnector.new(@id).add_stripe_account(stripe_payload)
     end
 
     def charges
-      Charge.all(oid)
+      Charge.all(mid)
     end
   end
 

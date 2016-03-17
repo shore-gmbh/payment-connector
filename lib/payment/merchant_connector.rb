@@ -7,46 +7,46 @@ require_relative 'response_handlers'
 
 module ShorePayment
   # Utility class encapsulating synchronous communication with Shore's Payment
-  #   Service for specific Organization objects.
-  class OrganizationConnector
+  #   Service for specific Merchant objects.
+  class MerchantConnector
     include ResponsesHandlers
-    attr_reader :oid
+    attr_reader :mid
 
-    # Create a new +ShorePayment::OrganizationConnector+ instance bound to a
-    #   specific +Organization+ ID (see +#oid+).
+    # Create a new +ShorePayment::MerchantConnector+ instance bound to a
+    #   specific +Merchant+ ID (see +#mid+).
     #
-    # @param oid [String] +Organization+ ID. UUID format.
+    # @param mid [String] +Merchant+ ID. UUID format.
     #
-    # @return [ShorePayment::OrganizationConnector]
-    def initialize(oid)
-      @oid = oid
+    # @return [ShorePayment::MerchantConnector]
+    def initialize(mid)
+      @mid = mid
     end
 
-    # Retrieve the current +Organization+ (see +#oid+).
+    # Retrieve the current +Merchant+ (see +#mid+).
     #
-    # @return [Hash<String,Object>] JSON representation of the +Organization+.
+    # @return [Hash<String,Object>] JSON representation of the +Merchant+.
     # @raise [RuntimeError] Request failed.
-    def get_organization # rubocop:disable AccessorMethodName
+    def get_merchant # rubocop:disable AccessorMethodName
       path = base_path
       response = HttpRetriever.authenticated_get(path)
-      handle_response(:get, response, path, 'organization')
+      handle_response(:get, response, path, 'merchant')
     end
 
-    # Create the current +Organization+ (see +#oid+).
+    # Create the current +Merchant+ (see +#mid+).
     #
     # @param meta [Hash<String,Object>] JSON serializable dictionary.
     #
-    # @return [Hash<String,Object>] JSON respresentation of the +Organization+.
+    # @return [Hash<String,Object>] JSON respresentation of the +Merchant+.
     # @raise [RuntimeError] Request failed.
-    def create_organization(meta = {})
+    def create_merchant(meta = {})
       path = base_path
       query = { meta: meta }
       response = HttpRetriever.authenticated_post(path, query: query)
       handle_response(:post, response, path)
     end
 
-    # Retreive a list of all +Charge+s for the current +Organization+ (see
-    # +#oid+).
+    # Retreive a list of all +Charge+s for the current +Merchant+ (see
+    # +#mid+).
     #
     # @return [Array<Hash>] JSON representations of all +Charge+s.
     # @raise [RuntimeError] Request failed.
@@ -56,8 +56,8 @@ module ShorePayment
       handle_response(:get, response, path, 'charges')
     end
 
-    # Retrieve a specific +Charge+ for the current +Organization+ (see
-    # +#oid+).
+    # Retrieve a specific +Charge+ for the current +Merchant+ (see
+    # +#mid+).
     #
     # @param charge_id [String] +Charge+ ID. UUID format.
     #
@@ -69,7 +69,7 @@ module ShorePayment
       handle_response(:get, response, path, 'charge')
     end
 
-    # Create a +Charge+ for the current +Organization+ (see +#oid+).
+    # Create a +Charge+ for the current +Merchant+ (see +#mid+).
     #
     # @param meta [Hash<String,Object>] JSON serializable dictionary.
     #
@@ -99,7 +99,7 @@ module ShorePayment
       handle_response(:post, response, path)
     end
 
-    # Create a new +BankAccount+ for the current +Organization+ (see +#oid+).
+    # Create a new +BankAccount+ for the current +Merchant+ (see +#mid+).
     #
     # @param bank_token [String] Token generated via Stripe's API.
     #
@@ -112,12 +112,12 @@ module ShorePayment
       handle_response(:post, response, path)
     end
 
-    # Create or edit +StripeAccount+ for the current +Organization+ (see
-    # +#oid+).
+    # Create or edit +StripeAccount+ for the current +Merchant+ (see
+    # +#mid+).
     #
     # @param legal_entity [Hash<String,Object>] Legal Entity.
     #
-    # @return [Hash<String,Object>] JSON respresentation of the +Organization+.
+    # @return [Hash<String,Object>] JSON respresentation of the +Merchant+.
     # @raise [RuntimeError] Request failed.
     def add_stripe_account(stripe_payload)
       path = "#{base_path}/stripe"
@@ -128,7 +128,7 @@ module ShorePayment
     private
 
     def base_path
-      "/v1/organizations/#{oid}"
+      "/v1/merchants/#{mid}"
     end
 
     # :nodoc:

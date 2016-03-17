@@ -1,7 +1,7 @@
 # rubocop:disable MethodLength
-def payment_service_organization_response(oid, attributes)
+def payment_service_merchant_response(mid, attributes)
   {
-    'id' => oid,
+    'id' => mid,
     'supported_transaction_types' => ['cash'],
     'cash' => {},
     'stripe_publishable_key' => 'test key',
@@ -107,7 +107,7 @@ def payment_service_disputes_response(attributes = {})
         'dispute_id' => 'dp_17Vv962eZvKYlo2CU7XhGGzB',
         'due_by' => '2016-03-18T10:10:10Z',
         'has_evidence' => false,
-        'organization_id' => SecureRandom.uuid,
+        'merchant_id' => SecureRandom.uuid,
         'reason' => 'general',
         'status' => 'lost'
       },
@@ -116,7 +116,7 @@ def payment_service_disputes_response(attributes = {})
         'dispute_id' => 'dp_18Vv962eZvKYlo2CU7XhGGzB',
         'due_by' => '2016-03-19T11:09:10Z',
         'has_evidence' => true,
-        'organization_id' => SecureRandom.uuid,
+        'merchant_id' => SecureRandom.uuid,
         'reason' => 'bank_cannot_process',
         'status' => 'under_review'
       }
@@ -124,7 +124,7 @@ def payment_service_disputes_response(attributes = {})
   }.merge(attributes).to_json
 end
 
-def payment_service_dispute_response(oid, attributes)
+def payment_service_dispute_response(mid, attributes)
   {
     'dispute' =>
     {
@@ -134,7 +134,7 @@ def payment_service_dispute_response(oid, attributes)
       'amount_cents' => 10_000,
       'currency' => 'eur',
       'created_at' => '2016-02-19T11:09:10Z',
-      'organization_id' => oid,
+      'merchant_id' => mid,
       'due_by' => '2016-03-19T11:09:10Z',
       'has_evidence' => true,
       'past_due' => false,
