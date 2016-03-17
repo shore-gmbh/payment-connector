@@ -139,6 +139,7 @@ def payment_service_dispute_response(mid, attributes)
       'has_evidence' => true,
       'past_due' => false,
       'submission_count' => 0,
+      'charge_id' => 'ch_17kyvuBJMmId6xqIDWIRAimq',
       'evidence' =>
       {
         'product_description' => nil,

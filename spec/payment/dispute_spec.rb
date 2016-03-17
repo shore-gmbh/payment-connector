@@ -7,6 +7,12 @@ describe ShorePayment::Dispute do
       payment_service_dispute_response(mid, {})['dispute']
     )
   end
+  let(:charge) do
+    ShorePayment::Charge.new(
+      charge_id: 'ch_17kyvuBJMmId6xqIDWIRAimq',
+      status: 'succeeded'
+    )
+  end
 
   describe 'attributes' do
     it { expect(dispute).to respond_to(:id) }
@@ -21,10 +27,32 @@ describe ShorePayment::Dispute do
     it { expect(dispute).to respond_to(:past_due) }
     it { expect(dispute).to respond_to(:submission_count) }
     it { expect(dispute).to respond_to(:evidence) }
+    it { expect(dispute).to respond_to(:charge_id) }
+    it { expect(dispute).to respond_to(:charge) }
   end
 
   describe 'methods' do
     it { expect(dispute).to respond_to(:update) }
+  end
+
+  context '#charge' do
+    before do
+      connector = double('payment connector')
+
+      expect(ShorePayment::MerchantConnector).to(
+        receive(:new).with(mid).and_return(connector)
+      )
+
+      expect(connector).to(
+        receive(:get_charge).with(charge.charge_id).and_return(charge)
+      )
+    end
+
+    it 'returns with a Charge object' do
+      dispute_charge = dispute.charge
+      expect(dispute_charge).to be_a(ShorePayment::Charge)
+      expect(dispute_charge.charge_id).to eq('ch_17kyvuBJMmId6xqIDWIRAimq')
+    end
   end
 
   context '#evidence' do
