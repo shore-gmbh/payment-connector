@@ -11,14 +11,14 @@ module ShorePayment
   class Connector
     include ResponsesHandlers
 
-    # Retrieve a filtered list of +Organizations+
+    # Retrieve a filtered list of +Merchant+s
     #
     # @param params - filter and cursor (limit, start) parameters
     #
-    # @return [Array[Hash<String,Object>]] JSON array of +Organizations+.
+    # @return [Array[Hash<String,Object>]] JSON array of +Merchant+s.
     # @raise [RuntimeError] Request failed.
-    def get_organizations(query)
-      path = '/v1/organizations/'
+    def get_merchants(query)
+      path = '/v1/merchants/'
       response = HttpRetriever.authenticated_get(path, query: query)
       handle_response(:get, response, path)
     end
