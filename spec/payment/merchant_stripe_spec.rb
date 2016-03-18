@@ -398,7 +398,6 @@ describe ShorePayment::MerchantPayment do
       it { expect(charge).to respond_to(:status) }
       it { expect(charge).to respond_to(:amount_cents) }
       it { expect(charge).to respond_to(:customer_name) }
-      it { expect(charge).to respond_to(:customer_email) }
       it { expect(charge).to respond_to(:credit_card_brand) }
       it { expect(charge).to respond_to(:created_at) }
     end

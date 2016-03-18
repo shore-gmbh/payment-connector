@@ -13,7 +13,7 @@ module ShorePayment
   class Dispute < StripeHash
     attr_accessor :id, :status, :reason, :amount_cents, :currency, :created_at,
                   :merchant_id, :due_by, :has_evidence, :past_due,
-                  :submission_count, :evidence, :charge_id
+                  :submission_count, :evidence, :charge
 
     def evidence=(attrs)
       @evidence = Evidence.new(attrs)
@@ -31,8 +31,8 @@ module ShorePayment
       @created_at = DateTime.parse(val).to_date
     end
 
-    def charge
-      @charge ||= MerchantConnector.new(@merchant_id).get_charge(@charge_id)
+    def charge=(attrs)
+      @charge = Charge.new(attrs)
     end
 
     def self.from_payment_service(dispute_id)
