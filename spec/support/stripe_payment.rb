@@ -164,3 +164,39 @@ def payment_service_dispute_response(mid, attributes)
     }
   }.merge(attributes)
 end
+
+def payment_service_charge_response(attributes = {})
+  {
+    'charge' =>
+    {
+      'charge_id' => 'ch_17ft3sBJMmId6xqIBzqPSK6a',
+      'amount_cents' => 11_825,
+      'amount_refunded_cents' => 1800,
+      'status' => 'succeeded',
+      'customer_name' => 'James Bond',
+      'customer_address' =>
+      {
+        'street' => 'Rosenheimerstr. 1145e',
+        'zip' => '81321',
+        'city' => 'Munchen'
+      },
+      'customer_email' => 'jb@mail.com',
+      'credit_card_brand' => 'Visa',
+      'credit_card_last4' => '1121',
+      'description' => 'Lorem ipsum...',
+      'currency' => 'eur',
+      'created_at' => '2016-02-18T14:47:20Z',
+      'services' =>
+      [
+        {
+          'service_name' => 'Haircut Women',
+          'service_price_cents' => 1800
+        },
+        {
+          'service_name' => 'Haircut Women - Wash, cut and blow dry',
+          'service_price_cents' => 1800
+        }
+      ]
+    }
+  }.merge(attributes)
+end
