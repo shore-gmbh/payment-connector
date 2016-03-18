@@ -386,7 +386,8 @@ describe ShorePayment::MerchantPayment do
         status: 'succeeded',
         amount_cents: 1000,
         currency: 'eur',
-        customer_name: 'Jane Austion',
+        customer_name: 'Jane Austen',
+        customer_email: 'jane.austen.1775@gmail.com',
         credit_card_brand: 'VISA',
         created_at: '2016-02-05'
       )
@@ -397,6 +398,7 @@ describe ShorePayment::MerchantPayment do
       it { expect(charge).to respond_to(:status) }
       it { expect(charge).to respond_to(:amount_cents) }
       it { expect(charge).to respond_to(:customer_name) }
+      it { expect(charge).to respond_to(:customer_email) }
       it { expect(charge).to respond_to(:credit_card_brand) }
       it { expect(charge).to respond_to(:created_at) }
     end
