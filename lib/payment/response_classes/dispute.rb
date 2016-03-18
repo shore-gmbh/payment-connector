@@ -32,7 +32,7 @@ module ShorePayment
     end
 
     def charge
-      MerchantConnector.new(@merchant_id).get_charge(@charge_id)
+      @charge ||= MerchantConnector.new(@merchant_id).get_charge(@charge_id)
     end
 
     def self.from_payment_service(dispute_id)
