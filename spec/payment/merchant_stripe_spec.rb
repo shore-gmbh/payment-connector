@@ -381,15 +381,7 @@ describe ShorePayment::MerchantPayment do
 
   context '#charges' do
     let(:charge) do
-      ShorePayment::Charge.new(
-        charge_id: 2,
-        status: 'succeeded',
-        amount_cents: 1000,
-        currency: 'eur',
-        customer_name: 'Jane Austion',
-        credit_card_brand: 'VISA',
-        created_at: '2016-02-05'
-      )
+      ShorePayment::Charge.new(payment_service_charge_response['charge'])
     end
 
     describe 'attributes' do
@@ -399,6 +391,27 @@ describe ShorePayment::MerchantPayment do
       it { expect(charge).to respond_to(:customer_name) }
       it { expect(charge).to respond_to(:credit_card_brand) }
       it { expect(charge).to respond_to(:created_at) }
+      it { expect(charge).to respond_to(:amount_refunded_cents) }
+      it { expect(charge).to respond_to(:customer_address) }
+      it { expect(charge).to respond_to(:customer_email) }
+      it { expect(charge).to respond_to(:credit_card_last4) }
+      it { expect(charge).to respond_to(:description) }
+      it { expect(charge).to respond_to(:services) }
+    end
+
+    context '#customer_address' do
+      describe 'attributes' do
+        it { expect(charge.customer_address).to respond_to(:city) }
+        it { expect(charge.customer_address).to respond_to(:zip) }
+        it { expect(charge.customer_address).to respond_to(:street) }
+      end
+    end
+
+    context '#services' do
+      describe 'attributes' do
+        it { expect(charge.services.first).to respond_to(:service_name) }
+        it { expect(charge.services.first).to respond_to(:service_price_cents) }
+      end
     end
 
     it 'should return a comparable Array of Charges' do
