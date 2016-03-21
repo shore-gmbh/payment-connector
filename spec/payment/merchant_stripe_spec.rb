@@ -150,17 +150,23 @@ describe ShorePayment::MerchantStripe do
         legal_entity.dob.year = nil
         legal_entity.dob.month = nil
         legal_entity.dob.day = nil
-        expect(legal_entity.dob_date).to eq(nil)
+        expect(legal_entity.dob_date).to be_nil
 
         legal_entity.dob.year = ''
         legal_entity.dob.month = ''
         legal_entity.dob.day = ''
-        expect(legal_entity.dob_date).to eq(nil)
+        expect(legal_entity.dob_date).to be_nil
 
         legal_entity.dob.year = 2015
         legal_entity.dob.month = nil
         legal_entity.dob.day = nil
-        expect(legal_entity.dob_date).to eq(nil)
+        expect(legal_entity.dob_date).to be_nil
+      end
+
+      it 'returns nil if the dob_date is invalid' do
+        expect do
+          legal_entity.dob_date = 'invalid'
+        end.not_to change(legal_entity, :dob)
       end
     end
 

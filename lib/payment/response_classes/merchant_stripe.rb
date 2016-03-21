@@ -14,6 +14,8 @@ module ShorePayment
         month: date.month,
         day: date.day
       ) if date
+    rescue
+      nil
     end
 
     private
