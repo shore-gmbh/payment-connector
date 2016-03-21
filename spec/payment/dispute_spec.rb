@@ -21,10 +21,18 @@ describe ShorePayment::Dispute do
     it { expect(dispute).to respond_to(:past_due) }
     it { expect(dispute).to respond_to(:submission_count) }
     it { expect(dispute).to respond_to(:evidence) }
+    it { expect(dispute).to respond_to(:charge) }
   end
 
   describe 'methods' do
     it { expect(dispute).to respond_to(:update) }
+  end
+
+  context '#charge' do
+    it 'returns with a Charge object' do
+      expect(dispute.charge).to be_a(ShorePayment::Charge)
+      expect(dispute.charge.charge_id).to eq('ch_17kyvuBJMmId6xqIDWIRAimq')
+    end
   end
 
   context '#evidence' do

@@ -35,6 +35,16 @@ module ShorePayment
     attr_accessor :city, :country, :line1, :line2, :postal_code, :state
   end
 
+  # Representation of a {CustomerAddress} object in the Charge response
+  class CustomerAddress < StripeHash
+    attr_accessor :city, :street, :zip
+  end
+
+  # Representation of a {Service} object in the Charge response
+  class Service < StripeHash
+    attr_accessor :service_name, :service_price_cents
+  end
+
   # Representation of an {AdditionalOwner} object in the Merchant response
   class AdditionalOwner < StripeHash
     include DobConvertible
@@ -189,8 +199,10 @@ module ShorePayment
       charge_id <=> other.charge_id
     end
 
-    attr_accessor :charge_id, :status, :amount_cents, :currency,
-                  :customer_name, :credit_card_brand, :created_at
+    attr_accessor :charge_id, :created_at, :status, :description, :services,
+                  :amount_cents, :amount_refunded_cents, :currency,
+                  :customer_name, :customer_address, :customer_email,
+                  :credit_card_brand, :credit_card_last4
 
     # Fetch the list of {Charge}s for the given {Merchant} UUID from the Payment
     #   Service. {Charge} objects are in reverse chronological order according
@@ -204,6 +216,14 @@ module ShorePayment
     def self.all(merchant_id)
       connector = MerchantConnector.new(merchant_id)
       connector.get_charges({}).map { |charge_attrs| new(charge_attrs) }
+    end
+
+    def customer_address=(attrs)
+      @customer_address = CustomerAddress.new(attrs)
+    end
+
+    def services=(attrs)
+      @services = attrs.map { |a| Service.new(a) }
     end
   end
 
