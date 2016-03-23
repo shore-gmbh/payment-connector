@@ -144,7 +144,7 @@ module ShorePayment
 
       def self.verify_required_params(params)
         REQUIRED_PARAMS.each do |required|
-          raise 'Parameter #{required} missing' unless params.key?(required)
+          raise "Parameter #{required} missing" unless params.key?(required)
         end
       end
 
