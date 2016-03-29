@@ -365,9 +365,11 @@ end
 
 describe ShorePayment::MerchantPayment do
   let(:mid) { SecureRandom.uuid }
+  let(:current_user) { 'admin_user:123' }
 
   subject do
     described_class.new(
+      current_user,
       payment_service_merchant_response(mid, {})
     )
   end

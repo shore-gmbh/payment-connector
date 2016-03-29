@@ -241,7 +241,7 @@ module ShorePayment
         payment_resp = connector.get_merchant ||
                        connector.create_merchant(current_user)
 
-        new(payment_resp)
+        new(current_user, payment_resp)
       end
 
       def collection_from_payment_service(params)
@@ -253,6 +253,11 @@ module ShorePayment
       end
     end
 
+    def initialize(current_user, attributes)
+      @current_user = current_user
+      super(attributes)
+    end
+
     def stripe=(attrs)
       @stripe = MerchantStripe.new(attrs)
     end
@@ -261,12 +266,12 @@ module ShorePayment
       @id
     end
 
-    def add_bank_account(current_user, token)
-      MerchantConnector.new(@id).add_bank_account(current_user, token)
+    def add_bank_account(token)
+      MerchantConnector.new(@id).add_bank_account(@current_user, token)
     end
 
-    def add_stripe_account(current_user, stripe_payload)
-      MerchantConnector.new(@id).add_stripe_account(current_user,
+    def add_stripe_account(stripe_payload)
+      MerchantConnector.new(@id).add_stripe_account(@current_user,
                                                     stripe_payload)
     end
 
