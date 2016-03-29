@@ -19,8 +19,8 @@ module ShorePayment
       @evidence = Evidence.new(attrs)
     end
 
-    def update(new_evidence)
-      Connector.new.update_dispute(id, evidence: new_evidence)
+    def update(current_user, new_evidence)
+      Connector.new.update_dispute(current_user, id, evidence: new_evidence)
     end
 
     def due_by=(val)

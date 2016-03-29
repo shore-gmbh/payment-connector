@@ -38,9 +38,9 @@ module ShorePayment
     #
     # @return [Hash<String,Object>] JSON respresentation of the +Merchant+.
     # @raise [RuntimeError] Request failed.
-    def create_merchant(meta = {})
+    def create_merchant(current_user, meta = {})
       path = base_path
-      query = { meta: meta }
+      query = { current_user: current_user, meta: meta }
       response = HttpRetriever.authenticated_post(path, query: query)
       handle_response(:post, response, path)
     end
@@ -88,10 +88,11 @@ module ShorePayment
     #
     # @return [Hash<String,Object>] JSON respresentation of the +Charge+.
     # @raise [RuntimeError] Request failed.
-    def create_charge(params)
+    def create_charge(current_user, params)
       path = "#{base_path}/charges"
       CreateChargeParams.verify_params(params)
-      response = HttpRetriever.authenticated_post(path, query: params)
+      query = { current_user: current_user }.merge(params)
+      response = HttpRetriever.authenticated_post(path, query: query)
       handle_response(:post, response, path)
     end
 
@@ -102,8 +103,10 @@ module ShorePayment
     #
     # @return [String] charge_id of the refunded charge
     # @raise [RuntimeError] Request failed.
-    def create_refund(charge_id:, amount_refunded_cents:)
-      query = { amount_refunded_cents: amount_refunded_cents }
+    def create_refund(current_user:, charge_id:, amount_refunded_cents:)
+      query = { current_user: current_user,
+                amount_refunded_cents: amount_refunded_cents
+      }
 
       path = "#{base_path}/charges/#{charge_id}/refund"
       response = HttpRetriever.authenticated_post(path, query: query)
@@ -116,9 +119,9 @@ module ShorePayment
     #
     # @return [Hash<String,Object>] JSON representation of the +BankAccount+.
     # @raise [RuntimeError] Request failed.
-    def add_bank_account(bank_token)
+    def add_bank_account(current_user, bank_token)
       path = "#{base_path}/bank_accounts"
-      query = { bank_token: bank_token }
+      query = { current_user: current_user, bank_token: bank_token }
       response = HttpRetriever.authenticated_post(path, query: query)
       handle_response(:post, response, path)
     end
@@ -130,9 +133,10 @@ module ShorePayment
     #
     # @return [Hash<String,Object>] JSON respresentation of the +Merchant+.
     # @raise [RuntimeError] Request failed.
-    def add_stripe_account(stripe_payload)
+    def add_stripe_account(current_user, stripe_payload)
       path = "#{base_path}/stripe"
-      response = HttpRetriever.authenticated_put(path, query: stripe_payload)
+      query = { current_user: current_user }.merge(stripe_payload)
+      response = HttpRetriever.authenticated_put(path, query: query)
       handle_response(:put, response, path)
     end
 
