@@ -199,10 +199,11 @@ module ShorePayment
       charge_id <=> other.charge_id
     end
 
-    attr_accessor :charge_id, :created_at, :status, :description, :services,
+    attr_accessor :charge_id, :created_at, :status,
+                  :appointment_id, :description, :services,
                   :amount_cents, :amount_refunded_cents, :currency,
-                  :customer_name, :customer_address, :customer_email,
-                  :credit_card_brand, :credit_card_last4
+                  :customer_id, :customer_name, :customer_address,
+                  :customer_email, :credit_card_brand, :credit_card_last4
 
     # Fetch the list of {Charge}s for the given {Merchant} UUID from the Payment
     #   Service. {Charge} objects are in reverse chronological order according
