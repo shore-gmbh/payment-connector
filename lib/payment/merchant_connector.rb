@@ -90,9 +90,7 @@ module ShorePayment
     # @return [String] charge_id of the refunded charge
     # @raise [RuntimeError] Request failed.
     def create_refund(charge_id:, amount_refunded_cents:)
-      query = { charge_id: charge_id,
-                amount_refunded_cents: amount_refunded_cents
-      }
+      query = { amount_refunded_cents: amount_refunded_cents }
 
       path = "#{base_path}/charges/#{charge_id}/refund"
       response = HttpRetriever.authenticated_post(path, query: query)
