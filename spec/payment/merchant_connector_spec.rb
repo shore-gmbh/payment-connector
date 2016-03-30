@@ -119,6 +119,35 @@ describe ShorePayment::MerchantConnector do
     end
   end
 
+  describe '#get_charge_for_appointment' do
+    it 'sends a GET request to /v1/:mid/charges/for_appointment/' \
+       ':appointment_id' do
+      expect(ShorePayment::HttpRetriever).to receive(:get)
+        .with("/v1/merchants/#{mid}/charges/for_appointment/#{fake_id}",
+              auth_mock).and_return(mock_success('{"charge":{}}'))
+
+      expect(subject.get_charge_for_appointment(fake_id)).to eq({})
+    end
+
+    it 'returns nil if the service responds with code 404' do
+      expect(ShorePayment::HttpRetriever).to receive(:get)
+        .with(any_args)
+        .and_return(mock_not_found)
+
+      expect(subject.get_charge_for_appointment(fake_id)).to be_nil
+    end
+
+    it 'raises an error if the service responds with code != 200 and != 404' do
+      expect(ShorePayment::HttpRetriever).to receive(:get)
+        .with(any_args)
+        .and_return(mock_server_error)
+
+      expect do
+        subject.get_charge_for_appointment(fake_id)
+      end.to raise_error(RuntimeError)
+    end
+  end
+
   describe '#create_charge' do
     let(:charge_params) do
       {

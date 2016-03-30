@@ -69,6 +69,19 @@ module ShorePayment
       handle_response(:get, response, path, 'charge')
     end
 
+    # Retrieve the +Charge+ for a specific Appointment of the current
+    # +Merchant+ (see +#mid+).
+    #
+    # @param appointment_id [String] +Charge+ ID. UUID format.
+    #
+    # @return [Hash<String,Object>] JSON representation of the +Charge+.
+    # @raise [RuntimeError] Request failed.
+    def get_charge_for_appointment(appointment_id)
+      path = "#{base_path}/charges/for_appointment/#{appointment_id}"
+      response = HttpRetriever.authenticated_get(path)
+      handle_response(:get, response, path, 'charge')
+    end
+
     # Create a +Charge+ for the current +Merchant+ (see +#mid+).
     #
     # @param meta [Hash<String,Object>] JSON serializable dictionary.

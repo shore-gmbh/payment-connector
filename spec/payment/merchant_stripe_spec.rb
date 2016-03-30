@@ -314,8 +314,8 @@ describe ShorePayment::MerchantStripe do
       expect(legal_entity.additional_owners.last.last_name).to eq('Ln')
     end
 
-    it 'additional_owners should be an empty string when the type is \
-individual' do
+    it 'additional_owners should be an empty string when the type is ' \
+       'individual' do
       legal_entity.update_attributes(
         type: 'individual',
         additional_owners: {
