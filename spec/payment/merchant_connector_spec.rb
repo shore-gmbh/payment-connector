@@ -218,15 +218,17 @@ describe ShorePayment::MerchantConnector do
   describe '#create_refund' do
     it 'sends a POST request to /v1/:mid/charges/:charge_id/refund' do
       charge_id = 'charge_id'
-      options = hash_including(query: an_instance_of(Hash),
-                               basic_auth: an_instance_of(Hash))
+      amount_refunded = 3
+      query = { amount_refunded_cents: amount_refunded }
+      options = hash_including(query: query, basic_auth: an_instance_of(Hash))
 
       expect(ShorePayment::HttpRetriever).to receive(:post)
         .with("/v1/merchants/#{mid}/charges/#{charge_id}/refund", options)
         .and_return(mock_success('{}'))
 
-      expect(subject.create_refund(charge_id: charge_id,
-                                   amount_refunded_cents: 3)).to eq({})
+      result = subject.create_refund(charge_id: charge_id,
+                                     amount_refunded_cents: amount_refunded)
+      expect(result).to eq({})
     end
 
     it 'raises an error if the service responds with code != 200..299' do
