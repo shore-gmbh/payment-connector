@@ -392,17 +392,20 @@ describe ShorePayment::MerchantPayment do
 
     describe 'attributes' do
       it { expect(charge).to respond_to(:charge_id) }
-      it { expect(charge).to respond_to(:status) }
-      it { expect(charge).to respond_to(:amount_cents) }
-      it { expect(charge).to respond_to(:customer_name) }
-      it { expect(charge).to respond_to(:credit_card_brand) }
       it { expect(charge).to respond_to(:created_at) }
-      it { expect(charge).to respond_to(:amount_refunded_cents) }
-      it { expect(charge).to respond_to(:customer_address) }
-      it { expect(charge).to respond_to(:customer_email) }
-      it { expect(charge).to respond_to(:credit_card_last4) }
+      it { expect(charge).to respond_to(:status) }
+      it { expect(charge).to respond_to(:appointment_id) }
       it { expect(charge).to respond_to(:description) }
       it { expect(charge).to respond_to(:services) }
+      it { expect(charge).to respond_to(:amount_cents) }
+      it { expect(charge).to respond_to(:amount_refunded_cents) }
+      it { expect(charge).to respond_to(:currency) }
+      it { expect(charge).to respond_to(:customer_id) }
+      it { expect(charge).to respond_to(:customer_name) }
+      it { expect(charge).to respond_to(:customer_address) }
+      it { expect(charge).to respond_to(:customer_email) }
+      it { expect(charge).to respond_to(:credit_card_brand) }
+      it { expect(charge).to respond_to(:credit_card_last4) }
     end
 
     context '#customer_address' do
