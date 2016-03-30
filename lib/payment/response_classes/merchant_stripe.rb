@@ -244,11 +244,11 @@ module ShorePayment
         new(current_user, payment_resp)
       end
 
-      def collection_from_payment_service(params)
+      def collection_from_payment_service(current_user, params)
         connector = Connector.new
         payment_resp = connector.get_merchants(params)
         Collection.new(payment_resp) do |response|
-          response['merchants'].map { |h| new(h) }
+          response['merchants'].map { |h| new(current_user, h) }
         end
       end
     end
