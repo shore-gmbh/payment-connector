@@ -233,24 +233,29 @@ module ShorePayment
     attr_accessor :id, :meta, :stripe, :stripe_publishable_key
 
     class << self
-      def from_payment_service(profile_id)
+      def from_payment_service(current_user, profile_id)
         connector = MerchantConnector.new(profile_id)
 
         # Fetch Merchant from the Payment Service. Create new Merchant
         #   if it does not exist.
         payment_resp = connector.get_merchant ||
-                       connector.create_merchant
+                       connector.create_merchant(current_user)
 
-        new(payment_resp)
+        new(current_user, payment_resp)
       end
 
-      def collection_from_payment_service(params)
+      def collection_from_payment_service(current_user, params)
         connector = Connector.new
         payment_resp = connector.get_merchants(params)
         Collection.new(payment_resp) do |response|
-          response['merchants'].map { |h| new(h) }
+          response['merchants'].map { |h| new(current_user, h) }
         end
       end
+    end
+
+    def initialize(current_user, attributes)
+      @current_user = current_user
+      super(attributes)
     end
 
     def stripe=(attrs)
@@ -262,11 +267,12 @@ module ShorePayment
     end
 
     def add_bank_account(token)
-      MerchantConnector.new(@id).add_bank_account(token)
+      MerchantConnector.new(@id).add_bank_account(@current_user, token)
     end
 
     def add_stripe_account(stripe_payload)
-      MerchantConnector.new(@id).add_stripe_account(stripe_payload)
+      MerchantConnector.new(@id).add_stripe_account(@current_user,
+                                                    stripe_payload)
     end
 
     def charges

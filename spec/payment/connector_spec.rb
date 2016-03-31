@@ -4,6 +4,7 @@ describe ShorePayment::Connector do
   let(:mid)     { SecureRandom.uuid }
   let(:fake_id) { SecureRandom.uuid }
   let(:fake_token) { 'btok_7pOCL22R2RLUC8' }
+  let(:current_user) { 'user:123' }
 
   describe '#get_merchants' do
     it 'sends a GET request to /v1/merchants/' do
@@ -101,14 +102,17 @@ describe ShorePayment::Connector do
   end
 
   describe '#update_dispute' do
+    let(:query_mock) { hash_including(current_user: current_user) }
     it 'sends a PUT request to /v1/disputes/:id' do
-      options = hash_including(basic_auth: an_instance_of(Hash))
+      options = hash_including(basic_auth: an_instance_of(Hash),
+                               query: query_mock)
+
       expect(ShorePayment::HttpRetriever).to receive(:put)
         .with("/v1/disputes/#{fake_id}", options)
         .and_return(mock_created('{}'))
 
       expect(
-        subject.update_dispute(fake_id, evidence: {})
+        subject.update_dispute(current_user, fake_id, evidence: {})
       ).to eq({})
     end
 
@@ -118,7 +122,7 @@ describe ShorePayment::Connector do
         .and_return(mock_server_error)
 
       expect do
-        subject.update_dispute(dispute_id: fake_id, evidence: {})
+        subject.update_dispute(current_user, dispute_id: fake_id, evidence: {})
       end.to raise_error(RuntimeError)
     end
 
@@ -128,7 +132,7 @@ describe ShorePayment::Connector do
         .and_return(mock_unprocessable_entity_error('{"error":"wrong"}'))
 
       expect do
-        subject.update_dispute(dispute_id: fake_id, evidence: {})
+        subject.update_dispute(current_user, dispute_id: fake_id, evidence: {})
       end.to raise_error(/wrong/)
     end
   end

@@ -54,9 +54,10 @@ module ShorePayment
     #
     # @return [Hash<String,Object>] JSON respresentation of the +Dispute+.
     # @raise [RuntimeError] Request failed.
-    def update_dispute(dispute_id, payload = {})
+    def update_dispute(current_user, dispute_id, payload = {})
       path = "/v1/disputes/#{dispute_id}"
-      response = HttpRetriever.authenticated_put(path, query: payload)
+      query = { current_user: current_user }.merge(payload)
+      response = HttpRetriever.authenticated_put(path, query: query)
       handle_response(:put, response, path)
     end
   end
