@@ -53,7 +53,7 @@ module ShorePayment
     def get_charges(query)
       path = "#{base_path}/charges"
       response = HttpRetriever.authenticated_get(path, query: query)
-      handle_response(:get, response, path, 'charges')
+      handle_response(:get, response, path)
     end
 
     # Retrieve a specific +Charge+ for the current +Merchant+ (see

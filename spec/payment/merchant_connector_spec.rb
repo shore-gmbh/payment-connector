@@ -71,7 +71,8 @@ describe ShorePayment::MerchantConnector do
         .with("/v1/merchants/#{mid}/charges", options)
         .and_return(mock_success('{"charges":[]}'))
 
-      expect(subject.get_charges(page: page, per_page: per_page)).to eq([])
+      charges = subject.get_charges(page: page, per_page: per_page)['charges']
+      expect(charges).to eq([])
     end
 
     it 'returns nil if the service responds with code 404' do
