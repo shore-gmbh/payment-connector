@@ -110,8 +110,23 @@ module ShorePayment
       (additional_owners || []).length + 1
     end
 
-    def as_hash
-      JSON.parse(to_json)
+    def as_hash(with_nil = false)
+      r = JSON.parse(to_json)
+      deep_reject_nil!(r) unless with_nil
+      r
+    end
+
+    private
+
+    def deep_reject_nil!(h)
+      h.each_key do |k|
+        deep_reject_nil!(h[k]) if h[k].is_a?(Hash)
+        next unless h[k].is_a?(Array)
+        h[k].each do |a|
+          deep_reject_nil!(a)
+        end
+      end
+      h.reject! { |_k, v| v.nil? || v == {} }
     end
   end
 

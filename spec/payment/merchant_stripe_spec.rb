@@ -360,6 +360,86 @@ describe ShorePayment::MerchantStripe do
         expect(verification.status).to eq('pending')
       end
     end
+
+    context '#as_hash' do
+      subject do
+        legal_entity_with_nil_values = {
+          'stripe' => {
+            'legal_entity' => {
+              'first_name' => 'First',
+              'last_name' => 'Last',
+              'business_name' => nil,
+              'address' => {
+                'city' => nil,
+                'country' => 'DE',
+                'line1' => nil,
+                'line2' => nil,
+                'postal_code' => nil,
+                'state' => nil
+              },
+              'dob' => {
+                'year' => nil,
+                'month' => nil,
+                'day' => nil
+              },
+              'additional_owners' => [{
+                'first_name' => 'Joe',
+                'last_name' => nil,
+                'dob' => {
+                  'year' => nil,
+                  'month' => nil,
+                  'day' => nil
+                }
+              }]
+            }
+          }
+        }
+        described_class.new(
+          payment_service_merchant_response(
+            mid,
+            legal_entity_with_nil_values)['stripe']
+        )
+      end
+
+      context 'with nil values paramater' do
+        it 'result should contain nil values' do
+          hash = legal_entity.as_hash(true)
+          expect(hash).to have_key('address')
+          expect(hash['address']).to have_key('city')
+          expect(hash['address']['city']).to eq(nil)
+          expect(hash['address']).to have_key('country')
+          expect(hash['address']['country']).to eq('DE')
+          expect(hash).to have_key('business_name')
+          expect(hash).to have_key('dob')
+          expect(hash['dob']).to have_key('year')
+          expect(hash['additional_owners'][0]).to have_key('first_name')
+          expect(hash['additional_owners'][0]).to have_key('last_name')
+          expect(hash['additional_owners'][0]).to have_key('dob')
+          expect(hash['additional_owners'][0]['dob']).to have_key('year')
+        end
+      end
+
+      context 'without nil values' do
+        it 'result should contain only attributes with values' do
+          hash = legal_entity.as_hash(false)
+          expect(hash).to have_key('first_name')
+          expect(hash['first_name']).to eq('First')
+          expect(hash).to have_key('last_name')
+          expect(hash['last_name']).to eq('Last')
+          expect(hash).to have_key('address')
+          expect(hash['address']).to have_key('country')
+          expect(hash['address']['country']).to eq('DE')
+          expect(hash).to have_key('additional_owners')
+          expect(hash['additional_owners'][0]).to have_key('first_name')
+          expect(hash['additional_owners'][0]['first_name']).to eq('Joe')
+
+          expect(hash).not_to have_key('business_name')
+          expect(hash).not_to have_key('dob')
+          expect(hash['additional_owners'][0]).not_to have_key('last_name')
+          expect(hash['additional_owners'][0]).not_to have_key('dob')
+        end
+      end
+    end
   end
 end
 
