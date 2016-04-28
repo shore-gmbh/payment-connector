@@ -245,7 +245,8 @@ module ShorePayment
 
   # Representation of a {Payment} object in the Payment Service.
   class MerchantPayment < StripeHash
-    attr_accessor :id, :meta, :stripe, :stripe_publishable_key
+    attr_accessor :id, :meta, :stripe,
+                  :stripe_publishable_key, :charge_limit_per_day
 
     class << self
       def from_payment_service(current_user, profile_id)
