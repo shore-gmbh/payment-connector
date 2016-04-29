@@ -245,7 +245,8 @@ module ShorePayment
 
   # Representation of a {Payment} object in the Payment Service.
   class MerchantPayment < StripeHash
-    attr_accessor :id, :meta, :stripe, :stripe_publishable_key
+    attr_accessor :id, :meta, :stripe,
+                  :stripe_publishable_key, :charge_limit_per_day
 
     class << self
       def from_payment_service(current_user, profile_id)
@@ -288,6 +289,16 @@ module ShorePayment
     def add_stripe_account(stripe_payload)
       MerchantConnector.new(@id).add_stripe_account(@current_user,
                                                     stripe_payload)
+    end
+
+    # Update non-stripe attributes on the current merchant
+    #
+    # @param params [Hash<String,Object>] JSON serializable dictionary.
+    #
+    # @return [Hash<String,Object>] JSON respresentation of the +Merchant+.
+    # @raise [RuntimeError] Request failed.
+    def update_merchant(params)
+      MerchantConnector.new(@id).update_merchant(@current_user, params)
     end
 
     def charges

@@ -59,6 +59,32 @@ describe ShorePayment::MerchantConnector do
     end
   end
 
+  describe '#update_merchant' do
+    it 'sends a PUT request to /v1/merchants/:mid' do
+      options = hash_including(
+        query: { current_user: current_user, charge_limit_per_day: 100 },
+        basic_auth: an_instance_of(Hash)
+      )
+
+      expect(ShorePayment::HttpRetriever).to receive(:put)
+        .with("/v1/merchants/#{mid}", options)
+        .and_return(mock_success('{}'))
+
+      expect(subject.update_merchant(current_user, charge_limit_per_day: 100))
+        .to eq({})
+    end
+
+    it 'raises an error if the service responds with code != 200..299' do
+      expect(ShorePayment::HttpRetriever).to receive(:put)
+        .with(any_args)
+        .and_return(mock_server_error)
+
+      expect do
+        subject.update_merchant(current_user, charge_limit_per_day: 100)
+      end.to raise_error(RuntimeError)
+    end
+  end
+
   describe '#get_charges' do
     let(:page) { 2 }
     let(:per_page) { 10 }

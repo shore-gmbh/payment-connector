@@ -45,6 +45,20 @@ module ShorePayment
       handle_response(:post, response, path)
     end
 
+    # Update non-stripe attributes on the current merchant
+    #
+    # @param current_user [String] the currently logged in user.
+    # @param attributes [Hash<String,Object>] JSON serializable dictionary.
+    #
+    # @return [Hash<String,Object>] JSON respresentation of the +Merchant+.
+    # @raise [RuntimeError] Request failed.
+    def update_merchant(current_user, attributes)
+      path = base_path
+      query = attributes.merge(current_user: current_user)
+      response = HttpRetriever.authenticated_put(path, query: query)
+      handle_response(:put, response, path)
+    end
+
     # Retreive a list of all +Charge+s for the current +Merchant+ (see
     # +#mid+).
     #
