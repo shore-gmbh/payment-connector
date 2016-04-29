@@ -291,6 +291,16 @@ module ShorePayment
                                                     stripe_payload)
     end
 
+    # Update non-stripe attributes on the current merchant
+    #
+    # @param params [Hash<String,Object>] JSON serializable dictionary.
+    #
+    # @return [Hash<String,Object>] JSON respresentation of the +Merchant+.
+    # @raise [RuntimeError] Request failed.
+    def update_merchant(params)
+      MerchantConnector.new(@id).update_merchant(@current_user, params)
+    end
+
     def charges
       Charge.all(mid)
     end
