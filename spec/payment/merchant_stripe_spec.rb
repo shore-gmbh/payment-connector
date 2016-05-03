@@ -513,7 +513,7 @@ describe ShorePayment::MerchantPayment do
       )
 
       expect(connector).to receive(:get_charges).and_return(
-        [{ 'charge_id' => '1' }, { 'charge_id' => '2' }]
+        'charges' => [{ 'charge_id' => '1' }, { 'charge_id' => '2' }]
       ).at_least(:once)
 
       expect(subject.charges.first.charge_id).to eq('1')

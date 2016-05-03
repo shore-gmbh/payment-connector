@@ -231,7 +231,8 @@ module ShorePayment
     # @return [Array<ShorePayment::Charge>]
     def self.all(merchant_id)
       connector = MerchantConnector.new(merchant_id)
-      connector.get_charges({}).map { |charge_attrs| new(charge_attrs) }
+      connector.get_charges({})['charges']
+        .map { |charge_attrs| new(charge_attrs) }
     end
 
     def customer_address=(attrs)
