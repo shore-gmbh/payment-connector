@@ -214,7 +214,7 @@ module ShorePayment
       charge_id <=> other.charge_id
     end
 
-    attr_accessor :charge_id, :created_at, :status,
+    attr_accessor :charge_id, :created_at, :status, :captured,
                   :appointment_id, :description, :services,
                   :amount_cents, :amount_refunded_cents, :currency,
                   :customer_id, :customer_name, :customer_address,

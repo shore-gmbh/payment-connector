@@ -184,7 +184,8 @@ describe ShorePayment::MerchantConnector do
         amount_cents: '100',
         currency: 'eur',
         description: 'description',
-        statement_descriptor: 'your company'
+        statement_descriptor: 'your company',
+        captured: 'true'
       }
     end
 
@@ -236,6 +237,13 @@ describe ShorePayment::MerchantConnector do
       it 'fails if currency is missing' do
         expect do
           subject.create_charge(current_user, charge_params.except(:currency))
+        end.to raise_error(RuntimeError)
+      end
+
+      it 'fails if captured is missing' do
+        expect do
+          subject.create_charge(current_user,
+                                charge_params.except(:captured))
         end.to raise_error(RuntimeError)
       end
 

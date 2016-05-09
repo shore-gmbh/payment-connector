@@ -173,6 +173,7 @@ def payment_service_charge_response(attributes = {})
       'amount_cents' => 11_825,
       'amount_refunded_cents' => 1800,
       'status' => 'succeeded',
+      'captured' => 'true',
       'customer_name' => 'James Bond',
       'customer_address' =>
       {
