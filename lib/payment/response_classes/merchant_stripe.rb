@@ -214,7 +214,10 @@ module ShorePayment
       charge_id <=> other.charge_id
     end
 
-    attr_accessor :charge_id, :created_at, :status, :captured,
+    # use capture to set whether or not to immediately capture the Charge,
+    # use captured to check if Charge still uncaptured or has since been
+    #   captured
+    attr_accessor :charge_id, :created_at, :status, :capture, :captured,
                   :appointment_id, :description, :services,
                   :amount_cents, :amount_refunded_cents, :currency,
                   :customer_id, :customer_name, :customer_address,
