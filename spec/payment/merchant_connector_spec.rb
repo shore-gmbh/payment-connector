@@ -240,13 +240,6 @@ describe ShorePayment::MerchantConnector do
         end.to raise_error(RuntimeError)
       end
 
-      it 'fails if capture is missing' do
-        expect do
-          subject.create_charge(current_user,
-                                charge_params.except(:capture))
-        end.to raise_error(RuntimeError)
-      end
-
       it 'fails if parameter is unknown' do
         expect do
           subject.create_charge(current_user, charge_params.merge(foo: 'bar'))
