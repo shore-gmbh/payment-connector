@@ -184,7 +184,8 @@ describe ShorePayment::MerchantConnector do
         amount_cents: '100',
         currency: 'eur',
         description: 'description',
-        statement_descriptor: 'your company'
+        statement_descriptor: 'your company',
+        capture: 'true'
       }
     end
 

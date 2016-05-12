@@ -165,7 +165,8 @@ module ShorePayment
       REQUIRED_PARAMS = [:credit_card_token, :amount_cents, :currency].freeze
       OPTIONAL_PARAMS = [:customer_id, :customer_name, :customer_address,
                          :customer_email, :appointment_id,
-                         :statement_descriptor, :services, :description].freeze
+                         :statement_descriptor, :services, :description,
+                         :capture].freeze
 
       def self.verify_params(params)
         verify_required_params(params)

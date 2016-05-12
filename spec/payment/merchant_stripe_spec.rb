@@ -476,6 +476,7 @@ describe ShorePayment::MerchantPayment do
       it { expect(charge).to respond_to(:charge_id) }
       it { expect(charge).to respond_to(:created_at) }
       it { expect(charge).to respond_to(:status) }
+      it { expect(charge).to respond_to(:captured) }
       it { expect(charge).to respond_to(:appointment_id) }
       it { expect(charge).to respond_to(:description) }
       it { expect(charge).to respond_to(:services) }
