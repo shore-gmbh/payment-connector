@@ -281,6 +281,49 @@ describe ShorePayment::MerchantConnector do
     end
   end
 
+  describe '#update_charge' do
+    let(:charge_id) { 'charge_id' }
+    let(:update_params) do
+      {
+        appointment_id: '1',
+        customer_id: '2',
+        foo: 'bar'
+      }
+    end
+
+    it 'sends a PUT request to /v1/:mid/charges/:charge_id' do
+      options = hash_including(query: query_mock,
+                               basic_auth: an_instance_of(Hash))
+
+      expect(ShorePayment::HttpRetriever).to receive(:put)
+        .with("/v1/merchants/#{mid}/charges/#{charge_id}", options)
+        .and_return(mock_success('{"updated_charge":{}}'))
+
+      expect(subject.update_charge(current_user, charge_id, update_params))
+        .to eq('updated_charge' => {})
+    end
+
+    it 'returns nil if the service responds with code 404' do
+      expect(ShorePayment::HttpRetriever).to receive(:put)
+        .with(any_args)
+        .and_return(mock_not_found)
+
+      expect(
+        subject.update_charge(current_user, charge_id, update_params)
+      ).to be_nil
+    end
+
+    it 'raises an error if the service responds with code != 200 and != 404' do
+      expect(ShorePayment::HttpRetriever).to receive(:put)
+        .with(any_args)
+        .and_return(mock_server_error)
+
+      expect do
+        subject.update_charge(current_user, charge_id, update_params)
+      end.to raise_error(RuntimeError)
+    end
+  end
+
   describe '#add_bank_account' do
     it 'sends a POST request to /v1/:mid/bank_accounts' do
       options = hash_including(basic_auth: an_instance_of(Hash),
