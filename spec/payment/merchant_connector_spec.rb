@@ -324,6 +324,42 @@ describe ShorePayment::MerchantConnector do
     end
   end
 
+  describe '#capture_charge' do
+    let(:charge_id) { 'charge_id' }
+
+    it 'sends a POST request to /v1/:mid/charges/:charge_id/capture' do
+      options = hash_including(query: query_mock,
+                               basic_auth: an_instance_of(Hash))
+
+      expect(ShorePayment::HttpRetriever).to receive(:post)
+        .with("/v1/merchants/#{mid}/charges/#{charge_id}/capture", options)
+        .and_return(mock_success('{"captured_charge":{}}'))
+
+      expect(subject.capture_charge(current_user, charge_id))
+        .to eq('captured_charge' => {})
+    end
+
+    it 'returns nil if the service responds with code 404' do
+      expect(ShorePayment::HttpRetriever).to receive(:post)
+        .with(any_args)
+        .and_return(mock_not_found)
+
+      expect(
+        subject.capture_charge(current_user, charge_id)
+      ).to be_nil
+    end
+
+    it 'raises an error if the service responds with code != 200 and != 404' do
+      expect(ShorePayment::HttpRetriever).to receive(:post)
+        .with(any_args)
+        .and_return(mock_server_error)
+
+      expect do
+        subject.capture_charge(current_user, charge_id)
+      end.to raise_error(RuntimeError)
+    end
+  end
+
   describe '#add_bank_account' do
     it 'sends a POST request to /v1/:mid/bank_accounts' do
       options = hash_including(basic_auth: an_instance_of(Hash),
