@@ -113,7 +113,7 @@ module ShorePayment
     # Update a +Charge+ for the current +Merchant+ (see +#mid+).
     #
     # @param current_user [String] ID of the user
-    # @param charge_id [Integer] ID of the charge object to update.
+    # @param charge_id [Integer] ID of the +Charge+ object to update.
     # @param params [Hash<String,Object>] JSON serializable dictionary.
     #
     # @return [Hash<String,Object>] JSON respresentation of the +Charge+.
@@ -124,6 +124,21 @@ module ShorePayment
       query = { current_user: current_user }.merge(params)
       response = HttpRetriever.authenticated_put(path, query: query)
       handle_response(:put, response, path)
+    end
+
+    # Capture a previously uncaptured +Charge+ for the current +Merchant+ (see
+    #   +#mid+).
+    #
+    # @param current_user [String] ID of the user
+    # @param charge_id [Integer] ID of the +Charge+ object to update.
+    #
+    # @return [Hash<String,Object>] JSON respresentation of the +Charge+.
+    # @raise [RuntimeError] Request failed.
+    def capture_charge(current_user, charge_id)
+      path = "#{base_path}/charges/#{charge_id}/capture"
+      query = { current_user: current_user }
+      response = HttpRetriever.authenticated_post(path, query: query)
+      handle_response(:post, response, path)
     end
 
     # Create a Refund for the current +Charge+ (see +#charge_id+).
