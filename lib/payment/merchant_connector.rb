@@ -110,6 +110,22 @@ module ShorePayment
       handle_response(:post, response, path)
     end
 
+    # Update a +Charge+ for the current +Merchant+ (see +#mid+).
+    #
+    # @param current_user [String] ID of the user
+    # @param charge_id [Integer] ID of the charge object to update.
+    # @param params [Hash<String,Object>] JSON serializable dictionary.
+    #
+    # @return [Hash<String,Object>] JSON respresentation of the +Charge+.
+    # @raise [RuntimeError] Request failed.
+    def update_charge(current_user, charge_id, params)
+      path = "#{base_path}/charges/#{charge_id}"
+      params.slice!(:appointment_id, :customer_id)
+      query = { current_user: current_user }.merge(params)
+      response = HttpRetriever.authenticated_put(path, query: query)
+      handle_response(:put, response, path)
+    end
+
     # Create a Refund for the current +Charge+ (see +#charge_id+).
     #
     # @param meta [String] charge_id
