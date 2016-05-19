@@ -218,10 +218,10 @@ module ShorePayment
     # use captured to check if Charge still uncaptured or has since been
     #   captured
     attr_accessor :charge_id, :created_at, :status, :capture, :captured,
-                  :appointment_id, :description, :services,
-                  :amount_cents, :amount_refunded_cents, :currency,
-                  :customer_id, :customer_name, :customer_address,
-                  :customer_email, :credit_card_brand, :credit_card_last4
+                  :description, :services, :amount_cents,
+                  :amount_refunded_cents, :currency, :customer_name,
+                  :customer_address, :customer_email, :credit_card_brand,
+                  :credit_card_last4
 
     # Fetch the list of {Charge}s for the given {Merchant} UUID from the Payment
     #   Service. {Charge} objects are in reverse chronological order according

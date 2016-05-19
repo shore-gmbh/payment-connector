@@ -148,35 +148,6 @@ describe ShorePayment::MerchantConnector do
     end
   end
 
-  describe '#get_charge_for_appointment' do
-    it 'sends a GET request to /v1/:mid/charges/for_appointment/' \
-      ':appointment_id' do
-      path = "/v1/merchants/#{mid}/charges/for_appointment/#{fake_id}"
-      expect(ShorePayment::HttpRetriever).to receive(:get)
-        .with(path, auth_mock).and_return(mock_success('{"charge":{}}'))
-
-      expect(subject.get_charge_for_appointment(fake_id)).to eq({})
-    end
-
-    it 'returns nil if the service responds with code 404' do
-      expect(ShorePayment::HttpRetriever).to receive(:get)
-        .with(any_args)
-        .and_return(mock_not_found)
-
-      expect(subject.get_charge_for_appointment(fake_id)).to be_nil
-    end
-
-    it 'raises an error if the service responds with code != 200 and != 404' do
-      expect(ShorePayment::HttpRetriever).to receive(:get)
-        .with(any_args)
-        .and_return(mock_server_error)
-
-      expect do
-        subject.get_charge_for_appointment(fake_id)
-      end.to raise_error(RuntimeError)
-    end
-  end
-
   describe '#create_charge' do
     let(:charge_params) do
       {
@@ -277,49 +248,6 @@ describe ShorePayment::MerchantConnector do
         subject.create_refund(current_user: current_user,
                               charge_id: 1,
                               amount_refunded_cents: 3)
-      end.to raise_error(RuntimeError)
-    end
-  end
-
-  describe '#update_charge' do
-    let(:charge_id) { 'charge_id' }
-    let(:update_params) do
-      {
-        appointment_id: '1',
-        customer_id: '2',
-        foo: 'bar'
-      }
-    end
-
-    it 'sends a PUT request to /v1/:mid/charges/:charge_id' do
-      options = hash_including(query: query_mock,
-                               basic_auth: an_instance_of(Hash))
-
-      expect(ShorePayment::HttpRetriever).to receive(:put)
-        .with("/v1/merchants/#{mid}/charges/#{charge_id}", options)
-        .and_return(mock_success('{"updated_charge":{}}'))
-
-      expect(subject.update_charge(current_user, charge_id, update_params))
-        .to eq('updated_charge' => {})
-    end
-
-    it 'returns nil if the service responds with code 404' do
-      expect(ShorePayment::HttpRetriever).to receive(:put)
-        .with(any_args)
-        .and_return(mock_not_found)
-
-      expect(
-        subject.update_charge(current_user, charge_id, update_params)
-      ).to be_nil
-    end
-
-    it 'raises an error if the service responds with code != 200 and != 404' do
-      expect(ShorePayment::HttpRetriever).to receive(:put)
-        .with(any_args)
-        .and_return(mock_server_error)
-
-      expect do
-        subject.update_charge(current_user, charge_id, update_params)
       end.to raise_error(RuntimeError)
     end
   end

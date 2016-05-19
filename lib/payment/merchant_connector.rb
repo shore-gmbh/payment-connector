@@ -83,19 +83,6 @@ module ShorePayment
       handle_response(:get, response, path, 'charge')
     end
 
-    # Retrieve the +Charge+ for a specific Appointment of the current
-    # +Merchant+ (see +#mid+).
-    #
-    # @param appointment_id [String] +Charge+ ID. UUID format.
-    #
-    # @return [Hash<String,Object>] JSON representation of the +Charge+.
-    # @raise [RuntimeError] Request failed.
-    def get_charge_for_appointment(appointment_id)
-      path = "#{base_path}/charges/for_appointment/#{appointment_id}"
-      response = HttpRetriever.authenticated_get(path)
-      handle_response(:get, response, path, 'charge')
-    end
-
     # Create a +Charge+ for the current +Merchant+ (see +#mid+).
     #
     # @param meta [Hash<String,Object>] JSON serializable dictionary.
@@ -108,22 +95,6 @@ module ShorePayment
       query = { current_user: current_user }.merge(params)
       response = HttpRetriever.authenticated_post(path, query: query)
       handle_response(:post, response, path)
-    end
-
-    # Update a +Charge+ for the current +Merchant+ (see +#mid+).
-    #
-    # @param current_user [String] ID of the user
-    # @param charge_id [Integer] ID of the +Charge+ object to update.
-    # @param params [Hash<String,Object>] JSON serializable dictionary.
-    #
-    # @return [Hash<String,Object>] JSON respresentation of the +Charge+.
-    # @raise [RuntimeError] Request failed.
-    def update_charge(current_user, charge_id, params)
-      path = "#{base_path}/charges/#{charge_id}"
-      params.slice!(:appointment_id, :customer_id)
-      query = { current_user: current_user }.merge(params)
-      response = HttpRetriever.authenticated_put(path, query: query)
-      handle_response(:put, response, path)
     end
 
     # Capture a previously uncaptured +Charge+ for the current +Merchant+ (see
@@ -194,8 +165,7 @@ module ShorePayment
     # :nodoc:
     module CreateChargeParams
       REQUIRED_PARAMS = [:credit_card_token, :amount_cents, :currency].freeze
-      OPTIONAL_PARAMS = [:customer_id, :customer_name, :customer_address,
-                         :customer_email, :appointment_id,
+      OPTIONAL_PARAMS = [:customer_name, :customer_address, :customer_email,
                          :statement_descriptor, :services, :description,
                          :capture].freeze
 
