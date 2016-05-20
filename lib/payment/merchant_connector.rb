@@ -164,13 +164,12 @@ module ShorePayment
 
     # :nodoc:
     module CreateChargeParams
-      REQUIRED_PARAMS = [:credit_card_token, :amount_cents, :currency].freeze
-      OPTIONAL_PARAMS = [:customer_name, :customer_address, :customer_email,
-                         :statement_descriptor, :services, :description,
-                         :capture].freeze
+      REQUIRED_PARAMS = %w(credit_card_token amount_cents currency).freeze
+      OPTIONAL_PARAMS = %w(customer_name customer_address customer_email
+                           statement_descriptor services description
+                           capture).freeze
 
       def self.verify_params(params)
-        params.symbolize_keys!
         verify_required_params(params)
         verify_unknown_params(params)
       end
