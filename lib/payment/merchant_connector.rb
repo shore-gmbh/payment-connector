@@ -170,6 +170,7 @@ module ShorePayment
                          :capture].freeze
 
       def self.verify_params(params)
+        params.symbolize_keys!
         verify_required_params(params)
         verify_unknown_params(params)
       end
