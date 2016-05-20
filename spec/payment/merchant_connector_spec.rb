@@ -151,12 +151,12 @@ describe ShorePayment::MerchantConnector do
   describe '#create_charge' do
     let(:charge_params) do
       {
-        credit_card_token: 'credit_card_token',
-        amount_cents: '100',
-        currency: 'eur',
-        description: 'description',
-        statement_descriptor: 'your company',
-        capture: 'true'
+        'credit_card_token' => 'credit_card_token',
+        'amount_cents' => '100',
+        'currency' => 'eur',
+        'description' => 'description',
+        'statement_descriptor' => 'your company',
+        'capture' => 'true'
       }
     end
 
@@ -194,26 +194,27 @@ describe ShorePayment::MerchantConnector do
       it 'fails if credit_card_token is missing' do
         expect do
           subject.create_charge(current_user,
-                                charge_params.except(:credit_card_token))
+                                charge_params.except('credit_card_token'))
         end.to raise_error(RuntimeError)
       end
 
       it 'fails if amount_cents is missing' do
         expect do
           subject.create_charge(current_user,
-                                charge_params.except(:amount_cents))
+                                charge_params.except('amount_cents'))
         end.to raise_error(RuntimeError)
       end
 
       it 'fails if currency is missing' do
         expect do
-          subject.create_charge(current_user, charge_params.except(:currency))
+          subject.create_charge(current_user, charge_params.except('currency'))
         end.to raise_error(RuntimeError)
       end
 
       it 'fails if parameter is unknown' do
         expect do
-          subject.create_charge(current_user, charge_params.merge(foo: 'bar'))
+          subject.create_charge(current_user,
+                                charge_params.merge('foo' => 'bar'))
         end.to raise_error(RuntimeError)
       end
     end
