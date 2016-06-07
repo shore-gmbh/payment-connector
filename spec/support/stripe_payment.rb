@@ -197,7 +197,8 @@ def payment_service_charge_response(attributes = {})
           'service_name' => 'Haircut Women - Wash, cut and blow dry',
           'service_price_cents' => 1800
         }
-      ]
+      ],
+      'origin' => 'customer_payment'
     }
   }.merge(attributes)
 end
