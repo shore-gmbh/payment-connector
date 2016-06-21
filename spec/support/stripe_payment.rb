@@ -140,7 +140,8 @@ def payment_service_dispute_response(mid, attributes)
       'past_due' => false,
       'submission_count' => 0,
       'charge' => {
-        'charge_id' => 'ch_17kyvuBJMmId6xqIDWIRAimq'
+        'charge_id' => SecureRandom.uuid,
+        'reference_charge_id' => 'ch_17kyvuBJMmId6xqIDWIRAimq'
       },
       'evidence' =>
       {
@@ -169,7 +170,8 @@ def payment_service_charge_response(attributes = {})
   {
     'charge' =>
     {
-      'charge_id' => 'ch_17ft3sBJMmId6xqIBzqPSK6a',
+      'charge_id' => SecureRandom.uuid,
+      'reference_charge_id' => 'ch_17ft3sBJMmId6xqIBzqPSK6a',
       'amount_cents' => 11_825,
       'amount_refunded_cents' => 1800,
       'status' => 'succeeded',
