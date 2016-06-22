@@ -11,6 +11,10 @@ module ShorePayment
   class Connector
     include ResponsesHandlers
 
+    def initialize
+      @http_retriever = HttpRetriever.new
+    end
+
     # Retrieve a filtered list of +Merchant+s
     #
     # @param params - filter and cursor (limit, start) parameters
@@ -19,7 +23,7 @@ module ShorePayment
     # @raise [RuntimeError] Request failed.
     def get_merchants(query)
       path = '/v1/merchants/'
-      response = HttpRetriever.authenticated_get(path, query: query)
+      response = @http_retriever.authenticated_get(path, query: query)
       handle_response(:get, response, path)
     end
 
@@ -31,7 +35,7 @@ module ShorePayment
     # @raise [RuntimeError] Request failed.
     def get_disputes(query = {})
       path = '/v1/disputes/'
-      response = HttpRetriever.authenticated_get(path, query: query)
+      response = @http_retriever.authenticated_get(path, query: query)
       handle_response(:get, response, path)
     end
 
@@ -43,7 +47,7 @@ module ShorePayment
     # @raise [RuntimeError] Request failed.
     def get_dispute(dispute_id)
       path = "/v1/disputes/#{dispute_id}"
-      response = HttpRetriever.authenticated_get(path)
+      response = @http_retriever.authenticated_get(path)
       handle_response(:get, response, path, 'dispute')
     end
 
@@ -57,7 +61,7 @@ module ShorePayment
     def update_dispute(current_user, dispute_id, payload = {})
       path = "/v1/disputes/#{dispute_id}"
       query = { current_user: current_user }.merge(payload)
-      response = HttpRetriever.authenticated_put(path, query: query)
+      response = @http_retriever.authenticated_put(path, query: query)
       handle_response(:put, response, path)
     end
   end

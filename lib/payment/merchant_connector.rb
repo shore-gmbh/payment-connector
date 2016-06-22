@@ -20,6 +20,7 @@ module ShorePayment
     # @return [ShorePayment::MerchantConnector]
     def initialize(mid)
       @mid = mid
+      @http_retriever = HttpRetriever.new
     end
 
     # Retrieve the current +Merchant+ (see +#mid+).
@@ -28,7 +29,7 @@ module ShorePayment
     # @raise [RuntimeError] Request failed.
     def get_merchant # rubocop:disable AccessorMethodName
       path = base_path
-      response = HttpRetriever.authenticated_get(path)
+      response = @http_retriever.authenticated_get(path)
       handle_response(:get, response, path, 'merchant')
     end
 
@@ -41,7 +42,7 @@ module ShorePayment
     def create_merchant(current_user, meta = {})
       path = base_path
       query = { current_user: current_user, meta: meta }
-      response = HttpRetriever.authenticated_post(path, query: query)
+      response = @http_retriever.authenticated_post(path, query: query)
       handle_response(:post, response, path)
     end
 
@@ -55,7 +56,7 @@ module ShorePayment
     def update_merchant(current_user, attributes)
       path = base_path
       query = attributes.merge(current_user: current_user)
-      response = HttpRetriever.authenticated_put(path, query: query)
+      response = @http_retriever.authenticated_put(path, query: query)
       handle_response(:put, response, path)
     end
 
@@ -66,7 +67,7 @@ module ShorePayment
     # @raise [RuntimeError] Request failed.
     def get_charges(query)
       path = "#{base_path}/charges"
-      response = HttpRetriever.authenticated_get(path, query: query)
+      response = @http_retriever.authenticated_get(path, query: query)
       handle_response(:get, response, path)
     end
 
@@ -79,7 +80,7 @@ module ShorePayment
     # @raise [RuntimeError] Request failed.
     def get_charge(charge_id)
       path = "#{base_path}/charges/#{charge_id}"
-      response = HttpRetriever.authenticated_get(path)
+      response = @http_retriever.authenticated_get(path)
       handle_response(:get, response, path, 'charge')
     end
 
@@ -93,7 +94,7 @@ module ShorePayment
       path = "#{base_path}/charges"
       CreateChargeParams.verify_params(params)
       query = { current_user: current_user }.merge(params)
-      response = HttpRetriever.authenticated_post(path, query: query)
+      response = @http_retriever.authenticated_post(path, query: query)
       handle_response(:post, response, path)
     end
 
@@ -108,7 +109,7 @@ module ShorePayment
     def capture_charge(current_user, charge_id)
       path = "#{base_path}/charges/#{charge_id}/capture"
       query = { current_user: current_user }
-      response = HttpRetriever.authenticated_post(path, query: query)
+      response = @http_retriever.authenticated_post(path, query: query)
       handle_response(:post, response, path)
     end
 
@@ -125,7 +126,7 @@ module ShorePayment
       }
 
       path = "#{base_path}/charges/#{charge_id}/refund"
-      response = HttpRetriever.authenticated_post(path, query: query)
+      response = @http_retriever.authenticated_post(path, query: query)
       handle_response(:post, response, path)
     end
 
@@ -138,7 +139,7 @@ module ShorePayment
     def add_bank_account(current_user, bank_token)
       path = "#{base_path}/bank_accounts"
       query = { current_user: current_user, bank_token: bank_token }
-      response = HttpRetriever.authenticated_post(path, query: query)
+      response = @http_retriever.authenticated_post(path, query: query)
       handle_response(:post, response, path)
     end
 
@@ -152,7 +153,7 @@ module ShorePayment
     def add_stripe_account(current_user, stripe_payload)
       path = "#{base_path}/stripe"
       query = { current_user: current_user }.merge(stripe_payload)
-      response = HttpRetriever.authenticated_put(path, query: query)
+      response = @http_retriever.authenticated_put(path, query: query)
       handle_response(:put, response, path)
     end
 
