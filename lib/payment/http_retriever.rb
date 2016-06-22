@@ -3,7 +3,11 @@ module ShorePayment
     include HTTParty
     base_uri ShorePayment.configuration.base_uri
 
-    def self.auth_credentials
+    def initialize(locale: 'en')
+      @locale = locale
+    end
+
+    def auth_credentials
       @auth_credentials ||= {
         basic_auth: {
           username: ShorePayment.configuration.secret.freeze,
@@ -12,12 +16,20 @@ module ShorePayment
       }.freeze
     end
 
+    def locale_params
+      { locale: @locale }
+    end
+
+    def params
+      locale_params.merge(auth_credentials)
+    end
+
     # Define variants of all HTTParty request methods with authentication
     # support.
     self::Request::SupportedHTTPMethods
       .map { |x| x.name.demodulize.downcase }.each do |method|
-      define_singleton_method("authenticated_#{method}") do |path, options = {}|
-        send(method, path, options.merge(auth_credentials))
+      define_method("authenticated_#{method}") do |path, options = {}|
+        self.class.send(method, path, options.merge(params))
       end
     end
   end

@@ -19,8 +19,10 @@ module ShorePayment
       @evidence = Evidence.new(attrs)
     end
 
-    def update(current_user, new_evidence)
-      Connector.new.update_dispute(current_user, id, evidence: new_evidence)
+    def update(current_user, new_evidence, locale: 'en')
+      Connector
+        .new(locale: locale)
+        .update_dispute(current_user, id, evidence: new_evidence)
     end
 
     def due_by=(val)
@@ -35,13 +37,13 @@ module ShorePayment
       @charge = Charge.new(attrs)
     end
 
-    def self.from_payment_service(dispute_id)
-      d = Connector.new.get_dispute(dispute_id)
+    def self.from_payment_service(dispute_id, locale: 'en')
+      d = Connector.new(locale: locale).get_dispute(dispute_id)
       Dispute.new(d)
     end
 
     def self.collection_from_payment_service(params = {})
-      connector = Connector.new
+      connector = Connector.new(locale: params['locale'] || 'en')
       service_resp = connector.get_disputes(params)
       Collection.new(service_resp) do |response|
         response['disputes'].map { |h| new(h) }

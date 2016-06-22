@@ -10,6 +10,7 @@ describe ShorePayment::Connector do
     it 'sends a GET request to /v1/merchants/' do
       params = hash_including(
         basic_auth: an_instance_of(Hash),
+        locale: 'en',
         query: { filter: { state: 'disabled' } }
       )
 
@@ -44,6 +45,7 @@ describe ShorePayment::Connector do
     it 'sends a GET request to /v1/disputes/' do
       params = hash_including(
         basic_auth: an_instance_of(Hash),
+        locale: 'en',
         query: {}
       )
 
@@ -105,6 +107,7 @@ describe ShorePayment::Connector do
     let(:query_mock) { hash_including(current_user: current_user) }
     it 'sends a PUT request to /v1/disputes/:id' do
       options = hash_including(basic_auth: an_instance_of(Hash),
+                               locale: 'en',
                                query: query_mock)
 
       expect(ShorePayment::HttpRetriever).to receive(:put)
