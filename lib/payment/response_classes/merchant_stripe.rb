@@ -217,8 +217,8 @@ module ShorePayment
     # use capture to set whether or not to immediately capture the Charge,
     # use captured to check if Charge still uncaptured or has since been
     #   captured
-    attr_accessor :charge_id, :created_at, :status, :capture, :captured,
-                  :description, :services, :amount_cents,
+    attr_accessor :reference_charge_id, :charge_id, :created_at, :status,
+                  :capture, :captured, :description, :services, :amount_cents,
                   :amount_refunded_cents, :currency, :customer_name,
                   :customer_address, :customer_email, :credit_card_brand,
                   :credit_card_last4, :origin

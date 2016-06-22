@@ -31,7 +31,8 @@ describe ShorePayment::Dispute do
   context '#charge' do
     it 'returns with a Charge object' do
       expect(dispute.charge).to be_a(ShorePayment::Charge)
-      expect(dispute.charge.charge_id).to eq('ch_17kyvuBJMmId6xqIDWIRAimq')
+      expect(dispute.charge.reference_charge_id)
+        .to eq('ch_17kyvuBJMmId6xqIDWIRAimq')
     end
   end
 
