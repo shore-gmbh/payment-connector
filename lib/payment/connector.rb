@@ -11,8 +11,8 @@ module ShorePayment
   class Connector
     include ResponsesHandlers
 
-    def initialize
-      @http_retriever = HttpRetriever.new
+    def initialize(locale: 'en')
+      @http_retriever = HttpRetriever.new(locale: locale)
     end
 
     # Retrieve a filtered list of +Merchant+s

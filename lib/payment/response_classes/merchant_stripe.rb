@@ -232,8 +232,8 @@ module ShorePayment
     #
     # @param merchant_id [String] UUID.
     # @return [Array<ShorePayment::Charge>]
-    def self.all(merchant_id)
-      connector = MerchantConnector.new(merchant_id)
+    def self.all(merchant_id, locale: 'en')
+      connector = MerchantConnector.new(merchant_id, locale: locale)
       connector.get_charges({})['charges']
         .map { |charge_attrs| new(charge_attrs) }
     end
@@ -253,19 +253,19 @@ module ShorePayment
                   :stripe_publishable_key, :charge_limit_per_day
 
     class << self
-      def from_payment_service(current_user, profile_id)
-        connector = MerchantConnector.new(profile_id)
+      def from_payment_service(current_user, profile_id, locale: 'en')
+        connector = MerchantConnector.new(profile_id, locale: locale)
 
         # Fetch Merchant from the Payment Service. Create new Merchant
         #   if it does not exist.
         payment_resp = connector.get_merchant ||
                        connector.create_merchant(current_user)
 
-        new(current_user, payment_resp)
+        new(current_user, payment_resp, locale: locale)
       end
 
-      def collection_from_payment_service(current_user, params)
-        connector = Connector.new
+      def collection_from_payment_service(current_user, params, locale: 'en')
+        connector = Connector.new(locale: locale)
         payment_resp = connector.get_merchants(params)
         Collection.new(payment_resp) do |response|
           response['merchants'].map { |h| new(current_user, h) }
@@ -273,8 +273,9 @@ module ShorePayment
       end
     end
 
-    def initialize(current_user, attributes)
+    def initialize(current_user, attributes, locale: 'en')
       @current_user = current_user
+      @locale = locale
       super(attributes)
     end
 
@@ -287,12 +288,15 @@ module ShorePayment
     end
 
     def add_bank_account(token)
-      MerchantConnector.new(@id).add_bank_account(@current_user, token)
+      MerchantConnector
+        .new(@id, locale: @locale)
+        .add_bank_account(@current_user, token)
     end
 
     def add_stripe_account(stripe_payload)
-      MerchantConnector.new(@id).add_stripe_account(@current_user,
-                                                    stripe_payload)
+      MerchantConnector
+        .new(@id, locale: @locale)
+        .add_stripe_account(@current_user, stripe_payload)
     end
 
     # Update non-stripe attributes on the current merchant
@@ -302,7 +306,9 @@ module ShorePayment
     # @return [Hash<String,Object>] JSON respresentation of the +Merchant+.
     # @raise [RuntimeError] Request failed.
     def update_merchant(params)
-      MerchantConnector.new(@id).update_merchant(@current_user, params)
+      MerchantConnector
+        .new(@id, locale: @locale)
+        .update_merchant(@current_user, params)
     end
 
     def charges

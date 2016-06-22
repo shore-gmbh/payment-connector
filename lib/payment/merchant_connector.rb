@@ -18,9 +18,9 @@ module ShorePayment
     # @param mid [String] +Merchant+ ID. UUID format.
     #
     # @return [ShorePayment::MerchantConnector]
-    def initialize(mid)
+    def initialize(mid, locale: 'en')
       @mid = mid
-      @http_retriever = HttpRetriever.new
+      @http_retriever = HttpRetriever.new(locale: locale)
     end
 
     # Retrieve the current +Merchant+ (see +#mid+).

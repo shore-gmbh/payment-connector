@@ -509,7 +509,9 @@ describe ShorePayment::MerchantPayment do
       connector = double('payment connector')
 
       expect(ShorePayment::MerchantConnector).to(
-        receive(:new).with(mid).and_return(connector).at_least(:once)
+        receive(:new)
+        .with(mid, locale: 'en')
+        .and_return(connector).at_least(:once)
       )
 
       expect(connector).to receive(:get_charges).and_return(
