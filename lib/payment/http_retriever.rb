@@ -17,7 +17,7 @@ module ShorePayment
     end
 
     def locale_params
-      { locale: @locale }
+      { query: { locale: @locale } }
     end
 
     def params
@@ -29,7 +29,7 @@ module ShorePayment
     self::Request::SupportedHTTPMethods
       .map { |x| x.name.demodulize.downcase }.each do |method|
       define_method("authenticated_#{method}") do |path, options = {}|
-        self.class.send(method, path, options.merge(params))
+        self.class.send(method, path, options.deep_merge(params))
       end
     end
   end

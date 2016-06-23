@@ -88,7 +88,7 @@ describe ShorePayment::Dispute do
 
       before do
         params = hash_including(basic_auth: an_instance_of(Hash),
-                                query: {}
+                                query: { locale: 'en' }
                                )
 
         expect(ShorePayment::HttpRetriever).to receive(:get)
