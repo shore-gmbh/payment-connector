@@ -39,7 +39,9 @@ describe ShorePayment::MerchantConnector do
   describe '#create_merchant' do
     it 'sends a POST request to /v1/merchants/:mid' do
       options = hash_including(
-        query: { current_user: current_user, meta: { 'foo' => 'bar' } },
+        query: { current_user: current_user,
+                 meta: { 'foo' => 'bar' },
+                 locale: 'en' },
         basic_auth: an_instance_of(Hash)
       )
       expect(ShorePayment::HttpRetriever).to receive(:post)
@@ -62,7 +64,9 @@ describe ShorePayment::MerchantConnector do
   describe '#update_merchant' do
     it 'sends a PUT request to /v1/merchants/:mid' do
       options = hash_including(
-        query: { current_user: current_user, charge_limit_per_day: 100 },
+        query: { current_user: current_user,
+                 charge_limit_per_day: 100,
+                 locale: 'en' },
         basic_auth: an_instance_of(Hash)
       )
 
@@ -226,7 +230,8 @@ describe ShorePayment::MerchantConnector do
       amount_refunded = 3
       query = {
         current_user: current_user,
-        amount_refunded_cents: amount_refunded
+        amount_refunded_cents: amount_refunded,
+        locale: 'en'
       }
       options = hash_including(query: query, basic_auth: an_instance_of(Hash))
 

@@ -32,5 +32,5 @@ def mock_not_found
 end
 
 def auth_mock
-  hash_including(basic_auth: an_instance_of(Hash), locale: 'en')
+  hash_including(basic_auth: an_instance_of(Hash))
 end
