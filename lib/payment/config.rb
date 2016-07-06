@@ -13,7 +13,7 @@ module ShorePayment # :nodoc:
     attr_accessor :base_uri, :secret, :password
 
     def initialize
-      @base_uri = 'http://localhost:5000/'
+      @base_uri = 'http://localhost:5042/'
       @secret   = 'secret'
       @password = ''
     end
