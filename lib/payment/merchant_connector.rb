@@ -7,13 +7,13 @@ require_relative 'response_handlers'
 
 module ShorePayment
   # Utility class encapsulating synchronous communication with Shore's Payment
-  #   Service for specific Merchant objects.
+  # Service for specific Merchant objects.
   class MerchantConnector
     include ResponsesHandlers
     attr_reader :mid
 
     # Create a new +ShorePayment::MerchantConnector+ instance bound to a
-    #   specific +Merchant+ ID (see +#mid+).
+    # specific +Merchant+ ID (see +#mid+).
     #
     # @param mid [String] +Merchant+ ID. UUID format.
     #
@@ -143,14 +143,26 @@ module ShorePayment
       handle_response(:post, response, path)
     end
 
-    # Create or edit +StripeAccount+ for the current +Merchant+ (see
-    # +#mid+).
+    # Create +StripeAccount+ for the current +Merchant+ (see +#mid+).
     #
     # @param legal_entity [Hash<String,Object>] Legal Entity.
     #
     # @return [Hash<String,Object>] JSON respresentation of the +Merchant+.
     # @raise [RuntimeError] Request failed.
-    def add_stripe_account(current_user, stripe_payload)
+    def create_stripe_account(current_user, country)
+      path = "#{base_path}/stripe"
+      query = { current_user: current_user, country: country }
+      response = @http_retriever.authenticated_post(path, query: query)
+      handle_response(:post, response, path)
+    end
+
+    # edit +StripeAccount+ for the current +Merchant+ (see +#mid+).
+    #
+    # @param legal_entity [Hash<String,Object>] Legal Entity.
+    #
+    # @return [Hash<String,Object>] JSON respresentation of the +Merchant+.
+    # @raise [RuntimeError] Request failed.
+    def update_stripe_account(current_user, stripe_payload)
       path = "#{base_path}/stripe"
       query = { current_user: current_user }.merge(stripe_payload)
       response = @http_retriever.authenticated_put(path, query: query)
