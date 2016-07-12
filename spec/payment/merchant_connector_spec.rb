@@ -316,7 +316,7 @@ describe ShorePayment::MerchantConnector do
     end
   end
 
-  describe '#add_stripe_account_to_merchant' do
+  describe '#update_stripe_account_to_merchant' do
     let(:legal_entity_fields) { { legal_entity: double('Legal Entity') } }
     it 'sends a PUT request to /v1/:mid/stripe' do
       options = hash_including(basic_auth: an_instance_of(Hash),
@@ -325,8 +325,8 @@ describe ShorePayment::MerchantConnector do
         .with("/v1/merchants/#{mid}/stripe", options)
         .and_return(mock_created('{}'))
 
-      expect(subject.add_stripe_account(current_user,
-                                        legal_entity_fields)).to eq({})
+      expect(subject.update_stripe_account(current_user,
+                                           legal_entity_fields)).to eq({})
     end
 
     it 'raises an error if the service responds with code != [200..299, 404]' do
@@ -335,7 +335,7 @@ describe ShorePayment::MerchantConnector do
         .and_return(mock_server_error)
 
       expect do
-        subject.add_stripe_account(current_user, legal_entity_fields)
+        subject.update_stripe_account(current_user, legal_entity_fields)
       end.to raise_error(RuntimeError)
     end
 
@@ -345,7 +345,41 @@ describe ShorePayment::MerchantConnector do
         .and_return(mock_unprocessable_entity_error('{"error":"wrong"}'))
 
       expect do
-        subject.add_stripe_account(current_user, legal_entity_fields)
+        subject.update_stripe_account(current_user, legal_entity_fields)
+      end.to raise_error(/wrong/)
+    end
+  end
+
+  describe '#create_stripe_account_to_merchant' do
+    let(:country) { 'FR' }
+    it 'sends a POST request to /v1/:mid/stripe' do
+      options = hash_including(basic_auth: an_instance_of(Hash),
+                               query: query_mock)
+      expect(ShorePayment::HttpRetriever).to receive(:post)
+        .with("/v1/merchants/#{mid}/stripe", options)
+        .and_return(mock_created('{}'))
+
+      expect(subject.create_stripe_account(current_user,
+                                           country)).to eq({})
+    end
+
+    it 'raises an error if the service responds with code != [200..299, 404]' do
+      expect(ShorePayment::HttpRetriever).to receive(:post)
+        .with(any_args)
+        .and_return(mock_server_error)
+
+      expect do
+        subject.create_stripe_account(current_user, country)
+      end.to raise_error(RuntimeError)
+    end
+
+    it 'raises an error with details if the service responds with code 422' do
+      expect(ShorePayment::HttpRetriever).to receive(:post)
+        .with(any_args)
+        .and_return(mock_unprocessable_entity_error('{"error":"wrong"}'))
+
+      expect do
+        subject.create_stripe_account(current_user, country)
       end.to raise_error(/wrong/)
     end
   end
