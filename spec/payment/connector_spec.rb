@@ -149,9 +149,9 @@ describe ShorePayment::Connector do
 
       expect(ShorePayment::HttpRetriever).to receive(:get)
         .with('/v1/countries/', params)
-        .and_return(mock_success('{"countries":[]}'))
+        .and_return(mock_success('{"countries":["RO", "DE"]}'))
 
-      expect(subject.get_countries['countries']).to eq([])
+      expect(subject.get_countries['countries']).to eq(%w(RO DE))
     end
 
     it 'raises an error if the service responds with code != 200 and != 404' do
@@ -169,9 +169,10 @@ describe ShorePayment::Connector do
     it 'sends a GET request to /v1/countries/:id/verification_fields' do
       expect(ShorePayment::HttpRetriever).to receive(:get)
         .with("/v1/countries/#{fake_id}/verification_fields", auth_mock)
-        .and_return(mock_success('{}'))
+        .and_return(mock_success('{"individual":["foo", "bar"]}'))
 
-      expect(subject.get_country_verification_fields(fake_id)).to eq({})
+      expect(subject.get_country_verification_fields(fake_id)).to \
+        eq('individual' => %w(foo bar))
     end
 
     it 'returns nil if the service responds with code 404' do
@@ -197,9 +198,10 @@ describe ShorePayment::Connector do
     it 'sends a GET request to /v1/countries/:id/bank_account_currencies' do
       expect(ShorePayment::HttpRetriever).to receive(:get)
         .with("/v1/countries/#{fake_id}/bank_account_currencies", auth_mock)
-        .and_return(mock_success('{}'))
+        .and_return(mock_success('{"usd": ["US"]}'))
 
-      expect(subject.get_country_bank_account_currencies(fake_id)).to eq({})
+      expect(subject.get_country_bank_account_currencies(fake_id)).to \
+        eq('usd' => ['US'])
     end
 
     it 'returns nil if the service responds with code 404' do
