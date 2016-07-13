@@ -27,6 +27,7 @@ describe ShorePayment::MerchantStripe do
     it { is_expected.to respond_to(:fields_needed) }
     it { is_expected.to respond_to(:transfers_enabled) }
     it { is_expected.to respond_to(:charges_enabled) }
+    it { is_expected.to respond_to(:country) }
   end
 
   context '#account_active' do

@@ -145,7 +145,7 @@ module ShorePayment
                   :last_charge_created_at, :legal_entity, :meta,
                   :publishable_key, :verification_disabled_reason,
                   :verification_due_by, :verification_fields_needed,
-                  :transfers_enabled, :charges_enabled
+                  :transfers_enabled, :charges_enabled, :country
 
     def initialize(attrs = nil)
       # Empty stripe object with all the necessery empty nodes
