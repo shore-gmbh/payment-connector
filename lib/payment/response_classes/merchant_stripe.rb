@@ -314,6 +314,20 @@ module ShorePayment
     def charges
       Charge.all(mid)
     end
+
+    def supported_countries
+      Connector.new(locale: @locale).get_countries
+    end
+
+    def bank_account_currencies
+      c = stripe.country || 'DE'
+      Connector.new(locale: @locale).get_country_bank_account_currencies(c)
+    end
+
+    def verification_fields
+      c = stripe.country || 'DE'
+      Connector.new(locale: @locale).get_country_verification_fields(c)
+    end
   end
 
   # Representation of a {Verification} object in the Payment Service.
