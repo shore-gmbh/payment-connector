@@ -27,6 +27,7 @@ describe ShorePayment::MerchantStripe do
     it { is_expected.to respond_to(:fields_needed) }
     it { is_expected.to respond_to(:transfers_enabled) }
     it { is_expected.to respond_to(:charges_enabled) }
+    it { is_expected.to respond_to(:country) }
   end
 
   context '#account_active' do
@@ -465,6 +466,9 @@ describe ShorePayment::MerchantPayment do
   describe 'methods' do
     it { is_expected.to respond_to(:add_bank_account) }
     it { is_expected.to respond_to(:add_stripe_account) }
+    it { is_expected.to respond_to(:supported_countries) }
+    it { is_expected.to respond_to(:bank_account_currencies) }
+    it { is_expected.to respond_to(:verification_fields) }
   end
 
   context '#charges' do
