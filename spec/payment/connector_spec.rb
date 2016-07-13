@@ -139,4 +139,85 @@ describe ShorePayment::Connector do
       end.to raise_error(/wrong/)
     end
   end
+
+  describe '#get_countries' do
+    it 'sends a GET request to /v1/countries/' do
+      params = hash_including(
+        basic_auth: an_instance_of(Hash),
+        query: { locale: 'en' }
+      )
+
+      expect(ShorePayment::HttpRetriever).to receive(:get)
+        .with('/v1/countries/', params)
+        .and_return(mock_success('{"countries":[]}'))
+
+      expect(subject.get_countries['countries']).to eq([])
+    end
+
+    it 'raises an error if the service responds with code != 200 and != 404' do
+      expect(ShorePayment::HttpRetriever).to receive(:get)
+        .with(any_args)
+        .and_return(mock_server_error)
+
+      expect do
+        subject.get_countries({})
+      end.to raise_error(RuntimeError)
+    end
+  end
+
+  describe '#get_country_verification_fields' do
+    it 'sends a GET request to /v1/countries/:id/verification_fields' do
+      expect(ShorePayment::HttpRetriever).to receive(:get)
+        .with("/v1/countries/#{fake_id}/verification_fields", auth_mock)
+        .and_return(mock_success('{}'))
+
+      expect(subject.get_country_verification_fields(fake_id)).to eq({})
+    end
+
+    it 'returns nil if the service responds with code 404' do
+      expect(ShorePayment::HttpRetriever).to receive(:get)
+        .with(any_args)
+        .and_return(mock_not_found)
+
+      expect(subject.get_country_verification_fields(fake_id)).to be_nil
+    end
+
+    it 'raises an error if the service responds with code != 200 and != 404' do
+      expect(ShorePayment::HttpRetriever).to receive(:get)
+        .with(any_args)
+        .and_return(mock_server_error)
+
+      expect do
+        subject.get_country_verification_fields(fake_id)
+      end.to raise_error(RuntimeError)
+    end
+  end
+
+  describe '#get_bank_account_currencies' do
+    it 'sends a GET request to /v1/countries/:id/bank_account_currencies' do
+      expect(ShorePayment::HttpRetriever).to receive(:get)
+        .with("/v1/countries/#{fake_id}/bank_account_currencies", auth_mock)
+        .and_return(mock_success('{}'))
+
+      expect(subject.get_country_bank_account_currencies(fake_id)).to eq({})
+    end
+
+    it 'returns nil if the service responds with code 404' do
+      expect(ShorePayment::HttpRetriever).to receive(:get)
+        .with(any_args)
+        .and_return(mock_not_found)
+
+      expect(subject.get_country_bank_account_currencies(fake_id)).to be_nil
+    end
+
+    it 'raises an error if the service responds with code != 200 and != 404' do
+      expect(ShorePayment::HttpRetriever).to receive(:get)
+        .with(any_args)
+        .and_return(mock_server_error)
+
+      expect do
+        subject.get_country_bank_account_currencies(fake_id)
+      end.to raise_error(RuntimeError)
+    end
+  end
 end

@@ -64,5 +64,41 @@ module ShorePayment
       response = @http_retriever.authenticated_put(path, query: query)
       handle_response(:put, response, path)
     end
+
+    # Retrieve a list of supported Countries
+    #
+    # @return [Array[String]] JSON array of Country ISO codes.
+    # @raise [RuntimeError] Request failed.
+    def get_countries(query = {})
+      path = '/v1/countries/'
+      response = @http_retriever.authenticated_get(path, query: query)
+      handle_response(:get, response, path)
+    end
+
+    # Retrieve a list with types of verification data needed to keep an account
+    # open for the given +Country+
+    #
+    # @param country_id [String] +Country+ ID. Country ISO code.
+    #
+    # @return [Hash<String,Object>] JSON representation of the fields.
+    # @raise [RuntimeError] Request failed.
+    def get_country_verification_fields(country_id)
+      path = "/v1/countries/#{country_id}/verification_fields"
+      response = @http_retriever.authenticated_get(path)
+      handle_response(:get, response, path)
+    end
+
+    # Retrieve a list with types of supported bank account currencies for the
+    # given for the given +Country+
+    #
+    # @param country_id [String] +Country+ ID. Country ISO code.
+    #
+    # @return [Hash<String,Object>] JSON representation of the currencies.
+    # @raise [RuntimeError] Request failed.
+    def get_country_bank_account_currencies(country_id)
+      path = "/v1/countries/#{country_id}/bank_account_currencies"
+      response = @http_retriever.authenticated_get(path)
+      handle_response(:get, response, path)
+    end
   end
 end
