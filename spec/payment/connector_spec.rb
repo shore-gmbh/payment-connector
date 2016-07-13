@@ -169,10 +169,12 @@ describe ShorePayment::Connector do
     it 'sends a GET request to /v1/countries/:id/verification_fields' do
       expect(ShorePayment::HttpRetriever).to receive(:get)
         .with("/v1/countries/#{fake_id}/verification_fields", auth_mock)
-        .and_return(mock_success('{"individual":["foo", "bar"]}'))
+        .and_return(
+          mock_success('{"verification_fields":["foo", "bar"]}')
+        )
 
       expect(subject.get_country_verification_fields(fake_id)).to \
-        eq('individual' => %w(foo bar))
+        eq(%w(foo bar))
     end
 
     it 'returns nil if the service responds with code 404' do

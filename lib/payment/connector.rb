@@ -85,7 +85,7 @@ module ShorePayment
     def get_country_verification_fields(country_id)
       path = "/v1/countries/#{country_id}/verification_fields"
       response = @http_retriever.authenticated_get(path)
-      handle_response(:get, response, path)
+      handle_response(:get, response, path, 'verification_fields')
     end
 
     # Retrieve a list with types of supported bank account currencies for the
