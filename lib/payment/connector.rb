@@ -72,7 +72,7 @@ module ShorePayment
     def get_countries(query = {})
       path = '/v1/countries/'
       response = @http_retriever.authenticated_get(path, query: query)
-      handle_response(:get, response, path)
+      handle_response(:get, response, path, 'countries')
     end
 
     # Retrieve a list with types of verification data needed to keep an account

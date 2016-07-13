@@ -151,7 +151,7 @@ describe ShorePayment::Connector do
         .with('/v1/countries/', params)
         .and_return(mock_success('{"countries":["RO", "DE"]}'))
 
-      expect(subject.get_countries['countries']).to eq(%w(RO DE))
+      expect(subject.get_countries).to eq(%w(RO DE))
     end
 
     it 'raises an error if the service responds with code != 200 and != 404' do
