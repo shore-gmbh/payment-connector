@@ -293,10 +293,16 @@ module ShorePayment
         .add_bank_account(@current_user, token)
     end
 
-    def add_stripe_account(stripe_payload)
+    def create_stripe_account(country)
       MerchantConnector
         .new(@id, locale: @locale)
-        .add_stripe_account(@current_user, stripe_payload)
+        .create_stripe_account(@current_user, country)
+    end
+
+    def update_stripe_account(stripe_payload)
+      MerchantConnector
+        .new(@id, locale: @locale)
+        .update_stripe_account(@current_user, stripe_payload)
     end
 
     # Update non-stripe attributes on the current merchant
