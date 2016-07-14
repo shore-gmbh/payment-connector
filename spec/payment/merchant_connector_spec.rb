@@ -46,7 +46,7 @@ describe ShorePayment::MerchantConnector do
       )
       expect(ShorePayment::HttpRetriever).to receive(:post)
         .with("/v1/merchants/#{mid}", options)
-        .and_return(mock_created('{}'))
+        .and_return(mock_created({ merchant: {} }.to_json))
 
       expect(subject.create_merchant(current_user, 'foo' => 'bar')).to eq({})
     end

@@ -43,7 +43,7 @@ module ShorePayment
       path = base_path
       query = { current_user: current_user, meta: meta }
       response = @http_retriever.authenticated_post(path, query: query)
-      handle_response(:post, response, path)
+      handle_response(:post, response, path, 'merchant')
     end
 
     # Update non-stripe attributes on the current merchant
