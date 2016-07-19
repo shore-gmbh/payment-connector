@@ -103,8 +103,8 @@ describe ShorePayment::MerchantStripe do
       it { expect(legal_entity).to respond_to(:last_name) }
       it { expect(legal_entity).to respond_to(:personal_id_number) }
       it { expect(legal_entity).to respond_to(:personal_id_number_provided) }
-      it { expect(legal_entity).to respond_to(:ssn_last4) }
-      it { expect(legal_entity).to respond_to(:ssn_last4_provided) }
+      it { expect(legal_entity).to respond_to(:ssn_last_4) }
+      it { expect(legal_entity).to respond_to(:ssn_last_4_provided) }
       it { expect(legal_entity).to respond_to(:type) }
       it { expect(legal_entity).to respond_to(:verification) }
     end

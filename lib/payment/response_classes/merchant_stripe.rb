@@ -72,7 +72,7 @@ module ShorePayment
                   :business_tax_id, :business_tax_id_provided, :dob,
                   :first_name, :last_name, :type, :verification,
                   :personal_id_number, :personal_id_number_provided,
-                  :ssn_last4, :ssn_last4_provided
+                  :ssn_last_4, :ssn_last_4_provided
 
     def update_attributes(attrs = {})
       super
