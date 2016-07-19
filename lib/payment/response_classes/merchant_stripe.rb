@@ -70,7 +70,9 @@ module ShorePayment
 
     attr_accessor :additional_owners, :address, :business_name,
                   :business_tax_id, :business_tax_id_provided, :dob,
-                  :first_name, :last_name, :type, :verification
+                  :first_name, :last_name, :type, :verification,
+                  :personal_id_number, :personal_id_number_provided,
+                  :ssn_last_4, :ssn_last_4_provided
 
     def update_attributes(attrs = {})
       super
