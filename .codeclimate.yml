@@ -1,0 +1,38 @@
+# https://docs.codeclimate.com/docs/example-codeclimateyml
+engines:
+  rubocop:
+    enabled: true
+    #checks:
+    # Rubocop/Metrics/ClassLength:
+    #   enabled: false
+  brakeman:
+    enabled: true
+    #exclude_fingerprints:
+    #- 08c185b3f764f262539a1f76997d3a89
+  reek:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - ruby
+        #mass_threshold: 30
+      - javascript
+  bundler-audit:
+    enabled: true
+  fixme:
+    enabled: true
+    config:
+      strings:
+      - TODO
+      - FIXME
+      - BUG
+      - HACK
+ratings:
+  paths:
+  - Gemfile.lock
+  - app/**
+  - lib/**
+  - "**.rb"
+exclude_paths:
+- "**/vendor/**/*"
