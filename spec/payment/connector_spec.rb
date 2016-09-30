@@ -224,4 +224,53 @@ describe ShorePayment::Connector do
       end.to raise_error(RuntimeError)
     end
   end
+
+  describe '#get_tax_calculations' do
+    let(:tax_response) do
+      {
+        'total_net_cents' => 21_212,
+        'total_cents' => 25_000,
+        'taxes' => [
+          {
+            'name' => 'Value Added Tax 20%',
+            'taxes_cents' => 3788
+          }
+        ]
+      }
+    end
+
+    let(:query_params) do
+      {
+        'services' => [
+          {
+            'service_price_cents' => 25_000,
+            'tax_category' => { 'name' => 'Value Added Tax 20%' }
+          }
+        ]
+      }
+    end
+
+    it 'sends a GET request to /v1/tax_calculations/' do
+      params = hash_including(
+        query: hash_including(query_params.merge(locale: 'en'))
+      )
+
+      expect(ShorePayment::HttpRetriever).to receive(:get)
+        .with('/v1/tax_calculations/', params)
+        .and_return(mock_success(tax_response.to_json))
+
+      response = subject.get_tax_calculations(query_params)
+      expect(response['taxes'].count).to eq(1)
+    end
+
+    it 'raises an error if the service responds with code != 200 and != 404' do
+      expect(ShorePayment::HttpRetriever).to receive(:get)
+        .with(any_args)
+        .and_return(mock_server_error)
+
+      expect do
+        subject.get_tax_calculations({})
+      end.to raise_error(RuntimeError)
+    end
+  end
 end

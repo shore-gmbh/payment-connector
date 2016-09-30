@@ -100,5 +100,18 @@ module ShorePayment
       response = @http_retriever.authenticated_get(path)
       handle_response(:get, response, path)
     end
+
+    # Calculate tax for a list of Services
+    #
+    # @param services - Array of services with tax_categories
+    #
+    # @return [Array[Hash<String,Object>]] JSON representation of the
+    #                                      calculated taxes.
+    # @raise [RuntimeError] Request failed.
+    def get_tax_calculations(query = {})
+      path = '/v1/tax_calculations/'
+      response = @http_retriever.authenticated_get(path, query: query)
+      handle_response(:get, response, path)
+    end
   end
 end
