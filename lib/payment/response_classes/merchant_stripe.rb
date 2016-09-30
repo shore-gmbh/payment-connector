@@ -336,6 +336,10 @@ module ShorePayment
       c = stripe.country || 'DE'
       Connector.new(locale: @locale).get_country_verification_fields(c)
     end
+
+    def tax_calculations(params)
+      Connector.new(locale: @locale).get_tax_calulcations(params)
+    end
   end
 
   # Representation of a {Verification} object in the Payment Service.
