@@ -255,7 +255,7 @@ describe ShorePayment::Connector do
         query: hash_including(query_params.merge(locale: 'en'))
       )
 
-      expect(ShorePayment::HttpRetriever).to receive(:get)
+      expect(ShorePayment::HttpRetriever).to receive(:post)
         .with('/v1/tax_calculations/', params)
         .and_return(mock_success(tax_response.to_json))
 
@@ -264,7 +264,7 @@ describe ShorePayment::Connector do
     end
 
     it 'raises an error if the service responds with code != 200 and != 404' do
-      expect(ShorePayment::HttpRetriever).to receive(:get)
+      expect(ShorePayment::HttpRetriever).to receive(:post)
         .with(any_args)
         .and_return(mock_server_error)
 
