@@ -250,13 +250,13 @@ describe ShorePayment::Connector do
       }
     end
 
-    it 'sends a GET request to /v1/tax_calculations/' do
+    it 'sends a POST request to /v1/tax_calculations' do
       params = hash_including(
         query: hash_including(query_params.merge(locale: 'en'))
       )
 
       expect(ShorePayment::HttpRetriever).to receive(:post)
-        .with('/v1/tax_calculations/', params)
+        .with('/v1/tax_calculations', params)
         .and_return(mock_success(tax_response.to_json))
 
       response = subject.get_tax_calculations(query_params)

@@ -109,7 +109,7 @@ module ShorePayment
     #                                      calculated taxes.
     # @raise [RuntimeError] Request failed.
     def get_tax_calculations(query = {})
-      path = '/v1/tax_calculations/'
+      path = '/v1/tax_calculations'
       response = @http_retriever.authenticated_post(path, query: query)
       handle_response(:post, response, path)
     end
