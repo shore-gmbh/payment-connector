@@ -9,7 +9,7 @@ module ShorePayment
     # Update object with this method. We have to take care updating 'nested'
     #   objects
     def update_attributes(attrs = {})
-      attrs&.each_pair do |attr, value|
+      attrs.each_pair do |attr, value|
         send(:"#{attr}=", value) if respond_to?(:"#{attr}=")
       end
     end

@@ -2,7 +2,7 @@ module ShorePayment
   # Conversion between day of birth's Hash and Date representation
   module DobConvertible
     def dob_date
-      return unless @dob && dob_present?
+      return unless dob_present?
       Date.new(@dob.year.to_i, @dob.month.to_i, @dob.day.to_i)
     end
 
@@ -20,7 +20,7 @@ module ShorePayment
     private
 
     def dob_present?
-      @dob.year.present? && @dob.month.present? && @dob.day.present?
+      @dob && @dob.year.present? && @dob.month.present? && @dob.day.present?
     end
   end
 
