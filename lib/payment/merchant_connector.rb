@@ -122,8 +122,7 @@ module ShorePayment
     # @raise [RuntimeError] Request failed.
     def create_refund(current_user:, charge_id:, amount_refunded_cents:)
       query = { current_user: current_user,
-                amount_refunded_cents: amount_refunded_cents
-      }
+                amount_refunded_cents: amount_refunded_cents }
 
       path = "#{base_path}/charges/#{charge_id}/refund"
       response = @http_retriever.authenticated_post(path, query: query)
@@ -178,9 +177,9 @@ module ShorePayment
     # :nodoc:
     module CreateChargeParams
       REQUIRED_PARAMS = %w(credit_card_token amount_cents currency).freeze
-      OPTIONAL_PARAMS = %w(customer_name customer_address customer_email
-                           statement_descriptor services description
-                           capture origin).freeze
+      OPTIONAL_PARAMS = %w(customer_id customer_name customer_address
+                           customer_email statement_descriptor services
+                           description capture origin).freeze
 
       def self.verify_params(params)
         verify_required_params(params)

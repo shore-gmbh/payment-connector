@@ -2,9 +2,8 @@ module ShorePayment
   # Conversion between day of birth's Hash and Date representation
   module DobConvertible
     def dob_date
-      if @dob && dob_present?
-        Date.new(@dob.year.to_i, @dob.month.to_i, @dob.day.to_i)
-      end
+      return unless @dob && dob_present?
+      Date.new(@dob.year.to_i, @dob.month.to_i, @dob.day.to_i)
     end
 
     def dob_date=(new_date)
@@ -221,9 +220,9 @@ module ShorePayment
     #   captured
     attr_accessor :reference_charge_id, :charge_id, :created_at, :status,
                   :capture, :captured, :description, :services, :amount_cents,
-                  :amount_refunded_cents, :currency, :customer_name,
-                  :customer_address, :customer_email, :credit_card_brand,
-                  :credit_card_last4, :origin
+                  :amount_refunded_cents, :currency, :customer_id,
+                  :customer_name, :customer_address, :customer_email,
+                  :credit_card_brand, :credit_card_last4, :origin
 
     # Fetch the list of {Charge}s for the given {Merchant} UUID from the Payment
     #   Service. {Charge} objects are in reverse chronological order according
