@@ -85,7 +85,7 @@ describe ShorePayment::MerchantStripe do
 
   context '#update_until' do
     it 'should return a Date' do
-      expect(subject.update_until).to eq(Date.new(2016, 04, 03))
+      expect(subject.update_until).to eq(Date.new(2016, 4, 3))
     end
   end
 
@@ -402,7 +402,8 @@ describe ShorePayment::MerchantStripe do
         described_class.new(
           payment_service_merchant_response(
             mid,
-            legal_entity_with_nil_values)['stripe']
+            legal_entity_with_nil_values
+          )['stripe']
         )
       end
 
@@ -491,6 +492,7 @@ describe ShorePayment::MerchantPayment do
       it { expect(charge).to respond_to(:amount_cents) }
       it { expect(charge).to respond_to(:amount_refunded_cents) }
       it { expect(charge).to respond_to(:currency) }
+      it { expect(charge).to respond_to(:customer_id) }
       it { expect(charge).to respond_to(:customer_name) }
       it { expect(charge).to respond_to(:customer_address) }
       it { expect(charge).to respond_to(:customer_email) }

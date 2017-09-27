@@ -11,7 +11,7 @@ module ShorePayment
     def update_attributes(attrs = {})
       attrs.each_pair do |attr, value|
         send(:"#{attr}=", value) if respond_to?(:"#{attr}=")
-      end if attrs
+      end
     end
   end
 end

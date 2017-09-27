@@ -122,10 +122,25 @@ module ShorePayment
     # @raise [RuntimeError] Request failed.
     def create_refund(current_user:, charge_id:, amount_refunded_cents:)
       query = { current_user: current_user,
-                amount_refunded_cents: amount_refunded_cents
-      }
+                amount_refunded_cents: amount_refunded_cents }
 
       path = "#{base_path}/charges/#{charge_id}/refund"
+      response = @http_retriever.authenticated_post(path, query: query)
+      handle_response(:post, response, path)
+    end
+
+    # Set the customer_id for the current +Charge+ (see +#charge_id+).
+    #
+    # @param meta [String] charge_id
+    # @param meta [String] customer_id
+    #
+    # @return [String] charge_id
+    # @raise [RuntimeError] Request failed.
+    def set_customer_for_charge(current_user:, charge_id:, customer_id:)
+      query = { current_user: current_user,
+                customer_id: customer_id }
+
+      path = "#{base_path}/charges/#{charge_id}/set_customer"
       response = @http_retriever.authenticated_post(path, query: query)
       handle_response(:post, response, path)
     end
