@@ -160,7 +160,8 @@ describe ShorePayment::MerchantConnector do
         'currency' => 'eur',
         'description' => 'description',
         'statement_descriptor' => 'your company',
-        'capture' => 'true'
+        'capture' => 'true',
+        'appointment_id' => nil
       }
     end
 
