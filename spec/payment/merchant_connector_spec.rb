@@ -295,6 +295,41 @@ describe ShorePayment::MerchantConnector do
     end
   end
 
+  describe '#set_customer_for_charge' do
+    let(:charge_id) { 'charge_id' }
+    let(:customer_id) { 'customer_id' }
+
+    it 'sends a POST request to /v1/:mid/charges/:charge_id/set_customer' do
+      query = {
+        current_user: current_user,
+        customer_id: customer_id,
+        locale: 'en'
+      }
+      options = hash_including(query: query, basic_auth: an_instance_of(Hash))
+
+      expect(ShorePayment::HttpRetriever).to receive(:post)
+        .with("/v1/merchants/#{mid}/charges/#{charge_id}/set_customer", options)
+        .and_return(mock_success('{}'))
+
+      result = subject.set_customer_for_charge(current_user: current_user,
+                                               charge_id: charge_id,
+                                               customer_id: customer_id)
+      expect(result).to eq({})
+    end
+
+    it 'raises an error if the service responds with code != 200..299' do
+      expect(ShorePayment::HttpRetriever).to receive(:post)
+        .with(any_args)
+        .and_return(mock_server_error)
+
+      expect do
+        subject.set_customer_for_charge(current_user: current_user,
+                                        charge_id: charge_id,
+                                        customer_id: customer_id)
+      end.to raise_error(RuntimeError)
+    end
+  end
+
   describe '#add_bank_account' do
     it 'sends a POST request to /v1/:mid/bank_accounts' do
       options = hash_including(basic_auth: an_instance_of(Hash),
