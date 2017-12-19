@@ -7,3 +7,6 @@ AllCops:
     - '.git-hooks/**/*'
     - 'bin/*'
   TargetRubyVersion: 2.3
+
+Metrics/BlockLength:
+  Enabled: false

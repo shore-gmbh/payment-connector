@@ -11,9 +11,11 @@ module ShorePayment
 
   # Representation of a {Dispute} object in the Payment Service.
   class Dispute < StripeHash
-    attr_accessor :id, :status, :reason, :amount_cents, :currency, :created_at,
-                  :merchant_id, :due_by, :has_evidence, :past_due,
-                  :submission_count, :evidence, :charge
+    attr_accessor :id, :status, :reason, :amount_cents, :currency,
+                  :merchant_id, :has_evidence, :past_due,
+                  :submission_count
+
+    attr_reader :evidence, :due_by, :created_at, :charge
 
     def evidence=(attrs)
       @evidence = Evidence.new(attrs)
@@ -26,11 +28,11 @@ module ShorePayment
     end
 
     def due_by=(val)
-      @due_by = DateTime.parse(val).to_date
+      @due_by = Time.parse(val).to_date
     end
 
     def created_at=(val)
-      @created_at = DateTime.parse(val).to_date
+      @created_at = Time.parse(val).to_date
     end
 
     def charge=(attrs)
