@@ -124,15 +124,15 @@ module ShorePayment
 
     private
 
-    def deep_reject_nil!(h)
-      h.each_key do |k|
-        deep_reject_nil!(h[k]) if h[k].is_a?(Hash)
-        next unless h[k].is_a?(Array)
-        h[k].each do |a|
+    def deep_reject_nil!(hash)
+      hash.each_key do |k|
+        deep_reject_nil!(hash[k]) if hash[k].is_a?(Hash)
+        next unless hash[k].is_a?(Array)
+        hash[k].each do |a|
           deep_reject_nil!(a)
         end
       end
-      h.reject! { |_k, v| v.nil? || v == {} }
+      hash.reject! { |_k, v| v.nil? || v == {} }
     end
   end
 
