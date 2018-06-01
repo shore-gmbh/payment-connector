@@ -204,3 +204,4 @@ def payment_service_charge_response(attributes = {})
     }
   }.merge(attributes)
 end
+# rubocop:enable MethodLength

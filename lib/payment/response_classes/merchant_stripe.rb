@@ -8,19 +8,21 @@ module ShorePayment
 
     def dob_date=(new_date)
       date = new_date.to_date
-      @dob = DateOfBirth.new(
-        year: date.year,
-        month: date.month,
-        day: date.day
-      ) if date
-    rescue
+      if date
+        @dob = DateOfBirth.new(
+          year: date.year,
+          month: date.month,
+          day: date.day
+        )
+      end
+    rescue StandardError
       nil
     end
 
     private
 
     def dob_present?
-      @dob && @dob.year.present? && @dob.month.present? && @dob.day.present?
+      @dob&.year.present? && @dob.month.present? && @dob.day.present?
     end
   end
 
@@ -48,7 +50,9 @@ module ShorePayment
   class AdditionalOwner < StripeHash
     include DobConvertible
 
-    attr_accessor :address, :first_name, :last_name, :dob, :verification
+    attr_accessor :first_name, :last_name
+
+    attr_reader :address, :dob, :verification
 
     def address=(attrs)
       @address = Address.new(attrs)
@@ -67,11 +71,12 @@ module ShorePayment
   class LegalEntity < StripeHash
     include DobConvertible
 
-    attr_accessor :additional_owners, :address, :business_name,
-                  :business_tax_id, :business_tax_id_provided, :dob,
-                  :first_name, :last_name, :type, :verification,
-                  :personal_id_number, :personal_id_number_provided,
+    attr_accessor :business_name, :business_tax_id, :business_tax_id_provided,
+                  :first_name, :last_name, :type, :personal_id_number,
+                  :personal_id_number_provided,
                   :ssn_last_4, :ssn_last_4_provided
+
+    attr_reader :address, :additional_owners, :dob, :verification
 
     def update_attributes(attrs = {})
       super
@@ -142,11 +147,13 @@ module ShorePayment
 
   # Representation of a {Stripe} object in the Merchant response
   class MerchantStripe < StripeHash
-    attr_accessor :account_id, :active_bank_accounts, :charges_count,
-                  :last_charge_created_at, :legal_entity, :meta,
+    attr_accessor :account_id, :charges_count, :last_charge_created_at, :meta,
                   :publishable_key, :verification_disabled_reason,
-                  :verification_due_by, :verification_fields_needed,
-                  :transfers_enabled, :charges_enabled, :country
+                  :verification_due_by, :transfers_enabled,
+                  :charges_enabled, :country
+
+    attr_reader :legal_entity, :active_bank_accounts,
+                :verification_fields_needed
 
     def initialize(attrs = nil)
       # Empty stripe object with all the necessery empty nodes
@@ -168,9 +175,11 @@ module ShorePayment
     def active_bank_accounts=(attrs)
       @active_bank_accounts = []
 
+      return unless attrs
+
       @active_bank_accounts = attrs.map do |a|
         ActiveBankAccount.new(a)
-      end if attrs
+      end
     end
 
     def verification_fields_needed=(attrs)
@@ -194,11 +203,11 @@ module ShorePayment
     end
 
     def update_until
-      verification_due_by.try { |v| DateTime.parse(v).to_date }
+      verification_due_by.try { |v| Time.parse(v).to_date }
     end
 
     def last_charge
-      last_charge_created_at.try { |v| DateTime.parse(v).to_date }
+      last_charge_created_at.try { |v| Time.parse(v).to_date }
     end
 
     def fields_needed
@@ -219,10 +228,12 @@ module ShorePayment
     # use captured to check if Charge still uncaptured or has since been
     #   captured
     attr_accessor :reference_charge_id, :charge_id, :created_at, :status,
-                  :capture, :captured, :description, :services, :amount_cents,
+                  :capture, :captured, :description, :amount_cents,
                   :amount_refunded_cents, :currency, :customer_id,
-                  :customer_name, :customer_address, :customer_email,
+                  :customer_name, :customer_email,
                   :credit_card_brand, :credit_card_last4, :origin
+
+    attr_reader :customer_address, :services
 
     # Fetch the list of {Charge}s for the given {Merchant} UUID from the Payment
     #   Service. {Charge} objects are in reverse chronological order according
@@ -236,7 +247,7 @@ module ShorePayment
     def self.all(merchant_id, locale: 'en')
       connector = MerchantConnector.new(merchant_id, locale: locale)
       connector.get_charges({})['charges']
-        .map { |charge_attrs| new(charge_attrs) }
+               .map { |charge_attrs| new(charge_attrs) }
     end
 
     def customer_address=(attrs)
@@ -250,8 +261,9 @@ module ShorePayment
 
   # Representation of a {Payment} object in the Payment Service.
   class MerchantPayment < StripeHash
-    attr_accessor :id, :meta, :stripe,
-                  :stripe_publishable_key, :charge_limit_per_day
+    attr_accessor :id, :meta, :stripe_publishable_key, :charge_limit_per_day
+
+    attr_reader :stripe
 
     class << self
       def from_payment_service(current_user, profile_id, locale: 'en')

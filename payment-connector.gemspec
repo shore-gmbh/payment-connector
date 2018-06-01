@@ -1,4 +1,4 @@
-# coding: utf-8
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
@@ -22,16 +22,16 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'httparty'
   spec.add_dependency 'activesupport', '>= 3.2'
+  spec.add_dependency 'httparty'
   spec.add_dependency 'tzinfo'
 
   spec.add_development_dependency 'bundler', '~> 1.10'
+  spec.add_development_dependency 'overcommit', '~> 0.31'
+  spec.add_development_dependency 'pry-byebug', '~> 3.3'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.4'
   spec.add_development_dependency 'rspec_junit_formatter', '~> 0.2'
+  spec.add_development_dependency 'rubocop', '~> 0.52'
   spec.add_development_dependency 'simplecov', '~> 0.10'
-  spec.add_development_dependency 'rubocop', '~> 0.37.2'
-  spec.add_development_dependency 'overcommit', '~> 0.31'
-  spec.add_development_dependency 'pry-byebug', '~> 3.3'
 end
