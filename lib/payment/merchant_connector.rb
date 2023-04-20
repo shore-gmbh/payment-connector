@@ -33,6 +33,16 @@ module ShorePayment
       handle_response(:get, response, path, 'merchant')
     end
 
+    # Retrieve the current +Merchant+ (see +#mid+).
+    #
+    # @return [Hash<String,Object>] JSON representation of the +Merchant+.
+    # @raise [RuntimeError] Request failed.
+    def get_merchant_payment_configs # rubocop:disable AccessorMethodName
+      path = "#{base_path}/payment_configs"
+      response = @http_retriever.authenticated_get(path)
+      handle_response(:get, response, path, 'merchant')
+    end
+
     # Create the current +Merchant+ (see +#mid+).
     #
     # @param meta [Hash<String,Object>] JSON serializable dictionary.
