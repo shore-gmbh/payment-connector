@@ -36,6 +36,16 @@ describe ShorePayment::MerchantConnector do
     end
   end
 
+  describe '#get_merchant' do
+    it 'sends a GET request to /v1/merchants/:mid/payment_configs' do
+      expect(ShorePayment::HttpRetriever).to receive(:get)
+        .with("/v1/merchants/#{mid}/payment_configs", auth_mock)
+        .and_return(mock_success('{"merchant":{}}'))
+
+      expect(subject.get_merchant_payment_configs).to eq({})
+    end
+  end
+
   describe '#create_merchant' do
     it 'sends a POST request to /v1/merchants/:mid' do
       options = hash_including(
